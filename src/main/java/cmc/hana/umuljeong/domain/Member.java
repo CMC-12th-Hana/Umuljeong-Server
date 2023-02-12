@@ -1,6 +1,7 @@
 package cmc.hana.umuljeong.domain;
 
 import cmc.hana.umuljeong.domain.common.BaseEntity;
+import cmc.hana.umuljeong.domain.enums.MemberRole;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,4 +20,15 @@ public class Member extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @Enumerated(EnumType.STRING)
+    private MemberRole memberRole;
+
+    private String name;
+
+    private String email;
+
+    private String phoneNumber;
+
+    private String password;
 }

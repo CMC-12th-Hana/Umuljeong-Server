@@ -19,4 +19,10 @@ public class TaskImage extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task task;
+
+    private String fileName;
+
+    private String url;
+
+    // TODO : uuid 관련 추가
 }

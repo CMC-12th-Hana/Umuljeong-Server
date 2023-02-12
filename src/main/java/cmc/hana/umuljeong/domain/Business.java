@@ -1,6 +1,7 @@
 package cmc.hana.umuljeong.domain;
 
 import cmc.hana.umuljeong.domain.common.BaseEntity;
+import cmc.hana.umuljeong.domain.embedded.BusinessPeriod;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,4 +20,11 @@ public class Business extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_company_id")
     private ClientCompany clientCompany;
+
+    private String name;
+
+    @Embedded
+    private BusinessPeriod businessPeriod;
+
+    private Integer revenue;
 }
