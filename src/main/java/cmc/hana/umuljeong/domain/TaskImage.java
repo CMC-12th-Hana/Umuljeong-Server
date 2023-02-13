@@ -4,6 +4,7 @@ import cmc.hana.umuljeong.domain.common.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Builder
@@ -24,5 +25,5 @@ public class TaskImage extends BaseEntity {
 
     private String url;
 
-    // TODO : uuid 관련 추가
+    private String uuid;
 }
