@@ -28,4 +28,7 @@ public class ClientCompany extends BaseEntity {
     private SalesRepresentative salesRepresentative;
 
     // TODO : 방문건수와 사업건수를 count 쿼리로 처리할지, 통계필드나 테이블을 따로두고 관리할지 고민하기
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_company_summary_id")
+    private ClientCompanySummary clientCompanySummary;
 }
