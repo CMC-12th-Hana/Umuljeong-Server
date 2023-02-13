@@ -29,5 +29,7 @@ public class Task extends BaseEntity {
 
     private String description;
 
-    // TODO : 업무카테고리는 어떤식으로 관리할 것인지? 기타업무인 경우 처리방안에 대해서..
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_category_id")
+    private TaskCategory taskCategory;
 }
