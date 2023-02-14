@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CompanyRestController {
 
     @PostMapping("/company")
-    public ResponseEntity<CompanyResponseDto.CreateDto> createCompany() {
+    public ResponseEntity<CompanyResponseDto.CompanyCreateDto> createCompany() {
         return null;
     }
 }
