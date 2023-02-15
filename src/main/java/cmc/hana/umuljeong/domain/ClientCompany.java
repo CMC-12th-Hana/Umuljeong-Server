@@ -23,6 +23,8 @@ public class ClientCompany extends BaseEntity {
 
     private String name;
 
+    private String tel;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sales_representative_id")
     private SalesRepresentative salesRepresentative;
