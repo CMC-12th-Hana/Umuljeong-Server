@@ -3,6 +3,7 @@ package cmc.hana.umuljeong.domain;
 import cmc.hana.umuljeong.domain.common.BaseEntity;
 import cmc.hana.umuljeong.domain.enums.MemberRole;
 import lombok.*;
+import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
 
@@ -37,4 +38,12 @@ public class Member extends BaseEntity {
     private String staffNumber; // 사원번호
 
     private Boolean isEnabled;
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public void setMemberRole(MemberRole memberRole) {
+        this.memberRole = memberRole;
+    }
 }

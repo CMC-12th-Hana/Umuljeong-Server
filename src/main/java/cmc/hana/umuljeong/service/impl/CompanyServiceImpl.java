@@ -1,6 +1,9 @@
 package cmc.hana.umuljeong.service.impl;
 
+import cmc.hana.umuljeong.converter.CompanyConverter;
 import cmc.hana.umuljeong.domain.Company;
+import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.domain.enums.MemberRole;
 import cmc.hana.umuljeong.repository.CompanyRepository;
 import cmc.hana.umuljeong.service.CompanyService;
 import cmc.hana.umuljeong.web.dto.CompanyRequestDto;
@@ -17,7 +20,10 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Transactional
     @Override
-    public Company create(CompanyRequestDto.CompanyCreateDto request) {
-        return null;
+    public Company create(Member member, CompanyRequestDto.CompanyCreateDto request) {
+        Company savedCompany = companyRepository.save(CompanyConverter.toCompany(request));
+        member.setCompany(savedCompany);
+        member.setMemberRole(MemberRole.LEADER);
+        return savedCompany;
     }
 }
