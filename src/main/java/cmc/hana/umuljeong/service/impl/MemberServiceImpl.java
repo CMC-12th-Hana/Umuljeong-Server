@@ -1,5 +1,6 @@
 package cmc.hana.umuljeong.service.impl;
 
+import cmc.hana.umuljeong.converter.MemberConverter;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.repository.MemberRepository;
 import cmc.hana.umuljeong.service.MemberService;
@@ -18,6 +19,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public Member join(AuthRequestDto.JoinDto joinDto) {
-        return null;
+        Member member = MemberConverter.toMember(joinDto);
+        return memberRepository.save(member);
     }
 }

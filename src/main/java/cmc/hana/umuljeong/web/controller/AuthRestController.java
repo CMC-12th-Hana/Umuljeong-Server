@@ -63,7 +63,7 @@ public class AuthRestController {
          */
         Member member = memberService.join(joinDto);
 
-        String accessToken = createTokenByPhoneNumberAndPassword(member.getPhoneNumber(), member.getPassword());
+        String accessToken = createTokenByPhoneNumberAndPassword(member.getPhoneNumber(), joinDto.getPassword());
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + accessToken);

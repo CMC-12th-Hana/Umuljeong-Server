@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
@@ -22,9 +24,14 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
         return (web) -> web.ignoring()
-                .antMatchers("/favicon.ico");
+                .antMatchers("/favicon.ico", "/**");
     }
 
     @Bean
@@ -45,7 +52,8 @@ public class SecurityConfig {
                 /** HttpServletRequest를 사용하는 요청들에 대한 접근 제한 설정*/
                 .and()
                 .authorizeRequests()
-                .antMatchers("/authenticate").permitAll()
+                .antMatchers("/**").permitAll()
+                // .antMatchers("/authenticate").permitAll()
 
                 /**JwtSecurityConfig 적용 */
                 .and()
