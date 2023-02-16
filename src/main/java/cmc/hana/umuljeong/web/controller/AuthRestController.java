@@ -7,10 +7,10 @@ import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.service.MemberService;
 import cmc.hana.umuljeong.web.dto.AuthRequestDto;
 import cmc.hana.umuljeong.web.dto.AuthResponseDto;
-import cmc.hana.umuljeong.web.dto.TokenResponseDto;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -58,7 +58,9 @@ public class AuthRestController {
     public ResponseEntity<AuthResponseDto.JoinDto> join(@RequestBody AuthRequestDto.JoinDto joinDto) {
         // todo : 전화번호(ID) 중복 및 인증, 이메일 중복 처리 방안
         /*
-            1. 신규 사용자 디비에 저장
+            1. 신규 사용자 디비에 저장 or 갱신
+                - 회사에서 만들어둔 계정이 있으면(등록된 전화번호가 있으면) 개인정보를 업데이트해주고
+                - 없으면 그냥 새로 만들어주기
             2. 해당 정보로 토큰 발급
          */
         Member member = memberService.join(joinDto);

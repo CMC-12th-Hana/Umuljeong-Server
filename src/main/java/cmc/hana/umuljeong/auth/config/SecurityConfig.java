@@ -31,7 +31,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
         return (web) -> web.ignoring()
-                .antMatchers("/favicon.ico", "/**");
+                .antMatchers("/favicon.ico");
     }
 
     @Bean
@@ -51,8 +51,9 @@ public class SecurityConfig {
 
                 /** HttpServletRequest를 사용하는 요청들에 대한 접근 제한 설정*/
                 .and()
-                .authorizeRequests()
-                .antMatchers("/**").permitAll()
+                .authorizeHttpRequests()
+                .antMatchers("/login", "/join").permitAll()
+                .anyRequest().authenticated()
                 // .antMatchers("/authenticate").permitAll()
 
                 /**JwtSecurityConfig 적용 */

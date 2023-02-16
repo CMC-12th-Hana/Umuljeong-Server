@@ -32,5 +32,9 @@ public class Member extends BaseEntity {
 
     private String password;
 
+    private String staffRank;
+
+    private String staffNumber; // 사원번호
+
     private Boolean isEnabled;
 }
