@@ -1,15 +1,15 @@
 package cmc.hana.umuljeong.converter;
 
-import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.enums.MemberRole;
 import cmc.hana.umuljeong.exception.ErrorCode;
 import cmc.hana.umuljeong.exception.MemberException;
 import cmc.hana.umuljeong.repository.MemberRepository;
 import cmc.hana.umuljeong.web.dto.AuthRequestDto;
+import cmc.hana.umuljeong.web.dto.MemberRequestDto;
 import cmc.hana.umuljeong.web.dto.MemberResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +25,7 @@ public class MemberConverter {
     private static PasswordEncoder staticPasswordEncoder;
     private static MemberRepository staticMemberRepository;
 
+
     @PostConstruct
     public void init() {
         staticPasswordEncoder = this.passwordEncoder;
@@ -38,8 +39,20 @@ public class MemberConverter {
                 .name(joinDto.getName())
                 .email(joinDto.getEmail())
                 .phoneNumber(joinDto.getPhoneNumber())
-                .password(staticPasswordEncoder.encode(joinDto.getPassword())) // todo : 암호화 필요
+                .password(staticPasswordEncoder.encode(joinDto.getPassword()))
                 .isEnabled(Boolean.TRUE)
+                .build();
+    }
+
+    public static Member toMember(MemberRequestDto.CreateDto createDto) {
+        return Member.builder()
+                .company(null)
+                .memberRole(MemberRole.STAFF)
+                .name(createDto.getName())
+                .email(null)
+                .phoneNumber(createDto.getPhoneNumber())
+                .password(null)
+                .isEnabled(Boolean.FALSE)
                 .build();
     }
 
@@ -51,11 +64,19 @@ public class MemberConverter {
         return MemberResponseDto.ProfileDto.builder()
                 .name(member.getName())
                 .role(member.getMemberRole().getDescription())
-                .companyName("더웨이트컴퍼니")
+                .companyName(member.getCompany().getName())
                 .staffRank("대리")
                 .phoneNumber(member.getPhoneNumber())
                 .email(member.getEmail())
                 .staffNumber("121221")
                 .build();
     }
+
+    public static MemberResponseDto.CreateDto toCreateDto(Member createdMember) {
+        return MemberResponseDto.CreateDto.builder()
+                .memberId(createdMember.getId())
+                .createdAt(createdMember.getCreatedAt())
+                .build();
+    }
+
 }
