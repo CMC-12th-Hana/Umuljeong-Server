@@ -4,12 +4,18 @@ import lombok.*;
 
 public class AuthRequestDto {
 
-    @Builder
     @Getter
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class LoginDto {
         private String phoneNumber;
         private String password;
+    }
+
+    @Getter
+    public static class JoinDto {
+        private String name;
+        private String email;
+        private String phoneNumber;
+        private String password;
+        private String passwordCheck;
     }
 }

@@ -12,4 +12,13 @@ public class AuthResponseDto {
         private String accessToken;
         // todo : refreshToken
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class JoinDto {
+        private Long memberId;
+        private String accessToken;
+    }
 }
