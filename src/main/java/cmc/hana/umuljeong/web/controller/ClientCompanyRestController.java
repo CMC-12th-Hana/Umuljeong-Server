@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class ClientCompanyRestController {
@@ -19,7 +21,8 @@ public class ClientCompanyRestController {
 
     @GetMapping("/company/clients")
     public ResponseEntity<ClientCompanyResponseDto.ClientCompanyListDto> getClientCompanyList(@AuthUser Member member) {
-        return null;
+        List<ClientCompany> clientCompanyList = clientCompanyService.findByCompany(member.getCompany());
+        return ResponseEntity.ok(ClientCompanyConverter.toClientCompanyListDto(clientCompanyList));
     }
 
     @GetMapping("/company/client/{clientId}")

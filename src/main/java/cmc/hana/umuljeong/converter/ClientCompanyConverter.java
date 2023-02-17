@@ -4,6 +4,9 @@ import cmc.hana.umuljeong.domain.ClientCompany;
 import cmc.hana.umuljeong.domain.embedded.SalesRepresentative;
 import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ClientCompanyConverter {
 
     public static ClientCompanyResponseDto.CreateClientCompany toCreateClientCompany(ClientCompany clientCompany) {
@@ -28,6 +31,17 @@ public class ClientCompanyConverter {
                 .salesRepresentativeDto(toSalesRepresentativeDto(clientCompany.getSalesRepresentative()))
                 .taskCount(clientCompany.getClientCompanySummary().getTaskCount())
                 .businessCount(clientCompany.getClientCompanySummary().getBusinessCount())
+                .build();
+    }
+
+    public static ClientCompanyResponseDto.ClientCompanyListDto toClientCompanyListDto(List<ClientCompany> clientCompanyList) {
+        List<ClientCompanyResponseDto.ClientCompanyDto> clientCompanyDtoList =
+                clientCompanyList.stream()
+                        .map(clientCompany -> toClientCompanyDto(clientCompany))
+                        .collect(Collectors.toList());
+
+        return ClientCompanyResponseDto.ClientCompanyListDto.builder()
+                .clientCompanyDtoList(clientCompanyDtoList)
                 .build();
     }
 }

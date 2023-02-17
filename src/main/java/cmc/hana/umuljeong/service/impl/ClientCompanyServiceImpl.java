@@ -1,12 +1,15 @@
 package cmc.hana.umuljeong.service.impl;
 
 import cmc.hana.umuljeong.domain.ClientCompany;
+import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.repository.ClientCompanyRepository;
 import cmc.hana.umuljeong.service.ClientCompanyService;
 import cmc.hana.umuljeong.web.dto.ClientCompanyRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,5 +27,10 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     @Override
     public ClientCompany findById(Long clientCompanyId) {
         return clientCompanyRepository.findById(clientCompanyId).get();
+    }
+
+    @Override
+    public List<ClientCompany> findByCompany(Company company) {
+        return clientCompanyRepository.findByCompany(company);
     }
 }
