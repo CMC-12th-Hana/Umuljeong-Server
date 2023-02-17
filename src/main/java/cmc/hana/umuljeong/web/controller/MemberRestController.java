@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,7 +30,7 @@ public class MemberRestController {
     }
 
     @PostMapping("/company/member")
-    public ResponseEntity<MemberResponseDto.CreateDto> create(MemberRequestDto.CreateDto request, @AuthUser Member leader) {
+    public ResponseEntity<MemberResponseDto.CreateDto> create(@RequestBody MemberRequestDto.CreateDto request, @AuthUser Member leader) {
         Member createdMember = memberService.create(leader, request);
         return ResponseEntity.ok(MemberConverter.toCreateDto(createdMember));
     }

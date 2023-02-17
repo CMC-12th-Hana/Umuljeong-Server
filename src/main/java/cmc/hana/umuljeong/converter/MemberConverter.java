@@ -52,6 +52,8 @@ public class MemberConverter {
                 .email(null)
                 .phoneNumber(createDto.getPhoneNumber())
                 .password(null)
+                .staffRank(createDto.getStaffRank())
+                .staffNumber(createDto.getStaffNumber())
                 .isEnabled(Boolean.FALSE)
                 .build();
     }
