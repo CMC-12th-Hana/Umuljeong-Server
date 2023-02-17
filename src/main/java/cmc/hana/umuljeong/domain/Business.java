@@ -5,6 +5,7 @@ import cmc.hana.umuljeong.domain.embedded.BusinessPeriod;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Builder
@@ -27,4 +28,6 @@ public class Business extends BaseEntity {
     private BusinessPeriod businessPeriod;
 
     private Integer revenue;
+
+    private String description;
 }

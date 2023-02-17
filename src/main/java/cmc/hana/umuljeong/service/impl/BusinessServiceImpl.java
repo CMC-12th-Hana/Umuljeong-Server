@@ -20,4 +20,9 @@ public class BusinessServiceImpl implements BusinessService {
     public Business create(BusinessRequestDto.CreateBusinessDto request) {
         return null;
     }
+
+    @Override
+    public Business findById(Long businessId) {
+        return businessRepository.findById(businessId).get();
+    }
 }

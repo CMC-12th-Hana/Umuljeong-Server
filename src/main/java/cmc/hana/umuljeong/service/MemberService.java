@@ -1,5 +1,6 @@
 package cmc.hana.umuljeong.service;
 
+import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.web.dto.AuthRequestDto;

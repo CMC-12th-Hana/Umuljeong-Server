@@ -1,6 +1,7 @@
 package cmc.hana.umuljeong.service.impl;
 
 import cmc.hana.umuljeong.converter.MemberConverter;
+import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.repository.MemberRepository;
@@ -49,4 +50,5 @@ public class MemberServiceImpl implements MemberService {
     public List<Member> findByCompany(Company company) {
         return memberRepository.findByCompany(company);
     }
+
 }
