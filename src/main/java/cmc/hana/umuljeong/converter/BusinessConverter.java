@@ -39,14 +39,26 @@ public class BusinessConverter {
                 .collect(Collectors.toList());
     }
 
-    public static BusinessResponseDto.BusinessDto toBusinessDto(Business business, List<BusinessMember> businessMemberList) {
+    public static BusinessResponseDto.BusinessDto toBusinessDto(Business business) {
         return BusinessResponseDto.BusinessDto.
                 builder()
                 .name(business.getName())
                 .businessPeriodDto(toBusinessPeriodDto(business.getBusinessPeriod()))
-                .memberDtoList(toMemberDtoList(businessMemberList))
+                .memberDtoList(toMemberDtoList(business.getBusinessMemberList()))
                 .revenue(business.getRevenue())
                 .description(business.getDescription())
+                .build();
+    }
+
+    private static List<BusinessResponseDto.BusinessDto> toBusinessDtoList(List<Business> businessList) {
+        return businessList.stream()
+                .map(business -> toBusinessDto(business))
+                .collect(Collectors.toList());
+    }
+
+    public static BusinessResponseDto.BusinessListDto toBusinessListDto(List<Business> businessList) {
+        return BusinessResponseDto.BusinessListDto.builder()
+                .businessDtoList(toBusinessDtoList(businessList))
                 .build();
     }
 }

@@ -24,4 +24,12 @@ public class BusinessMember {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void setBusiness(Business business) {
+        if (this.business != null) {
+            this.business.getBusinessMemberList().remove(this);
+        }
+        this.business = business;
+        business.getBusinessMemberList().add(this);
+    }
 }

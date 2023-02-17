@@ -47,7 +47,12 @@ public class BusinessResponseDto {
         private String description;
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class BusinessListDto {
+        private List<BusinessDto> businessDtoList;
     }
 
 }
