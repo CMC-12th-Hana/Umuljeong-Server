@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,13 +29,25 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
         return taskCategoryRepository.save(taskCategory);
     }
 
-    @Override
-    public List<TaskCategory> updateList(TaskCategoryRequestDto.UpdateTaskCategoryListDto request) {
-        return null;
+    private TaskCategory update(TaskCategoryRequestDto.UpdateTaskCategoryDto updateTaskCategoryDto) {
+        Long id = updateTaskCategoryDto.getTaskCategoryId();
+        TaskCategory taskCategory = taskCategoryRepository.findById(id).get(); // todo : 있는지 없는지 등은 컨트롤러 단에서 다 검증해서 넘기기
+        taskCategory.setName(updateTaskCategoryDto.getName());
+        return taskCategory;
     }
 
+    @Transactional
+    @Override
+    public List<TaskCategory> updateList(Company company, TaskCategoryRequestDto.UpdateTaskCategoryListDto request) {
+        return request.getUpdateTaskCategoryDtoList().stream()
+                .map((updateTaskCategoryDto) -> update(updateTaskCategoryDto))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     @Override
     public void deleteList(TaskCategoryRequestDto.DeleteTaskCategoryListDto request) {
+        taskCategoryRepository.deleteAllByIdInQuery(request.getTaskCategoryIdList());
         return ;
     }
 

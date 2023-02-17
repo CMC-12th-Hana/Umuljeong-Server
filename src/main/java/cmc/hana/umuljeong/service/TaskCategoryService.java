@@ -10,7 +10,7 @@ import java.util.List;
 public interface TaskCategoryService {
     TaskCategory create(Company company, TaskCategoryRequestDto.CreateTaskCategoryDto request);
 
-    List<TaskCategory> updateList(TaskCategoryRequestDto.UpdateTaskCategoryListDto request);
+    List<TaskCategory> updateList(Company company, TaskCategoryRequestDto.UpdateTaskCategoryListDto request);
 
     void deleteList(TaskCategoryRequestDto.DeleteTaskCategoryListDto request);
 

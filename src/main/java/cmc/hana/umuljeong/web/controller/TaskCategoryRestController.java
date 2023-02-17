@@ -28,17 +28,17 @@ public class TaskCategoryRestController {
 
     @PostMapping("/company/client/business/task/category")
     public ResponseEntity<TaskCategoryResponseDto.CreateTaskCategoryDto> createTaskCategory(@RequestBody TaskCategoryRequestDto.CreateTaskCategoryDto request, @AuthUser Member member) {
-        // todo : 리더 권한 체크 후 해당 회사의 업무 카테고리로 추가
+        // todo : 리더 권한 체크
         TaskCategory taskCategory = taskCategoryService.create(member.getCompany(), request);
         return ResponseEntity.ok(TaskCategoryConverter.toCreateTaskCategoryDto(taskCategory));
     }
 
     @PatchMapping("/company/client/business/task/categories")
-    public ResponseEntity<TaskCategoryResponseDto.UpdateTaskCategoryListDto> updateTaskCategory(@RequestBody TaskCategoryRequestDto.UpdateTaskCategoryListDto request) {
+    public ResponseEntity<TaskCategoryResponseDto.UpdateTaskCategoryListDto> updateTaskCategory(@RequestBody TaskCategoryRequestDto.UpdateTaskCategoryListDto request, @AuthUser Member member) {
         /*
-            TODO : 멤버 권한 체크
+            TODO : 리더 권한 체크 & 해당 회사의 업무 카테고리인지 검증 필요 : 아닌 경우 에러 응답
         */
-        List<TaskCategory> taskCategoryList = taskCategoryService.updateList(request);
+        List<TaskCategory> taskCategoryList = taskCategoryService.updateList(member.getCompany(), request);
         return ResponseEntity.ok(TaskCategoryConverter.toUpdateTaskCategoryListDto(taskCategoryList));
     }
 

@@ -21,4 +21,8 @@ public class TaskCategory extends BaseEntity {
     private Company company;
 
     private String name;
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

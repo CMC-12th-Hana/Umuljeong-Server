@@ -10,15 +10,18 @@ public class TaskCategoryRequestDto {
         private String name;
     }
 
+    @Getter
     public static class UpdateTaskCategoryDto {
         private Long taskCategoryId;
         private String name;
     }
 
+    @Getter
     public static class UpdateTaskCategoryListDto {
         List<UpdateTaskCategoryDto> updateTaskCategoryDtoList;
     }
 
+    @Getter
     public static class DeleteTaskCategoryListDto {
         List<Long> taskCategoryIdList;
     }
