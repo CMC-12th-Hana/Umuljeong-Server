@@ -6,4 +6,6 @@ import cmc.hana.umuljeong.web.dto.ClientCompanyRequestDto;
 public interface ClientCompanyService {
 
     ClientCompany create(ClientCompanyRequestDto.CreateClientCompanyDto request);
+
+    ClientCompany findById(Long clientCompanyId);
 }

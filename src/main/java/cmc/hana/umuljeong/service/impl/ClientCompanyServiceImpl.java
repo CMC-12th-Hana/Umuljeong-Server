@@ -20,4 +20,9 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     public ClientCompany create(ClientCompanyRequestDto.CreateClientCompanyDto request) {
         return null;
     }
+
+    @Override
+    public ClientCompany findById(Long clientCompanyId) {
+        return clientCompanyRepository.findById(clientCompanyId).get();
+    }
 }
