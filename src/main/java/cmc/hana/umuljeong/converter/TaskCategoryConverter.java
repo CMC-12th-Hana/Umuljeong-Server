@@ -1,6 +1,8 @@
 package cmc.hana.umuljeong.converter;
 
+import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.TaskCategory;
+import cmc.hana.umuljeong.web.dto.TaskCategoryRequestDto;
 import cmc.hana.umuljeong.web.dto.TaskCategoryResponseDto;
 import cmc.hana.umuljeong.web.dto.TaskResponseDto;
 
@@ -33,6 +35,13 @@ public class TaskCategoryConverter {
         return TaskCategoryResponseDto.TaskCategoryDtoList.builder()
                 .taskCategoryDtoList(new ArrayList<>())
                 .count(taskCategoryList.size())
+                .build();
+    }
+
+    public static TaskCategory toTaskCategory(Company company, TaskCategoryRequestDto.CreateTaskCategoryDto request) {
+        return TaskCategory.builder()
+                .company(company)
+                .name(request.getName())
                 .build();
     }
 }

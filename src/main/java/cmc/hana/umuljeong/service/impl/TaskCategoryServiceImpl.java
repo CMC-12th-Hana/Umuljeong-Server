@@ -1,5 +1,7 @@
 package cmc.hana.umuljeong.service.impl;
 
+import cmc.hana.umuljeong.converter.TaskCategoryConverter;
+import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.TaskCategory;
 import cmc.hana.umuljeong.repository.TaskCategoryRepository;
@@ -16,12 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskCategoryServiceImpl implements TaskCategoryService {
 
-    private TaskCategoryRepository taskCategoryRepository;
+    private final TaskCategoryRepository taskCategoryRepository;
 
     @Transactional
     @Override
-    public TaskCategory create(TaskCategoryRequestDto.CreateTaskCategoryDto request) {
-        return null;
+    public TaskCategory create(Company company, TaskCategoryRequestDto.CreateTaskCategoryDto request) {
+        TaskCategory taskCategory = TaskCategoryConverter.toTaskCategory(company, request);
+        return taskCategoryRepository.save(taskCategory);
     }
 
     @Override
@@ -35,7 +38,7 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
     }
 
     @Override
-    public List<TaskCategory> findByMember(Member mockMember) {
-        return null;
+    public List<TaskCategory> findByCompany(Company company) {
+        return taskCategoryRepository.findByCompany(company);
     }
 }
