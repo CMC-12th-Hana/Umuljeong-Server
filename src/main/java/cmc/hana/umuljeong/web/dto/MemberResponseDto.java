@@ -3,10 +3,9 @@ package cmc.hana.umuljeong.web.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class MemberResponseDto {
-    public static class MemberListDto {
-    }
 
     @Builder
     @Getter
@@ -21,6 +20,14 @@ public class MemberResponseDto {
         private String phoneNumber;
         private String email;
         private String staffNumber;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class ProfileListDto {
+        private List<ProfileDto> profileDtoList;
     }
 
     @Builder

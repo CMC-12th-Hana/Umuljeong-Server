@@ -1,6 +1,7 @@
 package cmc.hana.umuljeong.service.impl;
 
 import cmc.hana.umuljeong.converter.MemberConverter;
+import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.repository.MemberRepository;
 import cmc.hana.umuljeong.service.MemberService;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,5 +43,10 @@ public class MemberServiceImpl implements MemberService {
         Member member = MemberConverter.toMember(request);
         member.setCompany(leader.getCompany());
         return memberRepository.save(member);
+    }
+
+    @Override
+    public List<Member> findByCompany(Company company) {
+        return memberRepository.findByCompany(company);
     }
 }

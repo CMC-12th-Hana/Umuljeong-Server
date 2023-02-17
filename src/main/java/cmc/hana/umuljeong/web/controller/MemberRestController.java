@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class MemberRestController {
@@ -20,8 +22,9 @@ public class MemberRestController {
     private final MemberService memberService;
 
     @GetMapping("/company/members")
-    public ResponseEntity<MemberResponseDto.MemberListDto> getMemberList() {
-        return null;
+    public ResponseEntity<MemberResponseDto.ProfileListDto> getMemberList(@AuthUser Member member) {
+        List<Member> memberList = memberService.findByCompany(member.getCompany());
+        return ResponseEntity.ok(MemberConverter.toMemberProfileListDto(memberList));
     }
 
     @GetMapping("/company/member/profile")

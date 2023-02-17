@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -24,7 +26,6 @@ public class MemberConverter {
 
     private static PasswordEncoder staticPasswordEncoder;
     private static MemberRepository staticMemberRepository;
-
 
     @PostConstruct
     public void init() {
@@ -73,6 +74,18 @@ public class MemberConverter {
                 .staffNumber("121221")
                 .build();
     }
+
+    public static MemberResponseDto.ProfileListDto toMemberProfileListDto(List<Member> memberList) {
+        List<MemberResponseDto.ProfileDto> profileDtoList =
+                memberList.stream()
+                .map(member -> toProfileDto(member))
+                .collect(Collectors.toList());
+
+        return MemberResponseDto.ProfileListDto.builder()
+                .profileDtoList(profileDtoList)
+                .build();
+    }
+
 
     public static MemberResponseDto.CreateDto toCreateDto(Member createdMember) {
         return MemberResponseDto.CreateDto.builder()
