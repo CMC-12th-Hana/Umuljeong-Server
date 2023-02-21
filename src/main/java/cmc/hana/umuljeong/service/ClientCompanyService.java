@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface ClientCompanyService {
 
-    ClientCompany create(ClientCompanyRequestDto.CreateClientCompanyDto request, Member member);
+    ClientCompany create(ClientCompanyRequestDto.CreateClientCompanyDto request, Long companyId);
 
     ClientCompany findById(Long clientCompanyId);
 
-    List<ClientCompany> findByCompany(Company company);
+    List<ClientCompany> findByCompany(Long companyId);
 
     ClientCompany update(Long clientCompanyId, ClientCompanyRequestDto.UpdateClientCompanyDto request, Member member);
 }

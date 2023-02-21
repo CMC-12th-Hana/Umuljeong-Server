@@ -4,6 +4,7 @@ import cmc.hana.umuljeong.converter.MemberConverter;
 import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.repository.CompanyRepository;
 import cmc.hana.umuljeong.repository.MemberRepository;
 import cmc.hana.umuljeong.service.MemberService;
 import cmc.hana.umuljeong.web.dto.AuthRequestDto;
@@ -23,6 +24,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final CompanyRepository companyRepository;
 
     @Transactional
     @Override
@@ -40,14 +42,16 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public Member create(Member leader, MemberRequestDto.CreateDto request) {
+    public Member create(Long companyId, MemberRequestDto.CreateDto request) {
+        Company company = companyRepository.findById(companyId).get();
         Member member = MemberConverter.toMember(request);
-        member.setCompany(leader.getCompany());
+        member.setCompany(company);
         return memberRepository.save(member);
     }
 
     @Override
-    public List<Member> findByCompany(Company company) {
+    public List<Member> findByCompany(Long companyId) {
+        Company company = companyRepository.findById(companyId).get();
         return memberRepository.findByCompany(company);
     }
 

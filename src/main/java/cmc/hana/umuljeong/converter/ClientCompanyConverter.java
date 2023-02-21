@@ -2,6 +2,7 @@ package cmc.hana.umuljeong.converter;
 
 import cmc.hana.umuljeong.domain.ClientCompany;
 import cmc.hana.umuljeong.domain.ClientCompanySummary;
+import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.embedded.SalesRepresentative;
 import cmc.hana.umuljeong.web.dto.ClientCompanyRequestDto;
@@ -55,7 +56,7 @@ public class ClientCompanyConverter {
                 .build();
     }
 
-    public static ClientCompany toClientCompany(ClientCompanyRequestDto.CreateClientCompanyDto request, Member member) {
+    public static ClientCompany toClientCompany(ClientCompanyRequestDto.CreateClientCompanyDto request, Company company) {
         ClientCompanySummary clientCompanySummary = ClientCompanySummary.builder()
                 .businessCount(0)
                 .taskCount(0)
@@ -68,7 +69,7 @@ public class ClientCompanyConverter {
                 .build();
 
         return ClientCompany.builder()
-                .company(member.getCompany())
+                .company(company)
                 .clientCompanySummary(clientCompanySummary)
                 .name(request.getName())
                 .tel(request.getTel())

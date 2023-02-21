@@ -11,7 +11,7 @@ import java.util.List;
 public interface MemberService {
     Member join(AuthRequestDto.JoinDto joinDto);
 
-    Member create(Member leader, MemberRequestDto.CreateDto request);
+    Member create(Long companyId, MemberRequestDto.CreateDto request);
 
-    List<Member> findByCompany(Company company);
+    List<Member> findByCompany(Long companyId);
 }

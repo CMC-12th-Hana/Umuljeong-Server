@@ -52,9 +52,9 @@ public class SecurityConfig {
                 /** HttpServletRequest를 사용하는 요청들에 대한 접근 제한 설정*/
                 .and()
                 .authorizeHttpRequests()
+                .anyRequest().permitAll() // todo : 인가처리 전 전부 열어두기
                 // .antMatchers("/login", "/join").permitAll()
-                .anyRequest().authenticated()
-                // .antMatchers("/authenticate").permitAll()
+                // .anyRequest().authenticated()
 
                 /**JwtSecurityConfig 적용 */
                 .and()

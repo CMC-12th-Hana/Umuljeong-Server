@@ -5,6 +5,7 @@ import cmc.hana.umuljeong.domain.ClientCompany;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.repository.ClientCompanyRepository;
+import cmc.hana.umuljeong.repository.CompanyRepository;
 import cmc.hana.umuljeong.service.ClientCompanyService;
 import cmc.hana.umuljeong.web.dto.ClientCompanyRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,13 @@ import java.util.List;
 public class ClientCompanyServiceImpl implements ClientCompanyService {
 
     private final ClientCompanyRepository clientCompanyRepository;
+    private final CompanyRepository companyRepository;
 
     @Transactional
     @Override
-    public ClientCompany create(ClientCompanyRequestDto.CreateClientCompanyDto request, Member member) {
-        ClientCompany clientCompany = ClientCompanyConverter.toClientCompany(request, member);
+    public ClientCompany create(ClientCompanyRequestDto.CreateClientCompanyDto request, Long companyId) {
+        Company company = companyRepository.findById(companyId).get();
+        ClientCompany clientCompany = ClientCompanyConverter.toClientCompany(request, company);
         return clientCompanyRepository.save(clientCompany);
     }
 
@@ -46,7 +49,8 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     }
 
     @Override
-    public List<ClientCompany> findByCompany(Company company) {
+    public List<ClientCompany> findByCompany(Long companyId) {
+        Company company = companyRepository.findById(companyId).get();
         return clientCompanyRepository.findByCompany(company);
     }
 }

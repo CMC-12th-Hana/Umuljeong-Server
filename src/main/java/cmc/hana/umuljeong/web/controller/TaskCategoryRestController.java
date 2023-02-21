@@ -20,25 +20,26 @@ public class TaskCategoryRestController {
 
     private final TaskCategoryService taskCategoryService;
 
-    @GetMapping("/company/client/business/task/categories")
-    public ResponseEntity<TaskCategoryResponseDto.TaskCategoryDtoList> getTaskCategoryList(@AuthUser Member member) {
-        List<TaskCategory> taskCategoryList = taskCategoryService.findByCompany(member.getCompany());
+    @GetMapping("/company/{companyId}/client/business/task/categories")
+    public ResponseEntity<TaskCategoryResponseDto.TaskCategoryDtoList> getTaskCategoryList(@PathVariable(name = "companyId") Long companyId, @AuthUser Member member) {
+        List<TaskCategory> taskCategoryList = taskCategoryService.findByCompany(companyId);
         return ResponseEntity.ok(TaskCategoryConverter.toTaskCategoryDtoList(taskCategoryList));
     }
 
-    @PostMapping("/company/client/business/task/category")
-    public ResponseEntity<TaskCategoryResponseDto.CreateTaskCategoryDto> createTaskCategory(@RequestBody TaskCategoryRequestDto.CreateTaskCategoryDto request, @AuthUser Member member) {
+    @PostMapping("/company/{companyId}/client/business/task/category")
+    public ResponseEntity<TaskCategoryResponseDto.CreateTaskCategoryDto> createTaskCategory(@PathVariable(name = "companyId") Long companyId, @RequestBody TaskCategoryRequestDto.CreateTaskCategoryDto request, @AuthUser Member member) {
         // todo : 리더 권한 체크
-        TaskCategory taskCategory = taskCategoryService.create(member.getCompany(), request);
+        TaskCategory taskCategory = taskCategoryService.create(companyId, request);
         return ResponseEntity.ok(TaskCategoryConverter.toCreateTaskCategoryDto(taskCategory));
     }
 
-    @PatchMapping("/company/client/business/task/categories")
-    public ResponseEntity<TaskCategoryResponseDto.UpdateTaskCategoryListDto> updateTaskCategory(@RequestBody TaskCategoryRequestDto.UpdateTaskCategoryListDto request, @AuthUser Member member) {
+    // todo : 하나만 수정하는 걸로 변경?
+    @PatchMapping("/company/{companyId}/client/business/task/categories")
+    public ResponseEntity<TaskCategoryResponseDto.UpdateTaskCategoryListDto> updateTaskCategory(@PathVariable(name = "companyId") Long companyId, @RequestBody TaskCategoryRequestDto.UpdateTaskCategoryListDto request, @AuthUser Member member) {
         /*
             TODO : 리더 권한 체크 & 해당 회사의 업무 카테고리인지 검증 필요 : 아닌 경우 에러 응답
         */
-        List<TaskCategory> taskCategoryList = taskCategoryService.updateList(member.getCompany(), request);
+        List<TaskCategory> taskCategoryList = taskCategoryService.updateList(companyId, request);
         return ResponseEntity.ok(TaskCategoryConverter.toUpdateTaskCategoryListDto(taskCategoryList));
     }
 

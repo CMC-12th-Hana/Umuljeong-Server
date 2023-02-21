@@ -4,6 +4,7 @@ import cmc.hana.umuljeong.converter.TaskCategoryConverter;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.TaskCategory;
+import cmc.hana.umuljeong.repository.CompanyRepository;
 import cmc.hana.umuljeong.repository.TaskCategoryRepository;
 import cmc.hana.umuljeong.service.TaskCategoryService;
 import cmc.hana.umuljeong.web.dto.TaskCategoryRequestDto;
@@ -21,10 +22,12 @@ import java.util.stream.Collectors;
 public class TaskCategoryServiceImpl implements TaskCategoryService {
 
     private final TaskCategoryRepository taskCategoryRepository;
+    private final CompanyRepository companyRepository;
 
     @Transactional
     @Override
-    public TaskCategory create(Company company, TaskCategoryRequestDto.CreateTaskCategoryDto request) {
+    public TaskCategory create(Long companyId, TaskCategoryRequestDto.CreateTaskCategoryDto request) {
+        Company company = companyRepository.findById(companyId).get();
         TaskCategory taskCategory = TaskCategoryConverter.toTaskCategory(company, request);
         return taskCategoryRepository.save(taskCategory);
     }
@@ -38,7 +41,7 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
 
     @Transactional
     @Override
-    public List<TaskCategory> updateList(Company company, TaskCategoryRequestDto.UpdateTaskCategoryListDto request) {
+    public List<TaskCategory> updateList(Long companyId, TaskCategoryRequestDto.UpdateTaskCategoryListDto request) {
         return request.getUpdateTaskCategoryDtoList().stream()
                 .map((updateTaskCategoryDto) -> update(updateTaskCategoryDto))
                 .collect(Collectors.toList());
@@ -52,7 +55,8 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
     }
 
     @Override
-    public List<TaskCategory> findByCompany(Company company) {
+    public List<TaskCategory> findByCompany(Long companyId) {
+        Company company = companyRepository.findById(companyId).get();
         return taskCategoryRepository.findByCompany(company);
     }
 }
