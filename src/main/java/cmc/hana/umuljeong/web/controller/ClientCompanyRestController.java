@@ -40,6 +40,7 @@ public class ClientCompanyRestController {
 
     @PatchMapping("/company/client/{clientId}")
     public ResponseEntity<ClientCompanyResponseDto.UpdateClientCompany> updateClientCompany(@PathVariable(name = "clientId") Long clientCompanyId, @RequestBody ClientCompanyRequestDto.UpdateClientCompanyDto request, @AuthUser Member member) {
+        // todo : 해당 멤버가 속한 회사의 고객사인지 & 존재하는 id 인지 검증 필요
         ClientCompany clientCompany = clientCompanyService.update(clientCompanyId, request, member);
         return ResponseEntity.ok(ClientCompanyConverter.toUpdateClientCompany(clientCompany));
     }

@@ -42,9 +42,9 @@ public class BusinessRestController {
         return ResponseEntity.ok(BusinessConverter.toBusinessListDto(businessList));
     }
 
-    @PostMapping("/company/client/business")
-    public ResponseEntity<BusinessResponseDto.CreateBusinessDto> createBusiness(@RequestBody BusinessRequestDto.CreateBusinessDto request) {
-        Business business = businessService.create(request);
+    @PostMapping("/company/client/{clientId}/business")
+    public ResponseEntity<BusinessResponseDto.CreateBusinessDto> createBusiness(@PathVariable(name = "clientId") Long clientCompanyId, @RequestBody BusinessRequestDto.CreateBusinessDto request) {
+        Business business = businessService.create(clientCompanyId, request);
         return ResponseEntity.ok(BusinessConverter.toCreateBusinessDto(business));
     }
 }

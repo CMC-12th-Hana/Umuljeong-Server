@@ -3,6 +3,7 @@ package cmc.hana.umuljeong.domain.mapping;
 import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.Member;
 import lombok.*;
+import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
 
@@ -31,5 +32,9 @@ public class BusinessMember {
         }
         this.business = business;
         business.getBusinessMemberList().add(this);
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 }

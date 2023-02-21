@@ -23,7 +23,7 @@ public class Business extends BaseEntity {
     @JoinColumn(name = "client_company_id")
     private ClientCompany clientCompany;
 
-    @OneToMany(mappedBy = "business")
+    @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
     private List<BusinessMember> businessMemberList;
 
     private String name;
@@ -34,4 +34,8 @@ public class Business extends BaseEntity {
     private Integer revenue;
 
     private String description;
+
+    public void setBusinessMemberList(List<BusinessMember> businessMemberList) {
+        this.businessMemberList = businessMemberList;
+    }
 }

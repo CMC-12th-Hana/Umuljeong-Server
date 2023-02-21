@@ -7,7 +7,7 @@ import cmc.hana.umuljeong.web.dto.BusinessRequestDto;
 import java.util.List;
 
 public interface BusinessService {
-    Business create(BusinessRequestDto.CreateBusinessDto request);
+    Business create(Long clientCompanyId, BusinessRequestDto.CreateBusinessDto request);
 
     Business findById(Long businessId);
 
