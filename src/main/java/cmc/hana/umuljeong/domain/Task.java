@@ -1,3 +1,4 @@
+
 package cmc.hana.umuljeong.domain;
 
 import cmc.hana.umuljeong.domain.common.BaseEntity;

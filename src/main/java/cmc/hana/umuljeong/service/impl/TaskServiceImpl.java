@@ -26,7 +26,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> findByMemberAndDate(Member mockMember, LocalDate date) {
-        return null;
+    public List<Task> findByMemberAndDate(Member member, LocalDate date) {
+        return taskRepository.findByMemberAndDate(member, date);
     }
 }

@@ -1,5 +1,6 @@
 package cmc.hana.umuljeong.web.controller;
 
+import cmc.hana.umuljeong.auth.annotation.AuthUser;
 import cmc.hana.umuljeong.converter.TaskConverter;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.Task;
@@ -22,18 +23,20 @@ public class TaskRestController {
     private final TaskService taskService;
 
     @GetMapping("/company/client/business/tasks")
-    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskList(@RequestParam(name = "date") LocalDate date) {
+    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskList(@RequestParam(name = "date") LocalDate date, @AuthUser Member member) {
         /*
             TODO : 페이징
          */
-        List<Task> taskList = taskService.findByMemberAndDate(MemberUtil.mockMember(), date);
+        List<Task> taskList = taskService.findByMemberAndDate(member, date);
         return ResponseEntity.ok(TaskConverter.toTaskListDto(taskList));
     }
 
-    @PostMapping("/company/client/business/task")
-    public ResponseEntity<TaskResponseDto.CreateTaskDto> createTask(@RequestPart TaskRequestDto.CreateTaskDto request) {
+    // TODO : 이 API 구현 자체를 후순위로 미루기
+    @PostMapping("/company/client/business/{businessId}/task")
+    public ResponseEntity<TaskResponseDto.CreateTaskDto> createTask(@RequestPart TaskRequestDto.CreateTaskDto request, @AuthUser Member member) {
         /*
             TODO : AuthMember, 이미지 로직 추가
+
         */
         Task task = taskService.create(request);
         return ResponseEntity.ok(TaskConverter.toCreateTaskDto(task));

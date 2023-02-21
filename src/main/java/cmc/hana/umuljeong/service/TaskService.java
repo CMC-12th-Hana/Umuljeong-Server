@@ -10,5 +10,5 @@ import java.util.List;
 public interface TaskService {
     Task create(TaskRequestDto.CreateTaskDto request);
 
-    List<Task> findByMemberAndDate(Member mockMember, LocalDate date);
+    List<Task> findByMemberAndDate(Member member, LocalDate date);
 }
