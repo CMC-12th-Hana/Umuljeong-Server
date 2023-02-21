@@ -48,6 +48,12 @@ public class ClientCompanyResponseDto {
         private LocalDateTime createdAt;
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class UpdateClientCompany {
+        private Long clientCompanyId;
+        private LocalDateTime updatedAt;
     }
 }

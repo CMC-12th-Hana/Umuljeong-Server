@@ -1,7 +1,9 @@
 package cmc.hana.umuljeong.service.impl;
 
+import cmc.hana.umuljeong.converter.ClientCompanyConverter;
 import cmc.hana.umuljeong.domain.ClientCompany;
 import cmc.hana.umuljeong.domain.Company;
+import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.repository.ClientCompanyRepository;
 import cmc.hana.umuljeong.service.ClientCompanyService;
 import cmc.hana.umuljeong.web.dto.ClientCompanyRequestDto;
@@ -20,8 +22,22 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
 
     @Transactional
     @Override
-    public ClientCompany create(ClientCompanyRequestDto.CreateClientCompanyDto request) {
-        return null;
+    public ClientCompany create(ClientCompanyRequestDto.CreateClientCompanyDto request, Member member) {
+        ClientCompany clientCompany = ClientCompanyConverter.toClientCompany(request, member);
+        return clientCompanyRepository.save(clientCompany);
+    }
+
+
+    @Transactional
+    @Override
+    public ClientCompany update(Long clientCompanyId, ClientCompanyRequestDto.UpdateClientCompanyDto request, Member member) {
+        ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyId).get();
+        clientCompany.setName(request.getName());
+        clientCompany.setTel(request.getTel());
+        clientCompany.getSalesRepresentative().setName(request.getSalesRepresentativeDto().getName());
+        clientCompany.getSalesRepresentative().setDepartment(request.getSalesRepresentativeDto().getDepartment());
+        clientCompany.getSalesRepresentative().setPhoneNumber(request.getSalesRepresentativeDto().getPhoneNumber());
+        return clientCompany;
     }
 
     @Override

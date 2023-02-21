@@ -33,14 +33,15 @@ public class ClientCompanyRestController {
     }
 
     @PostMapping("/company/client")
-    public ResponseEntity<ClientCompanyResponseDto.CreateClientCompany> createClientCompany(@RequestBody ClientCompanyRequestDto.CreateClientCompanyDto request) {
-        ClientCompany clientCompany = clientCompanyService.create(request);
+    public ResponseEntity<ClientCompanyResponseDto.CreateClientCompany> createClientCompany(@RequestBody ClientCompanyRequestDto.CreateClientCompanyDto request, @AuthUser Member member) {
+        ClientCompany clientCompany = clientCompanyService.create(request, member);
         return ResponseEntity.ok(ClientCompanyConverter.toCreateClientCompany(clientCompany));
     }
 
-    @PatchMapping("/company/client")
-    public ResponseEntity<ClientCompanyResponseDto.UpdateClientCompany> updateClientCompany() {
-        return null;
+    @PatchMapping("/company/client/{clientId}")
+    public ResponseEntity<ClientCompanyResponseDto.UpdateClientCompany> updateClientCompany(@PathVariable(name = "clientId") Long clientCompanyId, @RequestBody ClientCompanyRequestDto.UpdateClientCompanyDto request, @AuthUser Member member) {
+        ClientCompany clientCompany = clientCompanyService.update(clientCompanyId, request, member);
+        return ResponseEntity.ok(ClientCompanyConverter.toUpdateClientCompany(clientCompany));
     }
 
 }

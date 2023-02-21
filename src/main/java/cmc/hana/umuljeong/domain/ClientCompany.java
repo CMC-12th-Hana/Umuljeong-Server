@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Builder
-@Getter
+@Getter @Setter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClientCompany extends BaseEntity {
@@ -25,11 +25,11 @@ public class ClientCompany extends BaseEntity {
 
     private String tel;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "sales_representative_id")
     private SalesRepresentative salesRepresentative;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "client_company_summary_id")
     private ClientCompanySummary clientCompanySummary;
 }
