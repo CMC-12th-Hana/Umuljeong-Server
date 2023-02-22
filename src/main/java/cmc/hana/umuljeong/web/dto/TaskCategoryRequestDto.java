@@ -8,12 +8,13 @@ public class TaskCategoryRequestDto {
     @Getter
     public static class CreateTaskCategoryDto {
         private String name;
+        private String color;
     }
 
     @Getter
     public static class UpdateTaskCategoryDto {
-        private Long taskCategoryId;
         private String name;
+        private String color;
     }
 
     @Getter

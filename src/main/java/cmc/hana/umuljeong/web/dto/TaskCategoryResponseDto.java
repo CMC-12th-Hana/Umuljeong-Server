@@ -7,16 +7,21 @@ import java.util.List;
 
 public class TaskCategoryResponseDto {
 
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class TaskCategoryDto {
         private Long taskCategoryId;
         private String name;
+        private String color;
     }
 
     @Builder
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class TaskCategoryDtoList {
+    public static class TaskCategoryListDto {
         List<TaskCategoryDto> taskCategoryDtoList;
         private Integer count;
     }
@@ -35,8 +40,8 @@ public class TaskCategoryResponseDto {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class UpdateTaskCategoryDto {
-        private Long taskId;
-        private String name;
+        private Long taskCategoryId;
+        private LocalDateTime updatedAt;
     }
 
     @Builder

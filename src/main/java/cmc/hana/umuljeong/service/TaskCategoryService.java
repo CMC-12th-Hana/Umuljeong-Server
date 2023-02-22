@@ -10,9 +10,11 @@ import java.util.List;
 public interface TaskCategoryService {
     TaskCategory create(Long companyId, TaskCategoryRequestDto.CreateTaskCategoryDto request);
 
-    List<TaskCategory> updateList(Long companyId, TaskCategoryRequestDto.UpdateTaskCategoryListDto request);
+    // List<TaskCategory> updateList(Long companyId, TaskCategoryRequestDto.UpdateTaskCategoryListDto request);
 
     void deleteList(TaskCategoryRequestDto.DeleteTaskCategoryListDto request);
 
     List<TaskCategory> findByCompany(Long companyId);
+
+    TaskCategory update(Long taskCategoryId, TaskCategoryRequestDto.UpdateTaskCategoryDto request);
 }

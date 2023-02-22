@@ -32,20 +32,22 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
         return taskCategoryRepository.save(taskCategory);
     }
 
-    private TaskCategory update(TaskCategoryRequestDto.UpdateTaskCategoryDto updateTaskCategoryDto) {
-        Long id = updateTaskCategoryDto.getTaskCategoryId();
-        TaskCategory taskCategory = taskCategoryRepository.findById(id).get(); // todo : 있는지 없는지 등은 컨트롤러 단에서 다 검증해서 넘기기
+    @Transactional
+    @Override
+    public TaskCategory update(Long taskCategoryId, TaskCategoryRequestDto.UpdateTaskCategoryDto updateTaskCategoryDto) {
+        TaskCategory taskCategory = taskCategoryRepository.findById(taskCategoryId).get(); // todo : 있는지 없는지 등은 컨트롤러 단에서 다 검증해서 넘기기
         taskCategory.setName(updateTaskCategoryDto.getName());
+        taskCategory.setColor(updateTaskCategoryDto.getColor());
         return taskCategory;
     }
 
-    @Transactional
-    @Override
-    public List<TaskCategory> updateList(Long companyId, TaskCategoryRequestDto.UpdateTaskCategoryListDto request) {
-        return request.getUpdateTaskCategoryDtoList().stream()
-                .map((updateTaskCategoryDto) -> update(updateTaskCategoryDto))
-                .collect(Collectors.toList());
-    }
+//    @Transactional
+//    @Override
+//    public List<TaskCategory> updateList(Long companyId, TaskCategoryRequestDto.UpdateTaskCategoryListDto request) {
+//        return request.getUpdateTaskCategoryDtoList().stream()
+//                .map((updateTaskCategoryDto) -> update(updateTaskCategoryDto))
+//                .collect(Collectors.toList());
+//    }
 
     @Transactional
     @Override

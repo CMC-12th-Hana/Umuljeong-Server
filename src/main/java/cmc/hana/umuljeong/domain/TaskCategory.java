@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Builder
-@Getter
+@Getter @Setter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TaskCategory extends BaseEntity {
@@ -22,7 +22,5 @@ public class TaskCategory extends BaseEntity {
 
     private String name;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    private String color;
 }

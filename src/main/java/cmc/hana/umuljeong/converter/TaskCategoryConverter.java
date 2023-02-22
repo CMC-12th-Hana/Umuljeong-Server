@@ -9,6 +9,7 @@ import cmc.hana.umuljeong.web.dto.TaskResponseDto;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskCategoryConverter {
 
@@ -31,9 +32,23 @@ public class TaskCategoryConverter {
                 .build();
     }
 
-    public static TaskCategoryResponseDto.TaskCategoryDtoList toTaskCategoryDtoList(List<TaskCategory> taskCategoryList) {
-        return TaskCategoryResponseDto.TaskCategoryDtoList.builder()
-                .taskCategoryDtoList(new ArrayList<>())
+    public static TaskCategoryResponseDto.TaskCategoryDto toTaskCategoryDto(TaskCategory taskCategory) {
+        return TaskCategoryResponseDto.TaskCategoryDto.builder()
+                .taskCategoryId(taskCategory.getId())
+                .name(taskCategory.getName())
+                .color(taskCategory.getColor())
+                .build();
+    }
+
+    public static List<TaskCategoryResponseDto.TaskCategoryDto> toTaskCategoryDtoList(List<TaskCategory> taskCategoryList) {
+        return taskCategoryList.stream()
+                .map(taskCategory -> toTaskCategoryDto(taskCategory))
+                .collect(Collectors.toList());
+    }
+
+    public static TaskCategoryResponseDto.TaskCategoryListDto toTaskCategoryListDto(List<TaskCategory> taskCategoryList) {
+        return TaskCategoryResponseDto.TaskCategoryListDto.builder()
+                .taskCategoryDtoList(toTaskCategoryDtoList(taskCategoryList))
                 .count(taskCategoryList.size())
                 .build();
     }
@@ -42,6 +57,13 @@ public class TaskCategoryConverter {
         return TaskCategory.builder()
                 .company(company)
                 .name(request.getName())
+                .build();
+    }
+
+    public static TaskCategoryResponseDto.UpdateTaskCategoryDto toUpdateTaskCategory(TaskCategory taskCategory) {
+        return TaskCategoryResponseDto.UpdateTaskCategoryDto.builder()
+                .taskCategoryId(taskCategory.getId())
+                .updatedAt(taskCategory.getUpdatedAt())
                 .build();
     }
 }
