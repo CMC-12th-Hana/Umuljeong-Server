@@ -4,6 +4,7 @@ import cmc.hana.umuljeong.auth.annotation.AuthUser;
 import cmc.hana.umuljeong.converter.TaskConverter;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.Task;
+import cmc.hana.umuljeong.domain.enums.MemberRole;
 import cmc.hana.umuljeong.service.TaskService;
 import cmc.hana.umuljeong.util.MemberUtil;
 import cmc.hana.umuljeong.web.dto.TaskRequestDto;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,8 +24,20 @@ public class TaskRestController {
 
     private final TaskService taskService;
 
+    @GetMapping("/company/{companyId}/client/business/tasks")
+    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskList(@PathVariable(name = "companyId") Long companyId, @RequestParam(name = "date") LocalDate date, @AuthUser Member member) {
+        List<Task> taskList;
+        if(member.getMemberRole() == MemberRole.LEADER) {
+            taskList = taskService.findByCompanyAndDate(companyId, date);
+            return ResponseEntity.ok(TaskConverter.toLeaderTaskListDto(taskList));
+        }
+
+        taskList = taskService.findByMemberAndDate(member, date);
+        return ResponseEntity.ok(TaskConverter.toStaffTaskListDto(taskList));
+    }
+
     @GetMapping("/company/client/business/{businessId}/tasks")
-    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskList(@PathVariable(name = "businessId") Long businessId, @RequestParam(name = "date") LocalDate date, @AuthUser Member member) {
+    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskListByBusiness(@PathVariable(name = "businessId") Long businessId, @RequestParam(name = "date") LocalDate date, @AuthUser Member member) {
         List<Task> taskList = taskService.findByBusinessAndMemberAndDate(businessId, member, date);
         return ResponseEntity.ok(TaskConverter.toTaskListDto(taskList));
     }

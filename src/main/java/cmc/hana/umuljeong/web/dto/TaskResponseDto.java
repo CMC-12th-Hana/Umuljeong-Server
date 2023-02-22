@@ -19,12 +19,37 @@ public class TaskResponseDto {
     }
 
     @Builder
-    @Getter
+    @Getter @Setter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class MemberDto {
+        private String name;
+        private List<TaskDto> taskDtoList;
+        private Integer count;
+    }
+
+    @Builder
+    @Getter @Setter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class TaskListDto {
-        private List<TaskDto> taskDtoList;
         private Integer count;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class LeaderTaskListDto extends TaskListDto {
+        private List<MemberDto> memberDtoList;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class StaffTaskListDto extends TaskListDto {
+        private List<TaskDto> taskDtoList;
     }
 
     @Builder
