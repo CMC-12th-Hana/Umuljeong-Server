@@ -1,7 +1,9 @@
 package cmc.hana.umuljeong.service.impl;
 
+import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.Task;
+import cmc.hana.umuljeong.repository.BusinessRepository;
 import cmc.hana.umuljeong.repository.TaskRepository;
 import cmc.hana.umuljeong.service.TaskService;
 import cmc.hana.umuljeong.web.dto.TaskRequestDto;
@@ -18,6 +20,7 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final BusinessRepository businessRepository;
 
     @Transactional
     @Override
@@ -28,5 +31,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> findByMemberAndDate(Member member, LocalDate date) {
         return taskRepository.findByMemberAndDate(member, date);
+    }
+
+    @Override
+    public List<Task> findByBusinessAndMemberAndDate(Long businessId, Member member, LocalDate date) {
+        Business business = businessRepository.findById(businessId).get();
+        return taskRepository.findByBusinessAndMemberAndDate(business, member, date);
     }
 }

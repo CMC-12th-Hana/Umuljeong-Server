@@ -11,4 +11,6 @@ public interface TaskService {
     Task create(TaskRequestDto.CreateTaskDto request);
 
     List<Task> findByMemberAndDate(Member member, LocalDate date);
+
+    List<Task> findByBusinessAndMemberAndDate(Long businessId, Member member, LocalDate date);
 }

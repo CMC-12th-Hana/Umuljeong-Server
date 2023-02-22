@@ -5,6 +5,7 @@ import cmc.hana.umuljeong.domain.TaskCategory;
 import cmc.hana.umuljeong.web.dto.TaskResponseDto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskConverter {
 
@@ -15,7 +16,25 @@ public class TaskConverter {
                 .build();
     }
 
+    public static TaskResponseDto.TaskDto toTaskDto(Task task) {
+        return TaskResponseDto.TaskDto.builder()
+                .taskId(task.getId())
+                .taskCategory(task.getTaskCategory().getName())
+                .clientName(task.getBusiness().getClientCompany().getName())
+                .businessName(task.getBusiness().getName())
+                .build();
+    }
+
+    public static List<TaskResponseDto.TaskDto> toTaskDtoList(List<Task> taskList) {
+        return taskList.stream()
+                .map(task -> toTaskDto(task))
+                .collect(Collectors.toList());
+    }
+
     public static TaskResponseDto.TaskListDto toTaskListDto(List<Task> taskList) {
-        return new TaskResponseDto.TaskListDto();
+        return TaskResponseDto.TaskListDto.builder()
+                .taskDtoList(toTaskDtoList(taskList))
+                .count(taskList.size())
+                .build();
     }
 }
