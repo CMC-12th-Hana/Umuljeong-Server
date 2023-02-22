@@ -26,6 +26,7 @@ public class TaskConverter {
                 .taskCategory(task.getTaskCategory().getName())
                 .clientName(task.getBusiness().getClientCompany().getName())
                 .businessName(task.getBusiness().getName())
+                .date(task.getDate())
                 .build();
     }
 

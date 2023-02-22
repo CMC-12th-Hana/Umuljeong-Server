@@ -2,6 +2,7 @@ package cmc.hana.umuljeong.web.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class TaskResponseDto {
         private String businessName;
         private String clientName;
         private String taskCategory;
+        private LocalDate date;
     }
 
     @Builder

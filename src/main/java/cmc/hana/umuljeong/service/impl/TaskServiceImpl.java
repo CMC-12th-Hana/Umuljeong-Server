@@ -47,4 +47,9 @@ public class TaskServiceImpl implements TaskService {
         Company company = companyRepository.findById(companyId).get();
         return taskRepository.findByCompanyAndDate(company, date);
     }
+
+    @Override
+    public Task findById(Long taskId) {
+        return taskRepository.findById(taskId).get();
+    }
 }

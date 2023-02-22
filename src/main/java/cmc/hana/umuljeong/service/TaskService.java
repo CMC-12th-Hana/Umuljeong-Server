@@ -15,4 +15,6 @@ public interface TaskService {
     List<Task> findByBusinessAndMemberAndDate(Long businessId, Member member, LocalDate date);
 
     List<Task> findByCompanyAndDate(Long companyId, LocalDate date);
+
+    Task findById(Long taskId);
 }

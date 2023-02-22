@@ -9,7 +9,6 @@ import java.util.List;
 public class TaskRequestDto {
     public static class CreateTaskDto {
         private Long clientCompanyId;
-        private Long businessId;
         private Long taskCategoryId;
         private LocalDate date;
         private String description;

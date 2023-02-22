@@ -24,6 +24,12 @@ public class TaskRestController {
 
     private final TaskService taskService;
 
+    @GetMapping("/company/client/business/task/{taskId}")
+    public ResponseEntity<TaskResponseDto.TaskDto> getTask(@PathVariable(name = "taskId") Long taskId) {
+        Task task = taskService.findById(taskId);
+        return ResponseEntity.ok(TaskConverter.toTaskDto(task));
+    }
+
     @GetMapping("/company/{companyId}/client/business/tasks")
     public ResponseEntity<TaskResponseDto.TaskListDto> getTaskList(@PathVariable(name = "companyId") Long companyId, @RequestParam(name = "date") LocalDate date, @AuthUser Member member) {
         List<Task> taskList;
