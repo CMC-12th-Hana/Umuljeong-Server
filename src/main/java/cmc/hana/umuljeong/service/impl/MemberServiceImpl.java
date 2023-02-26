@@ -32,7 +32,6 @@ public class MemberServiceImpl implements MemberService {
         Optional<Member> optionalMember = memberRepository.findByPhoneNumber(joinDto.getPhoneNumber());
         if(optionalMember.isPresent()) {
             Member member = optionalMember.get();
-            member.setEmail(joinDto.getEmail());
             member.setPassword(passwordEncoder.encode(joinDto.getPassword()));
             member.setIsEnabled(Boolean.TRUE);
             return member;

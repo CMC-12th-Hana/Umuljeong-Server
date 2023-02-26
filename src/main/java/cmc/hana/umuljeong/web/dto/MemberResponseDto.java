@@ -18,7 +18,6 @@ public class MemberResponseDto {
         private String staffRank;
         // todo : 사내 전화번호?....
         private String phoneNumber;
-        private String email;
         private String staffNumber;
     }
 

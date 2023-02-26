@@ -38,7 +38,6 @@ public class MemberConverter {
                 .company(null)
                 .memberRole(MemberRole.STAFF)
                 .name(joinDto.getName())
-                .email(joinDto.getEmail())
                 .phoneNumber(joinDto.getPhoneNumber())
                 .password(staticPasswordEncoder.encode(joinDto.getPassword()))
                 .isEnabled(Boolean.TRUE)
@@ -50,7 +49,6 @@ public class MemberConverter {
                 .company(null)
                 .memberRole(MemberRole.STAFF)
                 .name(createDto.getName())
-                .email(null)
                 .phoneNumber(createDto.getPhoneNumber())
                 .password(null)
                 .staffRank(createDto.getStaffRank())
@@ -70,7 +68,6 @@ public class MemberConverter {
                 .companyName(member.getCompany().getName())
                 .staffRank("대리")
                 .phoneNumber(member.getPhoneNumber())
-                .email(member.getEmail())
                 .staffNumber("121221")
                 .build();
     }
