@@ -10,6 +10,8 @@ import cmc.hana.umuljeong.service.BusinessMemberService;
 import cmc.hana.umuljeong.service.BusinessService;
 import cmc.hana.umuljeong.service.ClientCompanyService;
 import cmc.hana.umuljeong.service.MemberService;
+import cmc.hana.umuljeong.validation.annotation.ExistBusiness;
+import cmc.hana.umuljeong.validation.annotation.ExistClientCompany;
 import cmc.hana.umuljeong.web.dto.BusinessRequestDto;
 import cmc.hana.umuljeong.web.dto.BusinessResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +30,14 @@ public class BusinessRestController {
 
 
     @GetMapping("/company/client/business/{businessId}")
-    public ResponseEntity<BusinessResponseDto.BusinessDto> getBusiness(@PathVariable(name = "businessId") Long businessId, @AuthUser Member member) {
+    public ResponseEntity<BusinessResponseDto.BusinessDto> getBusiness(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @AuthUser Member member) {
         // todo : 해당 사업이 멤버의 회사에 속한 사업인지 검증
         Business business = businessService.findById(businessId);
         return ResponseEntity.ok(BusinessConverter.toBusinessDto(business));
     }
 
     @GetMapping("/company/client/{clientId}/businesses")
-    public ResponseEntity<BusinessResponseDto.BusinessListDto> getBusinessList(@PathVariable(name = "clientId") Long clientCompanyId, @AuthUser Member member) {
+    public ResponseEntity<BusinessResponseDto.BusinessListDto> getBusinessList(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @AuthUser Member member) {
         // todo : 존재하는 id 인지 & 멤버의 회사에 속한 고객사인지 검증
         ClientCompany clientCompany = clientCompanyService.findById(clientCompanyId);
         List<Business> businessList = businessService.findByClientCompany(clientCompany);
@@ -43,7 +45,7 @@ public class BusinessRestController {
     }
 
     @PostMapping("/company/client/{clientId}/business")
-    public ResponseEntity<BusinessResponseDto.CreateBusinessDto> createBusiness(@PathVariable(name = "clientId") Long clientCompanyId, @RequestBody BusinessRequestDto.CreateBusinessDto request) {
+    public ResponseEntity<BusinessResponseDto.CreateBusinessDto> createBusiness(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @RequestBody BusinessRequestDto.CreateBusinessDto request) {
         Business business = businessService.create(clientCompanyId, request);
         return ResponseEntity.ok(BusinessConverter.toCreateBusinessDto(business));
     }

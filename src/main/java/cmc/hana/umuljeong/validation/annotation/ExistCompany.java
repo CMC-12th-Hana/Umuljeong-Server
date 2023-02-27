@@ -1,0 +1,18 @@
+package cmc.hana.umuljeong.validation.annotation;
+
+
+import cmc.hana.umuljeong.validation.validator.CompanyExistValidator;
+
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import java.lang.annotation.*;
+
+@Documented
+@Constraint(validatedBy = CompanyExistValidator.class)
+@Target( { ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ExistCompany {
+    String message() default "해당하는 회사가 존재하지 않습니다.";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
+}

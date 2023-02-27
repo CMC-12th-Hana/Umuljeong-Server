@@ -30,7 +30,7 @@ public class TaskResponseDto {
         private Integer count;
     }
 
-    @Builder
+    // @Builder
     @Getter @Setter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
