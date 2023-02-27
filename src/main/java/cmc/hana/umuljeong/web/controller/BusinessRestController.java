@@ -14,6 +14,8 @@ import cmc.hana.umuljeong.validation.annotation.ExistBusiness;
 import cmc.hana.umuljeong.validation.annotation.ExistClientCompany;
 import cmc.hana.umuljeong.web.dto.BusinessRequestDto;
 import cmc.hana.umuljeong.web.dto.BusinessResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Business API", description = "사업 조회, 추가")
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +33,7 @@ public class BusinessRestController {
     private final ClientCompanyService clientCompanyService;
     private final BusinessMemberService businessMemberService;
 
-
+    @Operation(summary = "[003_04]", description = "사업 조회")
     @GetMapping("/company/client/business/{businessId}")
     public ResponseEntity<BusinessResponseDto.BusinessDto> getBusiness(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @AuthUser Member member) {
         // todo : 해당 사업이 멤버의 회사에 속한 사업인지 검증
@@ -46,6 +49,7 @@ public class BusinessRestController {
         return ResponseEntity.ok(BusinessConverter.toBusinessListDto(businessList));
     }
 
+    @Operation(summary = "[003_04_1]", description = "사업 추가")
     @PostMapping("/company/client/{clientId}/business")
     public ResponseEntity<BusinessResponseDto.CreateBusinessDto> createBusiness(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @RequestBody BusinessRequestDto.CreateBusinessDto request) {
         Business business = businessService.create(clientCompanyId, request);

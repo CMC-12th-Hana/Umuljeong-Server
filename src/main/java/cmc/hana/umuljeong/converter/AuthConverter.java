@@ -17,4 +17,12 @@ public class AuthConverter {
                 .accessToken(accessToken)
                 .build();
     }
+
+    public static AuthResponseDto.JoinCompanyDto toJoinCompanyDto(Member joinedMember) {
+        return AuthResponseDto.JoinCompanyDto.builder()
+                .memberId(joinedMember.getId())
+                .joinCompanyStatus(joinedMember.getJoinCompanyStatus())
+                .joinedAt(joinedMember.getUpdatedAt())
+                .build();
+    }
 }

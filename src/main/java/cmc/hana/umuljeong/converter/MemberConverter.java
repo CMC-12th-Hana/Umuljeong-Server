@@ -1,6 +1,7 @@
 package cmc.hana.umuljeong.converter;
 
 import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.domain.enums.JoinCompanyStatus;
 import cmc.hana.umuljeong.domain.enums.MemberRole;
 import cmc.hana.umuljeong.exception.ErrorCode;
 import cmc.hana.umuljeong.exception.MemberException;
@@ -41,6 +42,7 @@ public class MemberConverter {
                 .phoneNumber(joinDto.getPhoneNumber())
                 .password(staticPasswordEncoder.encode(joinDto.getPassword()))
                 .isEnabled(Boolean.TRUE)
+                .joinCompanyStatus(JoinCompanyStatus.PENDING)
                 .build();
     }
 
@@ -54,6 +56,7 @@ public class MemberConverter {
                 .staffRank(createDto.getStaffRank())
                 .staffNumber(createDto.getStaffNumber())
                 .isEnabled(Boolean.FALSE)
+                .joinCompanyStatus(JoinCompanyStatus.PENDING)
                 .build();
     }
 

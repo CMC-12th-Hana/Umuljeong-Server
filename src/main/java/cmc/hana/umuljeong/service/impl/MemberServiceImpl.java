@@ -4,6 +4,7 @@ import cmc.hana.umuljeong.converter.MemberConverter;
 import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.domain.enums.JoinCompanyStatus;
 import cmc.hana.umuljeong.repository.CompanyRepository;
 import cmc.hana.umuljeong.repository.MemberRepository;
 import cmc.hana.umuljeong.service.MemberService;
@@ -37,6 +38,13 @@ public class MemberServiceImpl implements MemberService {
             return member;
         }
         return memberRepository.save(MemberConverter.toMember(joinDto));
+    }
+
+    @Transactional
+    @Override
+    public Member joinCompany(Member member) {
+        member.setJoinCompanyStatus(JoinCompanyStatus.JOINED);
+        return member;
     }
 
     @Transactional

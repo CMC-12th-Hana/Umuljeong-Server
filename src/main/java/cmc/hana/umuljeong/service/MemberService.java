@@ -14,4 +14,6 @@ public interface MemberService {
     Member create(Long companyId, MemberRequestDto.CreateDto request);
 
     List<Member> findByCompany(Long companyId);
+
+    Member joinCompany(Member member);
 }

@@ -1,6 +1,7 @@
 package cmc.hana.umuljeong.domain;
 
 import cmc.hana.umuljeong.domain.common.BaseEntity;
+import cmc.hana.umuljeong.domain.enums.JoinCompanyStatus;
 import cmc.hana.umuljeong.domain.enums.MemberRole;
 import lombok.*;
 import org.springframework.security.core.parameters.P;
@@ -37,6 +38,9 @@ public class Member extends BaseEntity {
     private String staffNumber; // 사원번호
 
     private Boolean isEnabled;
+
+    @Enumerated(EnumType.STRING)
+    private JoinCompanyStatus joinCompanyStatus;
 
     public void setCompany(Company company) {
         this.company = company;

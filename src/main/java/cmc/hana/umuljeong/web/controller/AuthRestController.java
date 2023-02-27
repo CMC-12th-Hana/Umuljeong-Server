@@ -1,5 +1,6 @@
 package cmc.hana.umuljeong.web.controller;
 
+import cmc.hana.umuljeong.auth.annotation.AuthUser;
 import cmc.hana.umuljeong.auth.filter.JwtFilter;
 import cmc.hana.umuljeong.auth.provider.TokenProvider;
 import cmc.hana.umuljeong.converter.AuthConverter;
@@ -8,6 +9,8 @@ import cmc.hana.umuljeong.service.MemberService;
 import cmc.hana.umuljeong.web.dto.AuthRequestDto;
 import cmc.hana.umuljeong.web.dto.AuthResponseDto;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 
@@ -17,10 +20,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Auth API", description = "로그인, 회원가입")
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -43,6 +48,7 @@ public class AuthRestController {
         return tokenProvider.createToken(authentication);
     }
 
+    @Operation(summary = "[001_01]", description = "로그인")
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDto.LoginDto> login(@RequestBody AuthRequestDto.LoginDto loginDto) {
 
@@ -56,6 +62,7 @@ public class AuthRestController {
                 .body(AuthConverter.toLoginDto(accessToken));
     }
 
+    @Operation(summary = "[001_02]", description = "회원가입")
     @PostMapping("/join")
     public ResponseEntity<AuthResponseDto.JoinDto> join(@RequestBody AuthRequestDto.JoinDto joinDto) {
         // todo : 전화번호(ID) 중복 및 인증, 이메일 중복 처리 방안
@@ -75,5 +82,11 @@ public class AuthRestController {
         return ResponseEntity.ok()
                 .headers(httpHeaders)
                 .body(AuthConverter.toJoinDto(member, accessToken));
+    }
+
+    @PatchMapping("/company/join")
+    public ResponseEntity<AuthResponseDto.JoinCompanyDto> joinCompany(@AuthUser Member member) {
+        Member joinedMember = memberService.joinCompany(member);
+        return ResponseEntity.ok(AuthConverter.toJoinCompanyDto(joinedMember));
     }
 }
