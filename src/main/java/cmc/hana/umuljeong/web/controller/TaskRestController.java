@@ -15,12 +15,14 @@ import cmc.hana.umuljeong.web.dto.TaskResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Parameter;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 public class TaskRestController {
