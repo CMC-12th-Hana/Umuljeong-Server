@@ -16,4 +16,6 @@ public interface MemberService {
     List<Member> findByCompany(Long companyId);
 
     Member joinCompany(Member member);
+
+    Member updateProfile(Member member, MemberRequestDto.UpdateProfileDto request);
 }

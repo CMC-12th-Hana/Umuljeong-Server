@@ -17,4 +17,6 @@ public interface TaskService {
     List<Task> findByCompanyAndDate(Long companyId, LocalDate date);
 
     Task findById(Long taskId);
+
+    Task update(TaskRequestDto.UpdateTaskDto request);
 }

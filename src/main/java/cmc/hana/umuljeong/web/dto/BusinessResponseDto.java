@@ -55,4 +55,12 @@ public class BusinessResponseDto {
         private List<BusinessDto> businessDtoList;
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UpdateBusinessDto {
+        private Long businessId;
+        private LocalDateTime updatedAt;
+    }
 }

@@ -31,6 +31,12 @@ public class TaskServiceImpl implements TaskService {
         return null;
     }
 
+    @Transactional
+    @Override
+    public Task update(TaskRequestDto.UpdateTaskDto request) {
+        return null;
+    }
+
     @Override
     public List<Task> findByMemberAndDate(Member member, LocalDate date) {
         return taskRepository.findByMemberAndDate(member, date);

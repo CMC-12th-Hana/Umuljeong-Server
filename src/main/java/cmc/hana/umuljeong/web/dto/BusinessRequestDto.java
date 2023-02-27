@@ -21,4 +21,13 @@ public class BusinessRequestDto {
         private Integer revenue;
         private String description;
     }
+
+    @Getter
+    public static class UpdateBusinessDto {
+        private String name;
+        private BusinessPeriodDto businessPeriodDto;
+        private List<Long> memberIdList;
+        private Integer revenue;
+        private String description;
+    }
 }

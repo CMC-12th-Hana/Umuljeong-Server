@@ -84,9 +84,12 @@ public class AuthRestController {
                 .body(AuthConverter.toJoinDto(member, accessToken));
     }
 
+    @Operation(summary = "[001_04]", description = "회사 합류")
     @PatchMapping("/company/join")
     public ResponseEntity<AuthResponseDto.JoinCompanyDto> joinCompany(@AuthUser Member member) {
         Member joinedMember = memberService.joinCompany(member);
         return ResponseEntity.ok(AuthConverter.toJoinCompanyDto(joinedMember));
     }
+
+
 }

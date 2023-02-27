@@ -51,9 +51,19 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member create(Long companyId, MemberRequestDto.CreateDto request) {
         Company company = companyRepository.findById(companyId).get();
+        // todo : 멤버의 전화번호로 조회해서 멤버가 먼저 가입한 경우도 예외처리
+
         Member member = MemberConverter.toMember(request);
         member.setCompany(company);
         return memberRepository.save(member);
+    }
+
+    @Transactional
+    @Override
+    public Member updateProfile(Member member, MemberRequestDto.UpdateProfileDto request) {
+        member.setName(request.getName());
+        member.setStaffNumber(request.getStaffNumber());
+        return member;
     }
 
     @Override

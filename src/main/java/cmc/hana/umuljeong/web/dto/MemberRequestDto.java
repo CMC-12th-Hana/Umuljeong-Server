@@ -11,4 +11,10 @@ public class MemberRequestDto {
         private String staffRank;
         private String staffNumber;
     }
+
+    @Getter
+    public class UpdateProfileDto {
+        private String name;
+        private String staffNumber;
+    }
 }

@@ -37,4 +37,13 @@ public class MemberResponseDto {
         private Long memberId;
         private LocalDateTime createdAt;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UpdateProfileDto {
+        private Long memberId;
+        private LocalDateTime updatedAt;
+    }
 }

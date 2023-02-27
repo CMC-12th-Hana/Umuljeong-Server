@@ -28,6 +28,13 @@ public class MemberConverter {
     private static PasswordEncoder staticPasswordEncoder;
     private static MemberRepository staticMemberRepository;
 
+    public static MemberResponseDto.UpdateProfileDto toUpdateProfileDto(Member updatedMember) {
+        return MemberResponseDto.UpdateProfileDto.builder()
+                .memberId(updatedMember.getId())
+                .updatedAt(updatedMember.getUpdatedAt())
+                .build();
+    }
+
     @PostConstruct
     public void init() {
         staticPasswordEncoder = this.passwordEncoder;

@@ -62,4 +62,13 @@ public class TaskResponseDto {
         private Long taskId;
         private LocalDateTime createdAt;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UpdateTaskDto {
+        private Long taskId;
+        private LocalDateTime updatedAt;
+    }
 }

@@ -22,6 +22,13 @@ public class BusinessConverter {
 
     private static MemberRepository staticMemberRepository;
 
+    public static BusinessResponseDto.UpdateBusinessDto toUpdateBusinessDto(Business business) {
+        return BusinessResponseDto.UpdateBusinessDto.builder()
+                .businessId(business.getId())
+                .updatedAt(business.getUpdatedAt())
+                .build();
+    }
+
     @PostConstruct
     void init() {
         staticMemberRepository = this.memberRepository;
@@ -31,6 +38,13 @@ public class BusinessConverter {
         return BusinessResponseDto.CreateBusinessDto.builder()
                 .businessId(business.getId())
                 .createdAt(business.getCreatedAt())
+                .build();
+    }
+
+    public static BusinessPeriod toBusinessPeriod(BusinessRequestDto.BusinessPeriodDto businessPeriodDto) {
+        return BusinessPeriod.builder()
+                .start(businessPeriodDto.getStart())
+                .finish(businessPeriodDto.getFinish())
                 .build();
     }
 

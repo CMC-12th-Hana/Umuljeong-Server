@@ -75,4 +75,11 @@ public class TaskConverter {
 
         return leaderTaskListDto;
     }
+
+    public static TaskResponseDto.UpdateTaskDto toUpdateTaskDto(Task task) {
+        return TaskResponseDto.UpdateTaskDto.builder()
+                .taskId(task.getId())
+                .updatedAt(task.getUpdatedAt())
+                .build();
+    }
 }

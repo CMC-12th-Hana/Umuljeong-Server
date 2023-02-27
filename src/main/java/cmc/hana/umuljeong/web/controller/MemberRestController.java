@@ -38,6 +38,13 @@ public class MemberRestController {
         return ResponseEntity.ok(MemberConverter.toProfileDto(member));
     }
 
+    @Operation(summary = "[005_03]", description = "사원 프로필 수정")
+    @PatchMapping("/company/member/profile")
+    public ResponseEntity<MemberResponseDto.UpdateProfileDto> updateProfile(@RequestBody MemberRequestDto.UpdateProfileDto request, @AuthUser Member member) {
+        Member updatedMember = memberService.updateProfile(member, request);
+        return ResponseEntity.ok(MemberConverter.toUpdateProfileDto(updatedMember));
+    }
+
     @Operation(summary = "[005_02.1]", description = "사원 추가")
     @PostMapping("/company/{companyId}/member")
     public ResponseEntity<MemberResponseDto.CreateDto> create(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody MemberRequestDto.CreateDto request, @AuthUser Member leader) {

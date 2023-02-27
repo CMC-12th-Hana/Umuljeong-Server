@@ -55,4 +55,11 @@ public class BusinessRestController {
         Business business = businessService.create(clientCompanyId, request);
         return ResponseEntity.ok(BusinessConverter.toCreateBusinessDto(business));
     }
+
+    @Operation(summary = "[003_04_2]", description = "사업 수정")
+    @PatchMapping("/company/client/business/{businessId}")
+    public ResponseEntity<BusinessResponseDto.UpdateBusinessDto> updateBusiness(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @RequestBody BusinessRequestDto.UpdateBusinessDto request, @AuthUser Member member) {
+        Business business = businessService.update(businessId, request);
+        return ResponseEntity.ok(BusinessConverter.toUpdateBusinessDto(business));
+    }
 }
