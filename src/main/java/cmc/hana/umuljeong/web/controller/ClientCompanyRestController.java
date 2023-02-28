@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Tag(name = "ClientCompany API", description = "고객사 조회, 추가, 수정")
@@ -43,7 +44,7 @@ public class ClientCompanyRestController {
 
     @Operation(summary = "[003_02]", description = "고객사 추가")
     @PostMapping("/company/{companyId}/client")
-    public ResponseEntity<ClientCompanyResponseDto.CreateClientCompany> createClientCompany(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody ClientCompanyRequestDto.CreateClientCompanyDto request, @AuthUser Member member) {
+    public ResponseEntity<ClientCompanyResponseDto.CreateClientCompany> createClientCompany(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody @Valid ClientCompanyRequestDto.CreateClientCompanyDto request, @AuthUser Member member) {
         // todo : 본인의 회사에만 등록할 수 있도록 예외처리
         ClientCompany clientCompany = clientCompanyService.create(request, companyId);
         return ResponseEntity.ok(ClientCompanyConverter.toCreateClientCompany(clientCompany));
@@ -51,7 +52,7 @@ public class ClientCompanyRestController {
 
     @Operation(summary = "[003_03_1]", description = "고객사 수정")
     @PatchMapping("/company/client/{clientId}")
-    public ResponseEntity<ClientCompanyResponseDto.UpdateClientCompany> updateClientCompany(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @RequestBody ClientCompanyRequestDto.UpdateClientCompanyDto request, @AuthUser Member member) {
+    public ResponseEntity<ClientCompanyResponseDto.UpdateClientCompany> updateClientCompany(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @RequestBody @Valid ClientCompanyRequestDto.UpdateClientCompanyDto request, @AuthUser Member member) {
         // todo : 본인 회사의 고객사만 수정할 수 있도록 예외처리
         ClientCompany clientCompany = clientCompanyService.update(clientCompanyId, request, member);
         return ResponseEntity.ok(ClientCompanyConverter.toUpdateClientCompany(clientCompany));

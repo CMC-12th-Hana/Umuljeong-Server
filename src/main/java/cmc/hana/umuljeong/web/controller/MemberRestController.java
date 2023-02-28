@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Tag(name = "Member API", description = "사원 조회, 추가")
@@ -40,14 +41,14 @@ public class MemberRestController {
 
     @Operation(summary = "[005_03]", description = "사원 프로필 수정")
     @PatchMapping("/company/member/profile")
-    public ResponseEntity<MemberResponseDto.UpdateProfileDto> updateProfile(@RequestBody MemberRequestDto.UpdateProfileDto request, @AuthUser Member member) {
+    public ResponseEntity<MemberResponseDto.UpdateProfileDto> updateProfile(@RequestBody @Valid MemberRequestDto.UpdateProfileDto request, @AuthUser Member member) {
         Member updatedMember = memberService.updateProfile(member, request);
         return ResponseEntity.ok(MemberConverter.toUpdateProfileDto(updatedMember));
     }
 
     @Operation(summary = "[005_02.1]", description = "사원 추가")
     @PostMapping("/company/{companyId}/member")
-    public ResponseEntity<MemberResponseDto.CreateDto> create(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody MemberRequestDto.CreateDto request, @AuthUser Member leader) {
+    public ResponseEntity<MemberResponseDto.CreateDto> create(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody @Valid MemberRequestDto.CreateDto request, @AuthUser Member leader) {
         // todo : 리더권한 & 회사랑 멤버가 일치하는지
         Member createdMember = memberService.create(companyId, request);
         return ResponseEntity.ok(MemberConverter.toCreateDto(createdMember));

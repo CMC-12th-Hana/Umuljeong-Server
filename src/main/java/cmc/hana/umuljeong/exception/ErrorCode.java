@@ -7,6 +7,7 @@ public enum ErrorCode {
     // Common
     FORBIDDEN(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증정보가 유효하지 않습니다."),
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
 
     // Member
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 사용자가 존재하지 않습니다."),

@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Tag(name = "Business API", description = "사업 조회, 추가")
@@ -51,14 +52,14 @@ public class BusinessRestController {
 
     @Operation(summary = "[003_04_1]", description = "사업 추가")
     @PostMapping("/company/client/{clientId}/business")
-    public ResponseEntity<BusinessResponseDto.CreateBusinessDto> createBusiness(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @RequestBody BusinessRequestDto.CreateBusinessDto request) {
+    public ResponseEntity<BusinessResponseDto.CreateBusinessDto> createBusiness(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @RequestBody @Valid BusinessRequestDto.CreateBusinessDto request) {
         Business business = businessService.create(clientCompanyId, request);
         return ResponseEntity.ok(BusinessConverter.toCreateBusinessDto(business));
     }
 
     @Operation(summary = "[003_04_2]", description = "사업 수정")
     @PatchMapping("/company/client/business/{businessId}")
-    public ResponseEntity<BusinessResponseDto.UpdateBusinessDto> updateBusiness(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @RequestBody BusinessRequestDto.UpdateBusinessDto request, @AuthUser Member member) {
+    public ResponseEntity<BusinessResponseDto.UpdateBusinessDto> updateBusiness(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @RequestBody @Valid BusinessRequestDto.UpdateBusinessDto request, @AuthUser Member member) {
         Business business = businessService.update(businessId, request);
         return ResponseEntity.ok(BusinessConverter.toUpdateBusinessDto(business));
     }

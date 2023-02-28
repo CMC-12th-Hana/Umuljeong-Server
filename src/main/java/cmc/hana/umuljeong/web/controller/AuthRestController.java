@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @Tag(name = "Auth API", description = "로그인, 회원가입")
 @Validated
 @RestController
@@ -50,7 +52,7 @@ public class AuthRestController {
 
     @Operation(summary = "[001_01]", description = "로그인")
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto.LoginDto> login(@RequestBody AuthRequestDto.LoginDto loginDto) {
+    public ResponseEntity<AuthResponseDto.LoginDto> login(@RequestBody @Valid AuthRequestDto.LoginDto loginDto) {
 
         String accessToken = createTokenByPhoneNumberAndPassword(loginDto.getPhoneNumber(), loginDto.getPassword());
 
@@ -64,7 +66,7 @@ public class AuthRestController {
 
     @Operation(summary = "[001_02]", description = "회원가입")
     @PostMapping("/join")
-    public ResponseEntity<AuthResponseDto.JoinDto> join(@RequestBody AuthRequestDto.JoinDto joinDto) {
+    public ResponseEntity<AuthResponseDto.JoinDto> join(@RequestBody @Valid AuthRequestDto.JoinDto joinDto) {
         // todo : 전화번호(ID) 중복 및 인증, 이메일 중복 처리 방안
         /*
             1. 신규 사용자 디비에 저장 or 갱신

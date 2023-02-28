@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @Tag(name = "Company API", description = "회사 추가")
 @Validated
 @RestController
@@ -27,7 +29,7 @@ public class CompanyRestController {
     // todo : 이미 회사에 소속되어 있으면 생성할 수 없도록
     @Operation(summary = "[001_05]", description = "회사 추가")
     @PostMapping("/company")
-    public ResponseEntity<CompanyResponseDto.CompanyCreateDto> createCompany(@RequestBody CompanyRequestDto.CompanyCreateDto request, @AuthUser Member member) {
+    public ResponseEntity<CompanyResponseDto.CompanyCreateDto> createCompany(@RequestBody @Valid CompanyRequestDto.CompanyCreateDto request, @AuthUser Member member) {
         Company company = companyService.create(member, request);
         return ResponseEntity.ok(CompanyConverter.toCompanyCreateDto(company));
     }

@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Tag(name = "TaskCategory API", description = "업무 카테고리 조회, 추가, 수정, 삭제")
@@ -36,7 +37,7 @@ public class TaskCategoryRestController {
 
     @Operation(summary = "[006_02.2]", description = "업무 카테고리 추가")
     @PostMapping("/company/{companyId}/client/business/task/category")
-    public ResponseEntity<TaskCategoryResponseDto.CreateTaskCategoryDto> createTaskCategory(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody TaskCategoryRequestDto.CreateTaskCategoryDto request, @AuthUser Member member) {
+    public ResponseEntity<TaskCategoryResponseDto.CreateTaskCategoryDto> createTaskCategory(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody @Valid TaskCategoryRequestDto.CreateTaskCategoryDto request, @AuthUser Member member) {
         // todo : 리더 권한 체크
         TaskCategory taskCategory = taskCategoryService.create(companyId, request);
         return ResponseEntity.ok(TaskCategoryConverter.toCreateTaskCategoryDto(taskCategory));
@@ -44,7 +45,7 @@ public class TaskCategoryRestController {
 
     @Operation(summary = "[006_02.3]", description = "업무 카테고리 수정")
     @PatchMapping("/company/client/business/task/category/{categoryId}")
-    public ResponseEntity<TaskCategoryResponseDto.UpdateTaskCategoryDto> updateTaskCategory(@PathVariable(name = "categoryId") @ExistTaskCategory Long taskCategoryId, @RequestBody TaskCategoryRequestDto.UpdateTaskCategoryDto request, @AuthUser Member member) {
+    public ResponseEntity<TaskCategoryResponseDto.UpdateTaskCategoryDto> updateTaskCategory(@PathVariable(name = "categoryId") @ExistTaskCategory Long taskCategoryId, @RequestBody @Valid TaskCategoryRequestDto.UpdateTaskCategoryDto request, @AuthUser Member member) {
         TaskCategory taskCategory = taskCategoryService.update(taskCategoryId, request);
         return ResponseEntity.ok(TaskCategoryConverter.toUpdateTaskCategory(taskCategory));
     }
@@ -62,7 +63,7 @@ public class TaskCategoryRestController {
 
     @Operation(summary = "[006_02.4]", description = "업무 카테고리 삭제")
     @DeleteMapping("/company/client/business/task/categories")
-    public ResponseEntity<TaskCategoryResponseDto.DeleteTaskCategoryListDto> deleteTaskCategory(@RequestBody TaskCategoryRequestDto.DeleteTaskCategoryListDto request) {
+    public ResponseEntity<TaskCategoryResponseDto.DeleteTaskCategoryListDto> deleteTaskCategory(@RequestBody @Valid TaskCategoryRequestDto.DeleteTaskCategoryListDto request) {
         // todo : delete할 때 넘겨줘야할 정보들이 어떤 게 있을까?..
         taskCategoryService.deleteList(request);
         return ResponseEntity.ok(TaskCategoryConverter.toDeleteTaskCategoryListDto());

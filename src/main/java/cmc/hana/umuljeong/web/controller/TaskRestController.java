@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class TaskRestController {
     @Operation(summary = "[002_05]", description = "업무 추가")
     // TODO : 이 API 구현 자체를 후순위로 미루기
     @PostMapping("/company/client/business/{businessId}/task")
-    public ResponseEntity<TaskResponseDto.CreateTaskDto> createTask(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @RequestPart TaskRequestDto.CreateTaskDto request, @AuthUser Member member) {
+    public ResponseEntity<TaskResponseDto.CreateTaskDto> createTask(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @RequestPart @Valid TaskRequestDto.CreateTaskDto request, @AuthUser Member member) {
         /*
             TODO : AuthMember, 이미지 로직 추가
 
@@ -72,7 +73,7 @@ public class TaskRestController {
 
     @Operation(summary = "[002_05_5.1]", description = "업무 수정")
     @PatchMapping("/company/client/business/task/{taskId}")
-    public ResponseEntity<TaskResponseDto.UpdateTaskDto> updateTask(@PathVariable(name = "taskId") @ExistTask Long taskId, @RequestPart TaskRequestDto.UpdateTaskDto request, @AuthUser Member member) {
+    public ResponseEntity<TaskResponseDto.UpdateTaskDto> updateTask(@PathVariable(name = "taskId") @ExistTask Long taskId, @RequestPart @Valid TaskRequestDto.UpdateTaskDto request, @AuthUser Member member) {
         Task task = taskService.update(request);
         return ResponseEntity.ok(TaskConverter.toUpdateTaskDto(task));
     }

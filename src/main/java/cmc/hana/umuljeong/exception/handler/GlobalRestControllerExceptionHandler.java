@@ -7,6 +7,9 @@ import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -17,6 +20,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -42,7 +47,7 @@ public class GlobalRestControllerExceptionHandler extends ResponseEntityExceptio
     }
 
 
-    @ExceptionHandler
+    @ExceptionHandler // PathVariable 검증 예외
     public ResponseEntity<ApiErrorResult> ConstraintViolationExceptionHandler(ConstraintViolationException e) {
         ConstraintViolation constraintViolation = e.getConstraintViolations().stream().collect(Collectors.toList()).get(0);
         String errorCodeString = constraintViolation.getMessageTemplate();
@@ -50,6 +55,37 @@ public class GlobalRestControllerExceptionHandler extends ResponseEntityExceptio
         String cause = e.getClass().getName();
         return ResponseEntity.badRequest()
                 .body(ApiErrorResult.builder().errorCode(errorCode).message(errorCode.getMessage()).cause(cause).build());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
+        List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
+        String message = getMessage(allErrors.iterator());
+        String cause = ex.getClass().getName();
+        return ResponseEntity.badRequest()
+                .body(ApiErrorResult.builder().errorCode(ErrorCode.BAD_REQUEST).message(message).cause(cause).build());
+    }
+
+    private String getMessage(Iterator<ObjectError> errorIterator) {
+        final StringBuilder resultMessageBuilder = new StringBuilder();
+        while (errorIterator.hasNext()) {
+            ObjectError error = errorIterator.next();
+            resultMessageBuilder
+                    .append("['")
+                    .append(((FieldError) error).getField()) // 유효성 검사가 실패한 속성
+                    .append("' is '")
+                    .append(((FieldError) error).getRejectedValue()) // 유효하지 않은 값
+                    .append("' :: ")
+                    .append(error.getDefaultMessage()) // 유효성 검사 실패 시 메시지
+                    .append("]");
+
+            if (errorIterator.hasNext()) {
+                resultMessageBuilder.append("\n");
+            }
+        }
+
+        return resultMessageBuilder.toString();
     }
 
     @Override
