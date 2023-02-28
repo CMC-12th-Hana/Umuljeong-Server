@@ -29,6 +29,7 @@ jobs:
              export AWS_DB_URL=${{ secrets.AWS_DB_URL }}
              export AWS_DB_USERNAME=${{ secrets.AWS_DB_USERNAME }}
              export AWS_DB_PASSWORD=${{ secrets.AWS_DB_PASSWORD }}
+             source /etc/profile
 
       - name: Build with Gradle
         run: ./gradlew clean build
