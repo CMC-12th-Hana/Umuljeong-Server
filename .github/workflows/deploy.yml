@@ -18,6 +18,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 11 # (5).자바 설치
+          distribution: 'adopt'
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
