@@ -6,12 +6,6 @@ on:
       - main # (1).브랜치 이름
   workflow_dispatch: # (2).수동 실행도 가능하도록
 
-env:
-  JWT_SECRET: ${{ secrets.JWT_SECRET }}
-  AWS_DB_URL: ${{ secrets.AWS_DB_URL }}
-  AWS_DB_USERNAME: ${{ secrets.AWS_DB_USERNAME }}
-  AWS_DB_PASSWORD: ${{ secrets.AWS_DB_PASSWORD }}
-
 jobs:
   build:
     runs-on: ubuntu-latest # (3).OS환경
