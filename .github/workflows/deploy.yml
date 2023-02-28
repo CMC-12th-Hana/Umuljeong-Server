@@ -25,11 +25,11 @@ jobs:
         shell: bash # (6).권한 부여
 
       - name : Set environment variables
-        run: export JWT_SECRET=${{ secrets.JWT_SECRET }}
+        run: |
+             export JWT_SECRET=${{ secrets.JWT_SECRET }}
              export AWS_DB_URL=${{ secrets.AWS_DB_URL }}
              export AWS_DB_USERNAME=${{ secrets.AWS_DB_USERNAME }}
              export AWS_DB_PASSWORD=${{ secrets.AWS_DB_PASSWORD }}
-             source ~/.bashrc
 
       - name: Build with Gradle
         run: ./gradlew clean build
