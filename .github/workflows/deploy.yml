@@ -10,7 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest # (3).OS환경
 
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2 # (4).코드 check out
@@ -24,6 +23,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash # (6).권한 부여
+
+      - name : Set environment variables
+        run: export JWT_SECRET=${{ secrets.JWT_SECRET }}
+             export AWS_DB_URL=${{ secrets.AWS_DB_URL }}
+             export AWS_DB_USERNAME=${{ secrets.AWS_DB_USERNAME }}
+             export AWS_DB_PASSWORD=${{ secrets.AWS_DB_PASSWORD }}
 
       - name: Build with Gradle
         run: ./gradlew clean build
