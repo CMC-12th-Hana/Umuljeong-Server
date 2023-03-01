@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 public class MainController {
+
+    @GetMapping("/")
+    public String home() {
+        return "FIELD MATE API Server";
+    }
+
     @GetMapping("/health")
     public String health() {
         return "I'm healthy";
