@@ -78,9 +78,9 @@ spring:
       on-profile: prod
   datasource: # DB? ???? ?? DataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${AWS_DB_USERNAME}
-    password: ${AWS_DB_PASSWORD}
-    url: ${AWS_DB_URL}
+    username: ${aws.db.username}
+    password: ${aws.db.password}
+    url: ${aws.db.url}
   output:
     ansi:
       enabled: always # ???? ?? ??? ????
@@ -104,5 +104,5 @@ logging:
 
 jwt:
   header: Authorization
-  secret: ${JWT_SECRET}
+  secret: ${jwt.secret}
   token-validity-in-seconds: 86400
