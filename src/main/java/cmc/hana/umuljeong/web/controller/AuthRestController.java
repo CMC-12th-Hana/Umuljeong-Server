@@ -10,6 +10,8 @@ import cmc.hana.umuljeong.web.dto.AuthRequestDto;
 import cmc.hana.umuljeong.web.dto.AuthResponseDto;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -87,6 +89,9 @@ public class AuthRestController {
     }
 
     @Operation(summary = "[001_04]", description = "회사 합류")
+    @Parameters({
+            @Parameter(name = "member", hidden = true)
+    })
     @PatchMapping("/company/join")
     public ResponseEntity<AuthResponseDto.JoinCompanyDto> joinCompany(@AuthUser Member member) {
         Member joinedMember = memberService.joinCompany(member);

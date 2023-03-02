@@ -7,9 +7,11 @@ import cmc.hana.umuljeong.exception.MemberException;
 import cmc.hana.umuljeong.repository.BusinessRepository;
 import cmc.hana.umuljeong.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+@Component
 @RequiredArgsConstructor
 public class BusinessMemberConverter {
 
@@ -21,8 +23,8 @@ public class BusinessMemberConverter {
 
     @PostConstruct
     void init() {
-        staticBusinessRepository = this.businessRepository;
-        staticMemberRepository = this.memberRepository;
+        this.staticBusinessRepository = this.businessRepository;
+        this.staticMemberRepository = this.memberRepository;
     }
 
     public static BusinessMember toBusinessMember(Business business, Long memberId) {

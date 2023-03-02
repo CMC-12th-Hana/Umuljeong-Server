@@ -8,6 +8,8 @@ import cmc.hana.umuljeong.service.CompanyService;
 import cmc.hana.umuljeong.web.dto.CompanyRequestDto;
 import cmc.hana.umuljeong.web.dto.CompanyResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,9 @@ public class CompanyRestController {
 
     // todo : 이미 회사에 소속되어 있으면 생성할 수 없도록
     @Operation(summary = "[001_05]", description = "회사 추가")
+    @Parameters({
+            @Parameter(name = "member", hidden = true)
+    })
     @PostMapping("/company")
     public ResponseEntity<CompanyResponseDto.CompanyCreateDto> createCompany(@RequestBody @Valid CompanyRequestDto.CompanyCreateDto request, @AuthUser Member member) {
         Company company = companyService.create(member, request);

@@ -19,7 +19,7 @@ public class MemberRequestDto {
     }
 
     @Getter
-    public class UpdateProfileDto {
+    public static class UpdateProfileDto {
         @NotBlank
         private String name;
         @NotBlank

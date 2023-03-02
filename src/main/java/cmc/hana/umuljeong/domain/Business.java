@@ -6,6 +6,7 @@ import cmc.hana.umuljeong.domain.mapping.BusinessMember;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,7 @@ public class Business extends BaseEntity {
     private ClientCompany clientCompany;
 
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL)
-    private List<BusinessMember> businessMemberList;
+    private List<BusinessMember> businessMemberList = new ArrayList<>();
 
     private String name;
 

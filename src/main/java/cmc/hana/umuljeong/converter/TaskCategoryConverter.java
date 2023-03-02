@@ -57,6 +57,7 @@ public class TaskCategoryConverter {
         return TaskCategory.builder()
                 .company(company)
                 .name(request.getName())
+                .color(request.getColor())
                 .build();
     }
 

@@ -12,6 +12,7 @@ public class MemberResponseDto {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class ProfileDto {
+        private Long companyId;
         private String name;
         private String role;
         private String companyName;

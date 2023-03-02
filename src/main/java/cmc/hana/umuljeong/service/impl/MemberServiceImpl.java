@@ -53,9 +53,20 @@ public class MemberServiceImpl implements MemberService {
         Company company = companyRepository.findById(companyId).get();
         // todo : 멤버의 전화번호로 조회해서 멤버가 먼저 가입한 경우도 예외처리
 
-        Member member = MemberConverter.toMember(request);
-        member.setCompany(company);
-        return memberRepository.save(member);
+        Optional<Member> optionalMember = memberRepository.findByPhoneNumber(request.getPhoneNumber());
+
+        if(optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            member.setCompany(company);
+            member.setStaffNumber(request.getStaffNumber());
+            member.setStaffRank(request.getStaffRank());
+            return member;
+        }
+        else {
+            Member member = MemberConverter.toMember(request);
+            member.setCompany(company);
+            return memberRepository.save(member);
+        }
     }
 
     @Transactional

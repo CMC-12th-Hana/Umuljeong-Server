@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: prod
+springdoc:
+  use-fqn: true
 ---
 spring:
   config:
@@ -105,4 +107,4 @@ logging:
 jwt:
   header: Authorization
   secret: ${jwt.secret}
-  token-validity-in-seconds: 86400
+  token-validity-in-seconds: 8640000 # ms

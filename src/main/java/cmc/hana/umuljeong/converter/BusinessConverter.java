@@ -10,11 +10,14 @@ import cmc.hana.umuljeong.web.dto.BusinessRequestDto;
 import cmc.hana.umuljeong.web.dto.BusinessResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.parameters.P;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 @RequiredArgsConstructor
 public class BusinessConverter {
 
@@ -31,7 +34,7 @@ public class BusinessConverter {
 
     @PostConstruct
     void init() {
-        staticMemberRepository = this.memberRepository;
+        this.staticMemberRepository = this.memberRepository;
     }
 
     public static BusinessResponseDto.CreateBusinessDto toCreateBusinessDto(Business business) {
@@ -113,6 +116,7 @@ public class BusinessConverter {
                 .clientCompany(clientCompany)
                 .name(request.getName())
                 .businessPeriod(businessPeriod)
+                .businessMemberList(new ArrayList<>())
                 .revenue(request.getRevenue())
                 .description(request.getDescription())
                 .build();
