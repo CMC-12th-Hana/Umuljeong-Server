@@ -61,20 +61,10 @@ public class TaskCategoryRestController {
     })
     @PatchMapping("/company/client/business/task/category/{categoryId}")
     public ResponseEntity<TaskCategoryResponseDto.UpdateTaskCategoryDto> updateTaskCategory(@PathVariable(name = "categoryId") @ExistTaskCategory Long taskCategoryId, @RequestBody @Valid TaskCategoryRequestDto.UpdateTaskCategoryDto request, @AuthUser Member member) {
+        // TODO : 리더 권한 체크 & 해당 회사의 업무 카테고리인지 검증 필요 : 아닌 경우 에러 응답
         TaskCategory taskCategory = taskCategoryService.update(taskCategoryId, request);
         return ResponseEntity.ok(TaskCategoryConverter.toUpdateTaskCategory(taskCategory));
     }
-
-    // todo : 하나만 수정하는 걸로 변경? YES
-//    @PatchMapping("/company/{companyId}/client/business/task/categories")
-//    public ResponseEntity<TaskCategoryResponseDto.UpdateTaskCategoryListDto> updateTaskCategoryList(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody TaskCategoryRequestDto.UpdateTaskCategoryListDto request, @AuthUser Member member) {
-//        /*
-//            TODO : 리더 권한 체크 & 해당 회사의 업무 카테고리인지 검증 필요 : 아닌 경우 에러 응답
-//        */
-//        List<TaskCategory> taskCategoryList = taskCategoryService.updateList(companyId, request);
-//        return ResponseEntity.ok(TaskCategoryConverter.toUpdateTaskCategoryListDto(taskCategoryList));
-//    }
-
 
     @Operation(summary = "[006_02.4]", description = "업무 카테고리 삭제")
     @DeleteMapping("/company/client/business/task/categories")

@@ -22,6 +22,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
+        response.setContentType("application/json; charset=UTF-8");
         PrintWriter writer = response.getWriter();
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
         ApiErrorResult apiErrorResult = ApiErrorResult.builder()
@@ -30,7 +31,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 .cause(errorCode.getClass().getName())
                 .build();
         try{
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             writer.write(apiErrorResult.toString());
         }catch(NullPointerException e){
             LOGGER.error("응답 메시지 작성 에러", e);
@@ -40,6 +40,5 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 writer.close();
             }
         }
-        response.getWriter().write(apiErrorResult.toString());
     }
 }

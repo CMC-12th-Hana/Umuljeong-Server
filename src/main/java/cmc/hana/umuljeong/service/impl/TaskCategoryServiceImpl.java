@@ -35,7 +35,7 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
     @Transactional
     @Override
     public TaskCategory update(Long taskCategoryId, TaskCategoryRequestDto.UpdateTaskCategoryDto updateTaskCategoryDto) {
-        TaskCategory taskCategory = taskCategoryRepository.findById(taskCategoryId).get(); // todo : 있는지 없는지 등은 컨트롤러 단에서 다 검증해서 넘기기
+        TaskCategory taskCategory = taskCategoryRepository.findById(taskCategoryId).get();
         taskCategory.setName(updateTaskCategoryDto.getName());
         taskCategory.setColor(updateTaskCategoryDto.getColor());
         return taskCategory;

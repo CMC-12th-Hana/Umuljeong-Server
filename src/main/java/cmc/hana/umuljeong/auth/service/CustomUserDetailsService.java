@@ -35,7 +35,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         List<GrantedAuthority> grantedAuthorities = List.of(new SimpleGrantedAuthority(member.getMemberRole().getAuthority()));
 
-        // todo : CustomUserDetails로 변경? 이메일 인증 && 휴대폰 인증 등 복잡한 경우 생기면..
         return CustomUserDetails.builder()
                 .phoneNumber(member.getPhoneNumber())
                 .password(member.getPassword())
