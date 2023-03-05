@@ -30,6 +30,7 @@ public class ClientCompanyConverter {
 
     public static ClientCompanyResponseDto.ClientCompanyDto toClientCompanyDto(ClientCompany clientCompany) {
         return ClientCompanyResponseDto.ClientCompanyDto.builder()
+                .clientId(clientCompany.getId())
                 .name(clientCompany.getName())
                 .tel(clientCompany.getTel())
                 .salesRepresentativeDto(toSalesRepresentativeDto(clientCompany.getSalesRepresentative()))

@@ -23,6 +23,7 @@ public class ClientCompanyResponseDto {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class ClientCompanyDto {
+        private Long clientId;
         private String name;
         private String tel;
         private SalesRepresentativeDto salesRepresentativeDto;

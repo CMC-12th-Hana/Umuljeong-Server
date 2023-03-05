@@ -73,7 +73,7 @@ public class MemberConverter {
 
     public static MemberResponseDto.ProfileDto toProfileDto(Member member) {
         return MemberResponseDto.ProfileDto.builder()
-                .companyId(member.getCompany().getId())
+                .companyId(member.getCompany().getId() != null ? member.getCompany().getId() : null)
                 .name(member.getName())
                 .role(member.getMemberRole().getDescription())
                 .companyName(member.getCompany().getName())
