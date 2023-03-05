@@ -50,7 +50,7 @@ public class BusinessRestController {
     @Deprecated
     @GetMapping("/company/client/{clientId}/businesses")
     public ResponseEntity<BusinessResponseDto.BusinessListDto> getBusinessList(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @AuthUser Member member) {
-        // todo : 존재하는 id 인지 & 멤버의 회사에 속한 고객사인지 검증
+        // todo : 멤버의 회사에 속한 고객사인지 검증
         ClientCompany clientCompany = clientCompanyService.findById(clientCompanyId);
         List<Business> businessList = businessService.findByClientCompany(clientCompany);
         return ResponseEntity.ok(BusinessConverter.toBusinessListDto(businessList));

@@ -51,7 +51,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member create(Long companyId, MemberRequestDto.CreateDto request) {
         Company company = companyRepository.findById(companyId).get();
-        // todo : 멤버의 전화번호로 조회해서 멤버가 먼저 가입한 경우도 예외처리
 
         Optional<Member> optionalMember = memberRepository.findByPhoneNumber(request.getPhoneNumber());
 

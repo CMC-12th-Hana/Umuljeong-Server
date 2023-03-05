@@ -69,7 +69,7 @@ public class AuthRestController {
     @Operation(summary = "[001_02]", description = "회원가입")
     @PostMapping("/join")
     public ResponseEntity<AuthResponseDto.JoinDto> join(@RequestBody @Valid AuthRequestDto.JoinDto joinDto) {
-        // todo : 전화번호(ID) 중복 및 인증, 이메일 중복 처리 방안
+        // todo : 전화번호(ID) 중복 및 인증
         /*
             1. 신규 사용자 디비에 저장 or 갱신
                 - 회사에서 만들어둔 계정이 있으면(등록된 전화번호가 있으면) 개인정보를 업데이트해주고
