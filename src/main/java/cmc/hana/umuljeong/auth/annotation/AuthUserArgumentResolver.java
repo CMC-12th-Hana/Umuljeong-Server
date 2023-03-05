@@ -2,7 +2,7 @@ package cmc.hana.umuljeong.auth.annotation;
 
 import cmc.hana.umuljeong.converter.MemberConverter;
 import cmc.hana.umuljeong.domain.Member;
-import cmc.hana.umuljeong.exception.ErrorCode;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.exception.MemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;

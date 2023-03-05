@@ -22,7 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
-    private final JwtAuthenticationEntryPoint jwtAtuthenticationEntryPoint;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     private final String STAFF = MemberRole.STAFF.name();
@@ -41,7 +41,11 @@ public class SecurityConfig {
                         "/join",
                         "/login",
                         "/health",
-                        "/");
+                        "/",
+                        "/swagger-ui.html",
+                        "/v3/api-docs",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**");
     }
 
     @Bean
@@ -51,7 +55,7 @@ public class SecurityConfig {
 
                 /**401, 403 Exception 핸들링 */
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAtuthenticationEntryPoint)
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
 
                 /**세션 사용하지 않음*/

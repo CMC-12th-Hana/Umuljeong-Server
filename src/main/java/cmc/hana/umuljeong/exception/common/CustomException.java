@@ -1,4 +1,4 @@
-package cmc.hana.umuljeong.exception;
+package cmc.hana.umuljeong.exception.common;
 
 import lombok.Getter;
 

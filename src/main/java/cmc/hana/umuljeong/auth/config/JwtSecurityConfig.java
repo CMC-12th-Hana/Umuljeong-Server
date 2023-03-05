@@ -1,6 +1,7 @@
 package cmc.hana.umuljeong.auth.config;
 
 import cmc.hana.umuljeong.auth.filter.JwtFilter;
+import cmc.hana.umuljeong.auth.handler.JwtAuthenticationExceptionHandler;
 import cmc.hana.umuljeong.auth.provider.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -15,7 +16,9 @@ public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurity
 
     @Override
     public void configure(HttpSecurity http){
-        JwtFilter customFilter = new JwtFilter(tokenProvider);
-        http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
+        JwtFilter jwtFilter = new JwtFilter(tokenProvider);
+        JwtAuthenticationExceptionHandler jwtAuthenticationExceptionHandler = new JwtAuthenticationExceptionHandler();
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationExceptionHandler, JwtFilter.class);
     }
 }

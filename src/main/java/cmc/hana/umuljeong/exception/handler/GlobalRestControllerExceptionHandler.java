@@ -1,8 +1,8 @@
 package cmc.hana.umuljeong.exception.handler;
 
-import cmc.hana.umuljeong.exception.ApiErrorResult;
-import cmc.hana.umuljeong.exception.CustomException;
-import cmc.hana.umuljeong.exception.ErrorCode;
+import cmc.hana.umuljeong.exception.common.ApiErrorResult;
+import cmc.hana.umuljeong.exception.common.CustomException;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

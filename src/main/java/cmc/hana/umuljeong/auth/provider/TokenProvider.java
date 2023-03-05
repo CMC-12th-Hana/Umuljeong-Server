@@ -1,5 +1,7 @@
 package cmc.hana.umuljeong.auth.provider;
 
+import cmc.hana.umuljeong.exception.JwtAuthenticationException;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
@@ -26,7 +28,7 @@ public class TokenProvider implements InitializingBean {
 
     private final Logger LOGGER = LoggerFactory.getLogger(TokenProvider.class);
 
-    private static final String AUTHORITIES_KEY = "NeighborAPI";
+    private static final String AUTHORITIES_KEY = "NeighborAPI"; // todo : 환경변수로 세팅하기
 
     private final String secret;
     private final long tokenValidityInMilliseconds;
@@ -76,20 +78,19 @@ public class TokenProvider implements InitializingBean {
     }
 
     /**token 유효성 검증 */
-    public boolean validateToken(String token){
+    public boolean validateToken(String token) throws JwtAuthenticationException {
         try{
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         }catch(io.jsonwebtoken.security.SecurityException | MalformedJwtException e){
-            LOGGER.info("잘못된 JWT 서명입니다.");
+            throw new JwtAuthenticationException(ErrorCode.JWT_BAD_REQUEST);
         }catch(ExpiredJwtException e){
-            LOGGER.info("만료된 JWT 토큰입니다.");
+            throw new JwtAuthenticationException(ErrorCode.JWT_ACCESS_TOKEN_EXPIRED);
         }catch(UnsupportedJwtException e){
-            LOGGER.info("지원하지 않는 JWT 토큰입니다.");
+            throw new JwtAuthenticationException(ErrorCode.JWT_UNSUPPORTED_TOKEN);
         }catch(IllegalArgumentException e){
-            LOGGER.info("JWT 토큰이 잘못되었습니다.");
+            throw new JwtAuthenticationException(ErrorCode.JWT_BAD_REQUEST);
         }
-        return false;
     }
 
 }

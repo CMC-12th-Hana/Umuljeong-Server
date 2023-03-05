@@ -1,10 +1,10 @@
 package cmc.hana.umuljeong.auth.handler;
 
-import cmc.hana.umuljeong.exception.ApiErrorResult;
-import cmc.hana.umuljeong.exception.ErrorCode;
+import cmc.hana.umuljeong.auth.filter.JwtFilter;
+import cmc.hana.umuljeong.exception.common.ApiErrorResult;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         ApiErrorResult apiErrorResult = ApiErrorResult.builder()
                 .errorCode(errorCode)
                 .message(errorCode.getMessage())
-                .cause(errorCode.getClass().getName())
+                .cause(JwtFilter.class.getName())
                 .build();
         try{
             writer.write(apiErrorResult.toString());

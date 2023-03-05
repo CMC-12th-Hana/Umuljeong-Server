@@ -1,9 +1,11 @@
 package cmc.hana.umuljeong.auth.handler;
 
-import cmc.hana.umuljeong.exception.ApiErrorResult;
-import cmc.hana.umuljeong.exception.ErrorCode;
+import cmc.hana.umuljeong.auth.filter.JwtFilter;
+import cmc.hana.umuljeong.exception.common.ApiErrorResult;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -28,7 +30,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         ApiErrorResult apiErrorResult = ApiErrorResult.builder()
                 .errorCode(errorCode)
                 .message(errorCode.getMessage())
-                .cause(errorCode.getClass().getName())
+                .cause(JwtFilter.class.getName())
                 .build();
         try{
             writer.write(apiErrorResult.toString());

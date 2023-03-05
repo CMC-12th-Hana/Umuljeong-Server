@@ -2,7 +2,7 @@ package cmc.hana.umuljeong.converter;
 
 import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.mapping.BusinessMember;
-import cmc.hana.umuljeong.exception.ErrorCode;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.exception.MemberException;
 import cmc.hana.umuljeong.repository.BusinessRepository;
 import cmc.hana.umuljeong.repository.MemberRepository;

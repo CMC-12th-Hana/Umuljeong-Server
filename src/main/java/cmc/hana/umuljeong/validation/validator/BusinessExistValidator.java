@@ -1,6 +1,6 @@
 package cmc.hana.umuljeong.validation.validator;
 
-import cmc.hana.umuljeong.exception.ErrorCode;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.repository.BusinessRepository;
 import cmc.hana.umuljeong.validation.annotation.ExistBusiness;
 import lombok.RequiredArgsConstructor;

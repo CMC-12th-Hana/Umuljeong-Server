@@ -1,6 +1,6 @@
 package cmc.hana.umuljeong.validation.validator;
 
-import cmc.hana.umuljeong.exception.ErrorCode;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.repository.TaskRepository;
 import cmc.hana.umuljeong.validation.annotation.ExistTask;
 import lombok.RequiredArgsConstructor;

@@ -3,7 +3,7 @@ package cmc.hana.umuljeong.converter;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.enums.JoinCompanyStatus;
 import cmc.hana.umuljeong.domain.enums.MemberRole;
-import cmc.hana.umuljeong.exception.ErrorCode;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.exception.MemberException;
 import cmc.hana.umuljeong.repository.MemberRepository;
 import cmc.hana.umuljeong.web.dto.AuthRequestDto;

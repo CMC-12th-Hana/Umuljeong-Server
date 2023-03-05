@@ -1,6 +1,8 @@
 package cmc.hana.umuljeong.auth.filter;
 
 import cmc.hana.umuljeong.auth.provider.TokenProvider;
+import cmc.hana.umuljeong.exception.JwtAuthenticationException;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +37,9 @@ public class JwtFilter extends OncePerRequestFilter {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             LOGGER.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
-        }else{
-            LOGGER.info("유효한 JWT 토큰이 없습니다., uri: {}", requestURI);
+        } else{
+            // LOGGER.info(", uri: {}", requestURI);
+            throw new JwtAuthenticationException(ErrorCode.JWT_TOKEN_NOT_FOUND);
         }
         filterChain.doFilter(httpServletRequest, response);
     }
