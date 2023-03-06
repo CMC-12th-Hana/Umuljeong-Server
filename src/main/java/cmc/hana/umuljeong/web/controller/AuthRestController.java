@@ -5,13 +5,19 @@ import cmc.hana.umuljeong.auth.filter.JwtFilter;
 import cmc.hana.umuljeong.auth.provider.TokenProvider;
 import cmc.hana.umuljeong.converter.AuthConverter;
 import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.exception.common.ApiErrorResult;
 import cmc.hana.umuljeong.service.MemberService;
 import cmc.hana.umuljeong.web.dto.AuthRequestDto;
 import cmc.hana.umuljeong.web.dto.AuthResponseDto;
 
+import cmc.hana.umuljeong.web.dto.TaskCategoryResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -53,6 +59,10 @@ public class AuthRestController {
     }
 
     @Operation(summary = "[001_01]", description = "로그인")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = AuthResponseDto.JoinCompanyDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST : 요청 데이터의 값이 형식에 맞지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+    })
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDto.LoginDto> login(@RequestBody @Valid AuthRequestDto.LoginDto loginDto) {
 
@@ -67,6 +77,10 @@ public class AuthRestController {
     }
 
     @Operation(summary = "[001_02]", description = "회원가입")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "CREATED : 정상응답", content = @Content(schema = @Schema(implementation = AuthResponseDto.JoinCompanyDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST : 요청 데이터의 값이 형식에 맞지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+    })
     @PostMapping("/join")
     public ResponseEntity<AuthResponseDto.JoinDto> join(@RequestBody @Valid AuthRequestDto.JoinDto joinDto) {
         // todo : 전화번호(ID) 중복 및 인증
@@ -91,6 +105,11 @@ public class AuthRestController {
     @Operation(summary = "[001_04]", description = "회사 합류")
     @Parameters({
             @Parameter(name = "member", hidden = true)
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = AuthResponseDto.JoinCompanyDto.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 사원권한이 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
     })
     @PatchMapping("/company/join")
     public ResponseEntity<AuthResponseDto.JoinCompanyDto> joinCompany(@AuthUser Member member) {
