@@ -39,4 +39,12 @@ public class Business extends BaseEntity {
     public void setBusinessMemberList(List<BusinessMember> businessMemberList) {
         this.businessMemberList = businessMemberList;
     }
+
+    public void setClientCompany(ClientCompany clientCompany) {
+        if (this.clientCompany != null) {
+            this.clientCompany.getBusinessList().remove(this);
+        }
+        this.clientCompany = clientCompany;
+        clientCompany.getBusinessList().add(this);
+    }
 }

@@ -50,6 +50,7 @@ public class ClientCompanyRestController {
     @GetMapping("/company/{companyId}/clients")
     public ResponseEntity<ClientCompanyResponseDto.ClientCompanyListDto> getClientCompanyList(@PathVariable(name = "companyId") @ExistCompany Long companyId, @AuthUser Member member) {
         if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+
         List<ClientCompany> clientCompanyList = clientCompanyService.findByCompany(companyId);
         return ResponseEntity.ok(ClientCompanyConverter.toClientCompanyListDto(clientCompanyList));
     }
@@ -66,8 +67,10 @@ public class ClientCompanyRestController {
     })
     @GetMapping("/company/client/{clientId}")
     public ResponseEntity<ClientCompanyResponseDto.ClientCompanyDto> getClientCompany(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @AuthUser Member member) {
+        if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
+            throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
+
         ClientCompany clientCompany = clientCompanyService.findById(clientCompanyId);
-        if(!member.getCompany().getClientCompanyList().contains(clientCompany)) throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
         return ResponseEntity.ok(ClientCompanyConverter.toClientCompanyDto(clientCompany));
     }
 
@@ -84,6 +87,7 @@ public class ClientCompanyRestController {
     @PostMapping("/company/{companyId}/client")
     public ResponseEntity<ClientCompanyResponseDto.CreateClientCompany> createClientCompany(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody @Valid ClientCompanyRequestDto.CreateClientCompanyDto request, @AuthUser Member member) {
         if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+
         ClientCompany clientCompany = clientCompanyService.create(request, companyId);
         return ResponseEntity.ok(ClientCompanyConverter.toCreateClientCompany(clientCompany));
     }
@@ -100,8 +104,10 @@ public class ClientCompanyRestController {
     })
     @PatchMapping("/company/client/{clientId}")
     public ResponseEntity<ClientCompanyResponseDto.UpdateClientCompany> updateClientCompany(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @RequestBody @Valid ClientCompanyRequestDto.UpdateClientCompanyDto request, @AuthUser Member member) {
+        if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
+            throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
+
         ClientCompany clientCompany = clientCompanyService.update(clientCompanyId, request, member);
-        if(!member.getCompany().getClientCompanyList().contains(clientCompany)) throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
         return ResponseEntity.ok(ClientCompanyConverter.toUpdateClientCompany(clientCompany));
     }
 

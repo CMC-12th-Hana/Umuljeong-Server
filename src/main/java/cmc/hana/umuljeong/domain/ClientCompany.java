@@ -5,6 +5,7 @@ import cmc.hana.umuljeong.domain.embedded.SalesRepresentative;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Builder
@@ -32,6 +33,9 @@ public class ClientCompany extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "client_company_summary_id")
     private ClientCompanySummary clientCompanySummary;
+
+    @OneToMany(mappedBy = "clientCompany", cascade = CascadeType.ALL)
+    private List<Business> businessList;
 
     public void setCompany(Company company) {
         if (this.company != null) {

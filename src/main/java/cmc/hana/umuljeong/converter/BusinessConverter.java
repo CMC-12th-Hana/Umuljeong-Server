@@ -113,13 +113,14 @@ public class BusinessConverter {
                 .build();
 
         Business business = Business.builder()
-                .clientCompany(clientCompany)
                 .name(request.getName())
                 .businessPeriod(businessPeriod)
                 .businessMemberList(new ArrayList<>())
                 .revenue(request.getRevenue())
                 .description(request.getDescription())
                 .build();
+
+        business.setClientCompany(clientCompany);
 
         business.setBusinessMemberList(toBusinessMemberList(request.getMemberIdList(), business));
 
