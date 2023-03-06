@@ -23,4 +23,12 @@ public class TaskCategory extends BaseEntity {
     private String name;
 
     private String color;
+
+    public void setCompany(Company company) {
+        if (this.company != null) {
+            this.company.getTaskCategoryList().remove(this);
+        }
+        this.company = company;
+        company.getTaskCategoryList().add(this);
+    }
 }

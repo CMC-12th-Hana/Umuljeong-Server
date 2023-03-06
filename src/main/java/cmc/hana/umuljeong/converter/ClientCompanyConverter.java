@@ -70,7 +70,6 @@ public class ClientCompanyConverter {
                 .build();
 
         ClientCompany clientCompany = ClientCompany.builder()
-                .company(company)
                 .clientCompanySummary(clientCompanySummary)
                 .name(request.getName())
                 .tel(request.getTel())

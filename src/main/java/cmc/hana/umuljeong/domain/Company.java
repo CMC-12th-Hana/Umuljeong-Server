@@ -23,4 +23,7 @@ public class Company extends BaseEntity {
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<ClientCompany> clientCompanyList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    private List<TaskCategory> taskCategoryList = new ArrayList<>();
 }

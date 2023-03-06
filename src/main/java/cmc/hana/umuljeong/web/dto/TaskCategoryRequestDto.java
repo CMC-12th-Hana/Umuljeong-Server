@@ -1,5 +1,6 @@
 package cmc.hana.umuljeong.web.dto;
 
+import cmc.hana.umuljeong.validation.annotation.ExistTaskCategory;
 import lombok.Getter;
 
 import javax.validation.Valid;

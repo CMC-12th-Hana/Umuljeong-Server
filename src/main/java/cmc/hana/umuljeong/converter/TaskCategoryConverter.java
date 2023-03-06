@@ -54,11 +54,12 @@ public class TaskCategoryConverter {
     }
 
     public static TaskCategory toTaskCategory(Company company, TaskCategoryRequestDto.CreateTaskCategoryDto request) {
-        return TaskCategory.builder()
-                .company(company)
+        TaskCategory taskCategory = TaskCategory.builder()
                 .name(request.getName())
                 .color(request.getColor())
                 .build();
+        taskCategory.setCompany(company);
+        return taskCategory;
     }
 
     public static TaskCategoryResponseDto.UpdateTaskCategoryDto toUpdateTaskCategory(TaskCategory taskCategory) {

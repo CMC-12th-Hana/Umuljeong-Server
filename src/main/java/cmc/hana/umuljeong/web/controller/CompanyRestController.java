@@ -41,7 +41,7 @@ public class CompanyRestController {
             @Parameter(name = "member", hidden = true)
     })
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "CREATED : 정상응답", content = @Content(schema = @Schema(implementation = ClientCompanyResponseDto.ClientCompanyListDto.class))),
+            @ApiResponse(responseCode = "201", description = "CREATED : 정상응답", content = @Content(schema = @Schema(implementation = CompanyResponseDto.CompanyCreateDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST : 요청 데이터의 값이 형식에 맞지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
     })
