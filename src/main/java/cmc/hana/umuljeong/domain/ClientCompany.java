@@ -32,4 +32,12 @@ public class ClientCompany extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "client_company_summary_id")
     private ClientCompanySummary clientCompanySummary;
+
+    public void setCompany(Company company) {
+        if (this.company != null) {
+            this.company.getClientCompanyList().remove(this);
+        }
+        this.company = company;
+        company.getClientCompanyList().add(this);
+    }
 }

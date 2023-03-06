@@ -69,12 +69,15 @@ public class ClientCompanyConverter {
                 .phoneNumber(request.getSalesRepresentativeDto().getPhoneNumber())
                 .build();
 
-        return ClientCompany.builder()
+        ClientCompany clientCompany = ClientCompany.builder()
                 .company(company)
                 .clientCompanySummary(clientCompanySummary)
                 .name(request.getName())
                 .tel(request.getTel())
                 .salesRepresentative(salesRepresentative)
                 .build();
+        clientCompany.setCompany(company);
+
+        return clientCompany;
     }
 }

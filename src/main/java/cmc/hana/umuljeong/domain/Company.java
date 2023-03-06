@@ -1,16 +1,16 @@
 package cmc.hana.umuljeong.domain;
 
 import cmc.hana.umuljeong.domain.common.BaseEntity;
+import cmc.hana.umuljeong.domain.mapping.BusinessMember;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
-@Getter
+@Getter @Setter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Company extends BaseEntity {
@@ -20,4 +20,7 @@ public class Company extends BaseEntity {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    private List<ClientCompany> clientCompanyList = new ArrayList<>();
 }

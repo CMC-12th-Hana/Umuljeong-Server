@@ -4,6 +4,10 @@ import cmc.hana.umuljeong.auth.annotation.AuthUser;
 import cmc.hana.umuljeong.converter.ClientCompanyConverter;
 import cmc.hana.umuljeong.domain.ClientCompany;
 import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.exception.ClientCompanyException;
+import cmc.hana.umuljeong.exception.CompanyException;
+import cmc.hana.umuljeong.exception.common.ApiErrorResult;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.service.ClientCompanyService;
 import cmc.hana.umuljeong.validation.annotation.ExistClientCompany;
 import cmc.hana.umuljeong.validation.annotation.ExistCompany;
@@ -12,6 +16,10 @@ import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +41,15 @@ public class ClientCompanyRestController {
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = ClientCompanyResponseDto.ClientCompanyListDto.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND : companyId에 해당하는 회사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
+    })
     @GetMapping("/company/{companyId}/clients")
     public ResponseEntity<ClientCompanyResponseDto.ClientCompanyListDto> getClientCompanyList(@PathVariable(name = "companyId") @ExistCompany Long companyId, @AuthUser Member member) {
+        if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
         List<ClientCompany> clientCompanyList = clientCompanyService.findByCompany(companyId);
         return ResponseEntity.ok(ClientCompanyConverter.toClientCompanyListDto(clientCompanyList));
     }
@@ -43,10 +58,16 @@ public class ClientCompanyRestController {
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = ClientCompanyResponseDto.ClientCompanyDto.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 고객사가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND : clientId에 해당하는 고객사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
+    })
     @GetMapping("/company/client/{clientId}")
     public ResponseEntity<ClientCompanyResponseDto.ClientCompanyDto> getClientCompany(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @AuthUser Member member) {
-        // todo : 해당 멤버가 속한 회사의 고객사인지 & 존재하는 id 인지 검증 필요
         ClientCompany clientCompany = clientCompanyService.findById(clientCompanyId);
+        if(!member.getCompany().getClientCompanyList().contains(clientCompany)) throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
         return ResponseEntity.ok(ClientCompanyConverter.toClientCompanyDto(clientCompany));
     }
 
@@ -54,9 +75,15 @@ public class ClientCompanyRestController {
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = ClientCompanyResponseDto.CreateClientCompany.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND : companyId에 해당하는 회사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
+    })
     @PostMapping("/company/{companyId}/client")
     public ResponseEntity<ClientCompanyResponseDto.CreateClientCompany> createClientCompany(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody @Valid ClientCompanyRequestDto.CreateClientCompanyDto request, @AuthUser Member member) {
-        // todo : 본인의 회사에만 등록할 수 있도록 예외처리
+        if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
         ClientCompany clientCompany = clientCompanyService.create(request, companyId);
         return ResponseEntity.ok(ClientCompanyConverter.toCreateClientCompany(clientCompany));
     }
@@ -65,10 +92,16 @@ public class ClientCompanyRestController {
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = ClientCompanyResponseDto.ClientCompanyDto.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 고객사가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND : clientId에 해당하는 고객사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
+    })
     @PatchMapping("/company/client/{clientId}")
     public ResponseEntity<ClientCompanyResponseDto.UpdateClientCompany> updateClientCompany(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @RequestBody @Valid ClientCompanyRequestDto.UpdateClientCompanyDto request, @AuthUser Member member) {
-        // todo : 본인 회사의 고객사만 수정할 수 있도록 예외처리
         ClientCompany clientCompany = clientCompanyService.update(clientCompanyId, request, member);
+        if(!member.getCompany().getClientCompanyList().contains(clientCompany)) throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
         return ResponseEntity.ok(ClientCompanyConverter.toUpdateClientCompany(clientCompany));
     }
 

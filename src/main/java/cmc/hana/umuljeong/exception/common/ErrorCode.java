@@ -24,12 +24,14 @@ public enum ErrorCode {
 
     // Company
     COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 회사가 존재하지 않습니다."),
+    COMPANY_ACCESS_DENIED(HttpStatus.FORBIDDEN, "본인 회사의 데이터만 접근할 수 있습니다."),
 
     // Business
     BUSINESS_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 사업이 존재하지 않습니다."),
 
     // ClientCompany
     CLIENT_COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 고객사가 존재하지 않습니다."),
+    CLIENT_COMPANY_ACCESS_DENIED(HttpStatus.FORBIDDEN, "본인 회사의 고객사가 아닙니다."),
 
     // TaskCategory
     TASK_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 업무 카테고리가 존재하지 않습니다.");
