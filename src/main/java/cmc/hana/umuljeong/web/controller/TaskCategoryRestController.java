@@ -63,6 +63,7 @@ public class TaskCategoryRestController {
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = TaskCategoryResponseDto.CreateTaskCategoryDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST : 요청 데이터의 값이 형식에 맞지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND : companyId에 해당하는 회사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
@@ -80,6 +81,7 @@ public class TaskCategoryRestController {
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "CREATED : 정상응답", content = @Content(schema = @Schema(implementation = TaskCategoryResponseDto.UpdateTaskCategoryDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST : 요청 데이터의 값이 형식에 맞지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 업무카테고리가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND : categoryId에 해당하는 업무 카테고리가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
@@ -97,6 +99,7 @@ public class TaskCategoryRestController {
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "CREATED : 정상응답", content = @Content(schema = @Schema(implementation = TaskCategoryResponseDto.DeleteTaskCategoryListDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST : 요청 데이터의 값이 형식에 맞지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN : 삭제 요청 id들 중 본인 회사의 업무카테고리가 아닌 것이 있는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
     })

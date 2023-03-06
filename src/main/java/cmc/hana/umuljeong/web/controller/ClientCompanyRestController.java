@@ -80,6 +80,7 @@ public class ClientCompanyRestController {
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = ClientCompanyResponseDto.CreateClientCompany.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST : 요청 데이터의 값이 형식에 맞지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND : companyId에 해당하는 회사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
@@ -98,6 +99,7 @@ public class ClientCompanyRestController {
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = ClientCompanyResponseDto.UpdateClientCompany.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST : 요청 데이터의 값이 형식에 맞지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 고객사가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND : clientId에 해당하는 고객사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
