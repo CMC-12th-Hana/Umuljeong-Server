@@ -25,6 +25,7 @@ public enum ErrorCode {
     // Company
     COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 회사가 존재하지 않습니다."),
     COMPANY_ACCESS_DENIED(HttpStatus.FORBIDDEN, "본인 회사의 데이터만 접근할 수 있습니다."),
+    COMPANY_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 속한 회사가 있습니다."),
 
     // Business
     BUSINESS_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 사업이 존재하지 않습니다."),
