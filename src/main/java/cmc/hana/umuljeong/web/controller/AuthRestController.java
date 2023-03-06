@@ -78,7 +78,7 @@ public class AuthRestController {
 
     @Operation(summary = "[001_02]", description = "회원가입")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "CREATED : 정상응답", content = @Content(schema = @Schema(implementation = AuthResponseDto.JoinDto.class))),
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = AuthResponseDto.JoinDto.class))),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST : 요청 데이터의 값이 형식에 맞지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
     })
     @PostMapping("/join")
