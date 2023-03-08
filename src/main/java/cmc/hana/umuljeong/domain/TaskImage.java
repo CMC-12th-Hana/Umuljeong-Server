@@ -25,4 +25,12 @@ public class TaskImage extends BaseEntity {
     private String url;
 
     private String uuid;
+
+    public void setTask(Task task) {
+        if (this.task != null) {
+            this.task.getTaskImageList().remove(this);
+        }
+        this.task = task;
+        task.getTaskImageList().add(this);
+    }
 }

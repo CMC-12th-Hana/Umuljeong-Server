@@ -1,5 +1,6 @@
 package cmc.hana.umuljeong.service.impl;
 
+import cmc.hana.umuljeong.converter.TaskConverter;
 import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
@@ -27,8 +28,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional
     @Override
-    public Task create(TaskRequestDto.CreateTaskDto request) {
-        return null;
+    public Task create(TaskRequestDto.CreateTaskDto request, Member member) {
+        Task task = TaskConverter.toTask(request, member);
+        return taskRepository.save(task);
     }
 
     @Transactional

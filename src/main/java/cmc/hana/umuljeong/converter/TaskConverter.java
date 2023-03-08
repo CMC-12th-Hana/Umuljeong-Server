@@ -2,16 +2,35 @@ package cmc.hana.umuljeong.converter;
 
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.Task;
-import cmc.hana.umuljeong.domain.TaskCategory;
+import cmc.hana.umuljeong.repository.BusinessRepository;
+import cmc.hana.umuljeong.repository.TaskCategoryRepository;
+import cmc.hana.umuljeong.web.dto.TaskRequestDto;
 import cmc.hana.umuljeong.web.dto.TaskResponseDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
+@RequiredArgsConstructor
 public class TaskConverter {
+
+    private final BusinessRepository businessRepository;
+    private final TaskCategoryRepository taskCategoryRepository;
+
+    private static BusinessRepository staticBusinessRepository;
+    private static TaskCategoryRepository staticTaskCategoryRepository;
+
+    @PostConstruct
+    void init() {
+        this.staticBusinessRepository = this.businessRepository;
+        this.staticTaskCategoryRepository = this.taskCategoryRepository;
+    }
 
     public static TaskResponseDto.CreateTaskDto toCreateTaskDto(Task task) {
         return TaskResponseDto.CreateTaskDto.builder()
@@ -81,5 +100,20 @@ public class TaskConverter {
                 .taskId(task.getId())
                 .updatedAt(task.getUpdatedAt())
                 .build();
+    }
+
+    public static Task toTask(TaskRequestDto.CreateTaskDto request, Member member) {
+        Task task = Task.builder()
+                .taskCategory(staticTaskCategoryRepository.findById(request.getTaskCategoryId()).get())
+                .business(staticBusinessRepository.findById(request.getBusinessId()).get())
+                .taskImageList(new ArrayList<>())
+                .date(request.getDate())
+                .description(request.getDescription())
+                .member(member)
+                .build();
+
+        // todo : 이미지
+
+        return task;
     }
 }

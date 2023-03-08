@@ -38,6 +38,7 @@ jwt:
   header: Authorization
   secret: ${JWT_SECRET}
   token-validity-in-seconds: 86400
+
 ---
 spring:
   config:
@@ -73,6 +74,13 @@ jwt:
   header: Authorization
   secret: ${JWT_SECRET}
   token-validity-in-seconds: 86400
+
+cool-sms:
+  api-key: ${COOL_SMS_API_KEY}
+  api-secret: ${COOL_SMS_API_SECRET}
+  from-number: ${COOL_SMS_FROM_NUMBER}
+  domain: ${COOL_SMS_DOMAIN}
+
 ---
 spring:
   config:
@@ -108,3 +116,10 @@ jwt:
   header: Authorization
   secret: ${jwt.secret}
   token-validity-in-seconds: 1800000 # ms
+
+cool-sms:
+  api-key: ${cool.sms.api.key}
+  api-secret: ${cool.sms.api.secret}
+  from-number: ${cool.sms.from.number}
+  domain: ${cool.sms.domain}
+

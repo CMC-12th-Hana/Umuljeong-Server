@@ -35,4 +35,22 @@ public class AuthRequestDto {
         // todo : 8-20자 영문 대소문자, 숫자, 특수문자 조합
         private String passwordCheck;
     }
+
+    @Getter
+    public static class SendMessageDto {
+        @NotBlank
+        @Size(min = 11, max = 11)
+        private String phoneNumber;
+    }
+
+    @Getter
+    public static class VerifyMessageDto {
+        @NotBlank
+        @Size(min = 11, max = 11)
+        private String phoneNumber;
+
+        @NotBlank
+        @Size(min = 11, max = 11)
+        private String authenticationNumber;
+    }
 }

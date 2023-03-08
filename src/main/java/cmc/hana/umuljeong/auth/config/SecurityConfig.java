@@ -40,6 +40,7 @@ public class SecurityConfig {
                         "/favicon.ico",
                         "/join",
                         "/login",
+                        "/send/message",
                         "/health",
                         "/",
                         "/swagger-ui.html",

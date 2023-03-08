@@ -6,6 +6,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -25,6 +27,9 @@ public class Task extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    private List<TaskImage> taskImageList = new ArrayList<>();
 
     private LocalDate date;
 

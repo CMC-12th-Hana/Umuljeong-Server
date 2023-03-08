@@ -73,13 +73,13 @@ public class MemberConverter {
 
     public static MemberResponseDto.ProfileDto toProfileDto(Member member) {
         return MemberResponseDto.ProfileDto.builder()
-                .companyId(member.getCompany().getId() != null ? member.getCompany().getId() : null)
+                .companyId(member.getCompany() != null ? member.getCompany().getId() : null)
                 .name(member.getName())
                 .role(member.getMemberRole().getDescription())
-                .companyName(member.getCompany().getName())
-                .staffRank("대리")
+                .companyName(member.getCompany() != null ? member.getCompany().getName() : null)
+                .staffRank(member.getStaffRank() != null ? member.getStaffRank() : null)
                 .phoneNumber(member.getPhoneNumber())
-                .staffNumber("121221")
+                .staffNumber(member.getStaffNumber() != null ? member.getStaffNumber() : null)
                 .build();
     }
 

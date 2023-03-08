@@ -5,8 +5,10 @@ import cmc.hana.umuljeong.auth.filter.JwtFilter;
 import cmc.hana.umuljeong.auth.provider.TokenProvider;
 import cmc.hana.umuljeong.converter.AuthConverter;
 import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.domain.enums.VerifyMessageStatus;
 import cmc.hana.umuljeong.exception.common.ApiErrorResult;
 import cmc.hana.umuljeong.service.MemberService;
+import cmc.hana.umuljeong.service.MessageService;
 import cmc.hana.umuljeong.web.dto.AuthRequestDto;
 import cmc.hana.umuljeong.web.dto.AuthResponseDto;
 
@@ -44,6 +46,8 @@ public class AuthRestController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final MemberService memberService;
+
+    private final MessageService messageService;
 
     private String createTokenByPhoneNumberAndPassword(String phoneNumber, String password) {
 
@@ -117,5 +121,16 @@ public class AuthRestController {
         return ResponseEntity.ok(AuthConverter.toJoinCompanyDto(joinedMember));
     }
 
+    @PostMapping("/send/message")
+    public ResponseEntity<AuthResponseDto.SendMessageDto> sendMessage(@RequestBody @Valid AuthRequestDto.SendMessageDto request) {
+        // todo : 예외처리, 중복
+        messageService.sendMessage(request.getPhoneNumber());
+        return ResponseEntity.ok(AuthConverter.toSendMessageDto());
+    }
 
+    @PostMapping("/verify/message")
+    public ResponseEntity<AuthResponseDto.VerifyMessageDto> authenticateMessage(@RequestBody @Valid AuthRequestDto.VerifyMessageDto request) {
+         VerifyMessageStatus verifyMessageStatus = messageService.verifyMessage(request);
+         return ResponseEntity.ok(AuthConverter.toVerifyMessageDto(verifyMessageStatus));
+    }
 }

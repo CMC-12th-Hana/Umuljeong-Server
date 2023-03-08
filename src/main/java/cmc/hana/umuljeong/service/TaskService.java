@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface TaskService {
-    Task create(TaskRequestDto.CreateTaskDto request);
+    Task create(TaskRequestDto.CreateTaskDto request, Member member);
 
     List<Task> findByMemberAndDate(Member member, LocalDate date);
 

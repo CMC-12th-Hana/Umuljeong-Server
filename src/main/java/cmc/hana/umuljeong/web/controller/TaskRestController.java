@@ -2,9 +2,12 @@ package cmc.hana.umuljeong.web.controller;
 
 import cmc.hana.umuljeong.auth.annotation.AuthUser;
 import cmc.hana.umuljeong.converter.TaskConverter;
+import cmc.hana.umuljeong.domain.ClientCompany;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.Task;
 import cmc.hana.umuljeong.domain.enums.MemberRole;
+import cmc.hana.umuljeong.exception.BusinessException;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.service.TaskService;
 import cmc.hana.umuljeong.util.MemberUtil;
 import cmc.hana.umuljeong.validation.annotation.ExistBusiness;
@@ -17,6 +20,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +30,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Deprecated
 @Tag(name = "Task API", description = "업무 조회, 추가")
 @Validated
 @RestController
@@ -71,17 +74,20 @@ public class TaskRestController {
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })
-    // TODO : 이 API 구현 자체를 후순위로 미루기
-    @PostMapping("/company/client/business/{businessId}/task")
-    public ResponseEntity<TaskResponseDto.CreateTaskDto> createTask(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @RequestPart @Valid TaskRequestDto.CreateTaskDto request, @AuthUser Member member) {
-        /*
-            TODO : AuthMember, 이미지 로직 추가
+    @PostMapping(value = "/company/client/business/{businessId}/task", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<TaskResponseDto.CreateTaskDto> createTask(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @ModelAttribute @Valid TaskRequestDto.CreateTaskDto request, @AuthUser Member member) {
+        boolean isValid = false;
+        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
+            isValid = clientCompany.getBusinessList().stream().anyMatch(business -> business.getId() == businessId);
+            if(isValid) break;
+        }
+        if(!isValid) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
 
-        */
-        Task task = taskService.create(request);
+        Task task = taskService.create(request, member);
         return ResponseEntity.ok(TaskConverter.toCreateTaskDto(task));
     }
 
+    @Deprecated
     @Operation(summary = "[002_05_5.1]", description = "업무 수정")
     @Parameters({
             @Parameter(name = "member", hidden = true)

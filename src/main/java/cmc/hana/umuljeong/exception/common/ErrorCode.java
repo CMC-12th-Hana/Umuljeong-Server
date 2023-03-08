@@ -37,7 +37,11 @@ public enum ErrorCode {
 
     // TaskCategory
     TASK_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 업무 카테고리가 존재하지 않습니다."),
-    TASK_CATEGORY_ACCESS_DENIED(HttpStatus.FORBIDDEN, "본인 회사의 업무 카테고리가 아닙니다.");
+    TASK_CATEGORY_ACCESS_DENIED(HttpStatus.FORBIDDEN, "본인 회사의 업무 카테고리가 아닙니다."),
+
+    // Message
+    MESSAGE_SEND_FAILED(HttpStatus.BAD_REQUEST, "메시지 전송이 실패했습니다. 올바른 번호인지 확인하세요.")
+    ;
 
     private final HttpStatus status;
     private final String message;
