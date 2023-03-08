@@ -36,11 +36,16 @@ public class AuthRequestDto {
         private String passwordCheck;
     }
 
+    public enum MessageType {
+        JOIN, PASSWORD;
+    }
+
     @Getter
     public static class SendMessageDto {
         @NotBlank
         @Size(min = 11, max = 11)
         private String phoneNumber;
+        private MessageType messageType;
     }
 
     @Getter
@@ -50,7 +55,8 @@ public class AuthRequestDto {
         private String phoneNumber;
 
         @NotBlank
-        @Size(min = 11, max = 11)
         private String authenticationNumber;
+
+        private MessageType messageType;
     }
 }

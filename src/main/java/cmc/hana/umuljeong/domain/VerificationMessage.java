@@ -21,9 +21,13 @@ public class VerificationMessage extends BaseEntity {
     @Column(unique = true)
     private String phoneNumber;
 
+    private String verificationNumber;
+
     private LocalDateTime ExpirationTime;
 
-    private VerifyMessageStatus verificationPhone;
+    @Enumerated(EnumType.STRING)
+    private VerifyMessageStatus verificationJoin;
 
+    @Enumerated(EnumType.STRING)
     private VerifyMessageStatus verificationPassword;
 }

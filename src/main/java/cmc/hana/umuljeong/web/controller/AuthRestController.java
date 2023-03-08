@@ -30,10 +30,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -87,13 +84,15 @@ public class AuthRestController {
     })
     @PostMapping("/join")
     public ResponseEntity<AuthResponseDto.JoinDto> join(@RequestBody @Valid AuthRequestDto.JoinDto joinDto) {
-        // todo : 전화번호(ID) 중복 및 인증
         /*
             1. 신규 사용자 디비에 저장 or 갱신
                 - 회사에서 만들어둔 계정이 있으면(등록된 전화번호가 있으면) 개인정보를 업데이트해주고
                 - 없으면 그냥 새로 만들어주기
             2. 해당 정보로 토큰 발급
          */
+
+        // todo : 여기서 폰인증 안된 상태이면 아예 가입로직으로 넘어가지 않고 예외던져주기!! & 중복인 경우 예외
+
         Member member = memberService.join(joinDto);
 
         String accessToken = createTokenByPhoneNumberAndPassword(member.getPhoneNumber(), joinDto.getPassword());
@@ -121,14 +120,14 @@ public class AuthRestController {
         return ResponseEntity.ok(AuthConverter.toJoinCompanyDto(joinedMember));
     }
 
-    @PostMapping("/send/message")
+    @PostMapping("/message/send")
     public ResponseEntity<AuthResponseDto.SendMessageDto> sendMessage(@RequestBody @Valid AuthRequestDto.SendMessageDto request) {
         // todo : 예외처리, 중복
-        messageService.sendMessage(request.getPhoneNumber());
+        messageService.sendMessage(request);
         return ResponseEntity.ok(AuthConverter.toSendMessageDto());
     }
 
-    @PostMapping("/verify/message")
+    @PostMapping("/message/verify")
     public ResponseEntity<AuthResponseDto.VerifyMessageDto> authenticateMessage(@RequestBody @Valid AuthRequestDto.VerifyMessageDto request) {
          VerifyMessageStatus verifyMessageStatus = messageService.verifyMessage(request);
          return ResponseEntity.ok(AuthConverter.toVerifyMessageDto(verifyMessageStatus));

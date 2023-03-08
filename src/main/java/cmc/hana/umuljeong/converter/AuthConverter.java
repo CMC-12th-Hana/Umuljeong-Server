@@ -1,7 +1,9 @@
 package cmc.hana.umuljeong.converter;
 
 import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.domain.VerificationMessage;
 import cmc.hana.umuljeong.domain.enums.VerifyMessageStatus;
+import cmc.hana.umuljeong.web.dto.AuthRequestDto;
 import cmc.hana.umuljeong.web.dto.AuthResponseDto;
 
 import java.time.LocalDateTime;
@@ -38,6 +40,16 @@ public class AuthConverter {
     public static AuthResponseDto.VerifyMessageDto toVerifyMessageDto(VerifyMessageStatus verifyMessageStatus) {
         return AuthResponseDto.VerifyMessageDto.builder()
                 .verifyMessageStatus(verifyMessageStatus)
+                .build();
+    }
+
+    public static VerificationMessage toVerificationMessage(AuthRequestDto.SendMessageDto request, String verificationNumber) {
+        return VerificationMessage.builder()
+                .verificationJoin(VerifyMessageStatus.PENDING)
+                .verificationPassword(VerifyMessageStatus.PENDING)
+                .verificationNumber(verificationNumber)
+                .ExpirationTime(LocalDateTime.now().plusMinutes(5))
+                .phoneNumber(request.getPhoneNumber())
                 .build();
     }
 }

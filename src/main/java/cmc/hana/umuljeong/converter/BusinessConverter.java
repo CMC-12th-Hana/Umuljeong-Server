@@ -74,6 +74,7 @@ public class BusinessConverter {
     public static BusinessResponseDto.BusinessDto toBusinessDto(Business business) {
         return BusinessResponseDto.BusinessDto.
                 builder()
+                .businessId(business.getId())
                 .name(business.getName())
                 .businessPeriodDto(toBusinessPeriodDto(business.getBusinessPeriod()))
                 .memberDtoList(toMemberDtoList(business.getBusinessMemberList()))

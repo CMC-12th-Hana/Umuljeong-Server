@@ -7,6 +7,7 @@ import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.enums.JoinCompanyStatus;
 import cmc.hana.umuljeong.repository.CompanyRepository;
 import cmc.hana.umuljeong.repository.MemberRepository;
+import cmc.hana.umuljeong.repository.VerificationMessageRepository;
 import cmc.hana.umuljeong.service.MemberService;
 import cmc.hana.umuljeong.web.dto.AuthRequestDto;
 import cmc.hana.umuljeong.web.dto.MemberRequestDto;
@@ -30,7 +31,9 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public Member join(AuthRequestDto.JoinDto joinDto) {
-        Optional<Member> optionalMember = memberRepository.findByPhoneNumber(joinDto.getPhoneNumber());
+        String phoneNumber = joinDto.getPhoneNumber();
+        Optional<Member> optionalMember = memberRepository.findByPhoneNumber(phoneNumber);
+
         if(optionalMember.isPresent()) {
             Member member = optionalMember.get();
             member.setPassword(passwordEncoder.encode(joinDto.getPassword()));

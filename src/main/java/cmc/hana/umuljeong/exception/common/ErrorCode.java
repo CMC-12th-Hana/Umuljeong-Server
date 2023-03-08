@@ -40,8 +40,9 @@ public enum ErrorCode {
     TASK_CATEGORY_ACCESS_DENIED(HttpStatus.FORBIDDEN, "본인 회사의 업무 카테고리가 아닙니다."),
 
     // Message
-    MESSAGE_SEND_FAILED(HttpStatus.BAD_REQUEST, "메시지 전송이 실패했습니다. 올바른 번호인지 확인하세요.")
-    ;
+    MESSAGE_SEND_FAILED(HttpStatus.BAD_REQUEST, "메시지 전송이 실패했습니다. 올바른 번호인지 확인하세요."),
+    MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "인증번호 전송 기록이 존재하지 않습니다."),
+    MESSAGE_VERIFICATION_TIMEOUT(HttpStatus.BAD_REQUEST, "인증 번호가 만료되었습니다.");
 
     private final HttpStatus status;
     private final String message;
