@@ -63,10 +63,12 @@ public class ClientCompanyConverter {
                 .taskCount(0)
                 .build();
 
+        ClientCompanyRequestDto.SalesRepresentativeDto salesRepresentativeDto = request.getSalesRepresentativeDto();
+
         SalesRepresentative salesRepresentative = SalesRepresentative.builder()
-                .name(request.getSalesRepresentativeDto().getName())
-                .department(request.getSalesRepresentativeDto().getDepartment())
-                .phoneNumber(request.getSalesRepresentativeDto().getPhoneNumber())
+                .name(salesRepresentativeDto.getName() != null ? salesRepresentativeDto.getName() : "")
+                .department(salesRepresentativeDto.getDepartment() != null ? salesRepresentativeDto.getDepartment() : "")
+                .phoneNumber(salesRepresentativeDto.getDepartment() != null ? salesRepresentativeDto.getPhoneNumber() : "")
                 .build();
 
         ClientCompany clientCompany = ClientCompany.builder()

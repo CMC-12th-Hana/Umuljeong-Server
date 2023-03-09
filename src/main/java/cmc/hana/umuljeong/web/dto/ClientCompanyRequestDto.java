@@ -10,14 +10,8 @@ public class ClientCompanyRequestDto {
 
     @Getter
     public static class SalesRepresentativeDto {
-        @NotBlank
         private String name;
-
-        @NotBlank
-        @Size(min = 11, max = 11)
         private String phoneNumber;
-
-        @NotBlank
         private String department;
     }
 
@@ -27,7 +21,6 @@ public class ClientCompanyRequestDto {
         private String name;
         @NotBlank
         private String tel;
-        @Valid
         private SalesRepresentativeDto salesRepresentativeDto;
     }
 
@@ -37,7 +30,7 @@ public class ClientCompanyRequestDto {
         private String name;
         @NotBlank
         private String tel;
-        @Valid
+
         private SalesRepresentativeDto salesRepresentativeDto;
     }
 }
