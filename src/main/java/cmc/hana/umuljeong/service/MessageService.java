@@ -7,4 +7,6 @@ public interface MessageService {
     void sendMessage(AuthRequestDto.SendMessageDto request);
 
     VerifyMessageStatus verifyMessage(AuthRequestDto.VerifyMessageDto request);
+
+    void sendTempPassword(String phoneNumber);
 }

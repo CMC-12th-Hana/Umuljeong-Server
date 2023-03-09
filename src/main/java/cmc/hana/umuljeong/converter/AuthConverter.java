@@ -37,10 +37,13 @@ public class AuthConverter {
                 .build();
     }
 
-    public static AuthResponseDto.VerifyMessageDto toVerifyMessageDto(VerifyMessageStatus verifyMessageStatus) {
-        return AuthResponseDto.VerifyMessageDto.builder()
-                .verifyMessageStatus(verifyMessageStatus)
-                .build();
+    public static AuthResponseDto.VerifyMessageDto toJoinVerifyMessageDto(VerifyMessageStatus verifyMessageStatus) {
+        AuthResponseDto.VerifyMessageDto joinVerifyMessageDto =
+                AuthResponseDto.VerifyMessageDto.builder()
+                    .verifyMessageStatus(verifyMessageStatus)
+                    .build();
+
+        return joinVerifyMessageDto;
     }
 
     public static VerificationMessage toVerificationMessage(AuthRequestDto.SendMessageDto request, String verificationNumber) {

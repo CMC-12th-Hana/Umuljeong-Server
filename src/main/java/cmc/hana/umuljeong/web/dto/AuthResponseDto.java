@@ -44,6 +44,7 @@ public class AuthResponseDto {
         private LocalDateTime sentAt;
     }
 
+
     @Builder
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -51,4 +52,5 @@ public class AuthResponseDto {
     public static class VerifyMessageDto {
         private VerifyMessageStatus verifyMessageStatus;
     }
+
 }

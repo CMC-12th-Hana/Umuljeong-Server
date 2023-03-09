@@ -29,6 +29,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +46,7 @@ public class AuthRestController {
     private final MemberService memberService;
 
     private final MessageService messageService;
+    private final PasswordEncoder passwordEncoder;
 
     private String createTokenByPhoneNumberAndPassword(String phoneNumber, String password) {
 
@@ -130,6 +132,11 @@ public class AuthRestController {
     @PostMapping("/message/verify")
     public ResponseEntity<AuthResponseDto.VerifyMessageDto> authenticateMessage(@RequestBody @Valid AuthRequestDto.VerifyMessageDto request) {
          VerifyMessageStatus verifyMessageStatus = messageService.verifyMessage(request);
-         return ResponseEntity.ok(AuthConverter.toVerifyMessageDto(verifyMessageStatus));
+         if(request.getMessageType() == AuthRequestDto.MessageType.JOIN) return ResponseEntity.ok(AuthConverter.toJoinVerifyMessageDto(verifyMessageStatus));
+         else {
+             messageService.sendTempPassword(request.getPhoneNumber());
+             // 인증번호 전송 및 리턴
+             return ResponseEntity.ok(AuthConverter.toJoinVerifyMessageDto(verifyMessageStatus));
+         }
     }
 }

@@ -21,6 +21,7 @@ public enum ErrorCode {
 
     // Task
     TASK_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 업무가 존재하지 않습니다."),
+    TASK_ACCESS_DENIED(HttpStatus.FORBIDDEN, "본인 회사의 업무에만 접근할 수 있습니다."),
 
     // Company
     COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 회사가 존재하지 않습니다."),

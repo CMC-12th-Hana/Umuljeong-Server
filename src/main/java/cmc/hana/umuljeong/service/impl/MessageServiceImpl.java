@@ -1,10 +1,13 @@
 package cmc.hana.umuljeong.service.impl;
 
 import cmc.hana.umuljeong.converter.AuthConverter;
+import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.VerificationMessage;
 import cmc.hana.umuljeong.domain.enums.VerifyMessageStatus;
+import cmc.hana.umuljeong.exception.MemberException;
 import cmc.hana.umuljeong.exception.MessageException;
 import cmc.hana.umuljeong.exception.common.ErrorCode;
+import cmc.hana.umuljeong.repository.MemberRepository;
 import cmc.hana.umuljeong.repository.VerificationMessageRepository;
 import cmc.hana.umuljeong.service.MessageService;
 import cmc.hana.umuljeong.web.dto.AuthRequestDto;
@@ -14,6 +17,7 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,17 +34,24 @@ public class MessageServiceImpl implements MessageService {
     private final DefaultMessageService coolsmsService;
     private final String fromNumber;
 
+    private final MemberRepository memberRepository;
+
     private final VerificationMessageRepository verificationMessageRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public MessageServiceImpl(@Value("${cool-sms.api-key}") String apiKey,
                               @Value("${cool-sms.api-secret}") String apiSecret,
                               @Value("${cool-sms.from-number}") String fromNumber,
                               @Value("${cool-sms.domain}") String domain,
-                              VerificationMessageRepository verificationMessageRepository) {
+                              MemberRepository memberRepository,
+                              VerificationMessageRepository verificationMessageRepository,
+                              PasswordEncoder passwordEncoder) {
         // 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
         this.coolsmsService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, domain);
         this.fromNumber = fromNumber;
+        this.memberRepository = memberRepository;
         this.verificationMessageRepository = verificationMessageRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -116,5 +127,27 @@ public class MessageServiceImpl implements MessageService {
         } else throw new MessageException(ErrorCode.MESSAGE_NOT_FOUND);
 
         return VerifyMessageStatus.FAILED;
+    }
+
+    @Transactional
+    @Override
+    public void sendTempPassword(String phoneNumber) {
+        VerificationMessage verificationMessage = verificationMessageRepository.findByPhoneNumber(phoneNumber).get();
+        Member member = memberRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND));
+        String newPassword = numberGen(8);
+        try {
+            Message message = new Message();
+            // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+            message.setFrom(fromNumber);
+            message.setTo(phoneNumber);
+            message.setText("[FIELD MATE]\n임시비밀번호 : " + newPassword);
+            SingleMessageSentResponse response = this.coolsmsService.sendOne(new SingleMessageSendingRequest(message));
+
+            verificationMessage.setVerificationPassword(VerifyMessageStatus.PENDING);
+            member.setPassword(passwordEncoder.encode(newPassword));
+        } catch (Exception e) {
+            throw new MessageException(ErrorCode.MESSAGE_SEND_FAILED);
+        }
+
     }
 }

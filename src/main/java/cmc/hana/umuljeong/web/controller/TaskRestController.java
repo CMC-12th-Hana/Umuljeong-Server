@@ -2,11 +2,14 @@ package cmc.hana.umuljeong.web.controller;
 
 import cmc.hana.umuljeong.auth.annotation.AuthUser;
 import cmc.hana.umuljeong.converter.TaskConverter;
+import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.ClientCompany;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.Task;
 import cmc.hana.umuljeong.domain.enums.MemberRole;
 import cmc.hana.umuljeong.exception.BusinessException;
+import cmc.hana.umuljeong.exception.CompanyException;
+import cmc.hana.umuljeong.exception.TaskException;
 import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.service.TaskService;
 import cmc.hana.umuljeong.util.MemberUtil;
@@ -44,7 +47,17 @@ public class TaskRestController {
             @Parameter(name = "member", hidden = true)
     })
     @GetMapping("/company/client/business/task/{taskId}")
-    public ResponseEntity<TaskResponseDto.TaskDto> getTask(@PathVariable(name = "taskId") @ExistTask Long taskId) {
+    public ResponseEntity<TaskResponseDto.TaskDto> getTask(@PathVariable(name = "taskId") @ExistTask Long taskId, @AuthUser Member member) {
+        boolean isValid = false;
+        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
+            for(Business business : clientCompany.getBusinessList()) {
+                isValid = business.getTaskList().stream().anyMatch(task -> task.getId() == taskId);
+                if(isValid) break;
+            }
+            if(isValid) break;
+        }
+        if(!isValid) throw new TaskException(ErrorCode.TASK_ACCESS_DENIED);
+
         Task task = taskService.findById(taskId);
         return ResponseEntity.ok(TaskConverter.toTaskDto(task));
     }
@@ -55,6 +68,8 @@ public class TaskRestController {
     })
     @GetMapping("/company/{companyId}/client/business/tasks")
     public ResponseEntity<TaskResponseDto.TaskListDto> getTaskList(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, @AuthUser Member member) {
+        if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+
         List<Task> taskList;
         if(member.getMemberRole() == MemberRole.LEADER) {
             taskList = taskService.findByCompanyAndDate(companyId, date);
@@ -65,15 +80,15 @@ public class TaskRestController {
         return ResponseEntity.ok(TaskConverter.toStaffTaskListDto(taskList));
     }
 
-    @Deprecated
-    @Parameters({
-            @Parameter(name = "member", hidden = true)
-    })
-    @GetMapping("/company/client/business/{businessId}/tasks")
-    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskListByBusiness(@PathVariable(name = "businessId") @ExistBusiness Long businessId,  @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, @AuthUser Member member) {
-        List<Task> taskList = taskService.findByBusinessAndMemberAndDate(businessId, member, date);
-        return ResponseEntity.ok(TaskConverter.toLeaderTaskListDto(taskList)); // todo : 요구사항에 따라 변경
-    }
+//    @Deprecated
+//    @Parameters({
+//            @Parameter(name = "member", hidden = true)
+//    })
+//    @GetMapping("/company/client/business/{businessId}/tasks")
+//    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskListByBusiness(@PathVariable(name = "businessId") @ExistBusiness Long businessId,  @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, @AuthUser Member member) {
+//        List<Task> taskList = taskService.findByBusinessAndMemberAndDate(businessId, member, date);
+//        return ResponseEntity.ok(TaskConverter.toLeaderTaskListDto(taskList)); // todo : 요구사항에 따라 변경
+//    }
 
     @Operation(summary = "[002_05]", description = "업무 추가")
     @Parameters({
@@ -99,6 +114,16 @@ public class TaskRestController {
     })
     @PatchMapping("/company/client/business/task/{taskId}")
     public ResponseEntity<TaskResponseDto.UpdateTaskDto> updateTask(@PathVariable(name = "taskId") @ExistTask Long taskId, @RequestPart @Valid TaskRequestDto.UpdateTaskDto request, @AuthUser Member member) {
+        boolean isValid = false;
+        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
+            for(Business business : clientCompany.getBusinessList()) {
+                isValid = business.getTaskList().stream().anyMatch(task -> task.getId() == taskId);
+                if(isValid) break;
+            }
+            if(isValid) break;
+        }
+        if(!isValid) throw new TaskException(ErrorCode.TASK_ACCESS_DENIED);
+
         Task task = taskService.update(request);
         return ResponseEntity.ok(TaskConverter.toUpdateTaskDto(task));
     }

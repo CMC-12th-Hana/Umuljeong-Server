@@ -38,4 +38,12 @@ public class Task extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_category_id")
     private TaskCategory taskCategory;
+
+    void setBusiness(Business business) {
+        if (this.business != null) {
+            this.business.getTaskList().remove(this);
+        }
+        this.business = business;
+        business.getTaskList().add(this);
+    }
 }
