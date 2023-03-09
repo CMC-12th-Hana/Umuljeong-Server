@@ -1,5 +1,6 @@
 package cmc.hana.umuljeong.web.dto;
 
+import cmc.hana.umuljeong.validation.annotation.ExistBusiness;
 import cmc.hana.umuljeong.validation.annotation.ExistClientCompany;
 import cmc.hana.umuljeong.validation.annotation.ExistTaskCategory;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -15,7 +16,7 @@ import java.util.List;
 public class TaskRequestDto {
     @Getter @Setter
     public static class CreateTaskDto {
-        @ExistClientCompany
+        @ExistBusiness
         private Long businessId;
         @ExistTaskCategory
         private Long taskCategoryId;

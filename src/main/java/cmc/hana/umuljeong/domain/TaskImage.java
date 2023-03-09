@@ -1,6 +1,7 @@
 package cmc.hana.umuljeong.domain;
 
 import cmc.hana.umuljeong.domain.common.BaseEntity;
+import cmc.hana.umuljeong.domain.common.Uuid;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,7 +25,9 @@ public class TaskImage extends BaseEntity {
 
     private String url;
 
-    private String uuid;
+    @OneToOne
+    @JoinColumn(name = "uuid_id")
+    private Uuid uuid;
 
     public void setTask(Task task) {
         if (this.task != null) {

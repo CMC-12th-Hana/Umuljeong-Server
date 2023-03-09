@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -53,7 +54,7 @@ public class TaskRestController {
             @Parameter(name = "member", hidden = true)
     })
     @GetMapping("/company/{companyId}/client/business/tasks")
-    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskList(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestParam(name = "date") LocalDate date, @AuthUser Member member) {
+    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskList(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, @AuthUser Member member) {
         List<Task> taskList;
         if(member.getMemberRole() == MemberRole.LEADER) {
             taskList = taskService.findByCompanyAndDate(companyId, date);
@@ -64,8 +65,12 @@ public class TaskRestController {
         return ResponseEntity.ok(TaskConverter.toStaffTaskListDto(taskList));
     }
 
+    @Deprecated
+    @Parameters({
+            @Parameter(name = "member", hidden = true)
+    })
     @GetMapping("/company/client/business/{businessId}/tasks")
-    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskListByBusiness(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @RequestParam(name = "date") LocalDate date, @AuthUser Member member) {
+    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskListByBusiness(@PathVariable(name = "businessId") @ExistBusiness Long businessId,  @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, @AuthUser Member member) {
         List<Task> taskList = taskService.findByBusinessAndMemberAndDate(businessId, member, date);
         return ResponseEntity.ok(TaskConverter.toLeaderTaskListDto(taskList)); // todo : 요구사항에 따라 변경
     }
@@ -74,11 +79,11 @@ public class TaskRestController {
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })
-    @PostMapping(value = "/company/client/business/{businessId}/task", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<TaskResponseDto.CreateTaskDto> createTask(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @ModelAttribute @Valid TaskRequestDto.CreateTaskDto request, @AuthUser Member member) {
+    @PostMapping(value = "/company/client/business/task", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<TaskResponseDto.CreateTaskDto> createTask(@ModelAttribute @Valid TaskRequestDto.CreateTaskDto request, @AuthUser Member member) {
         boolean isValid = false;
         for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
-            isValid = clientCompany.getBusinessList().stream().anyMatch(business -> business.getId() == businessId);
+            isValid = clientCompany.getBusinessList().stream().anyMatch(business -> business.getId() == request.getBusinessId());
             if(isValid) break;
         }
         if(!isValid) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);

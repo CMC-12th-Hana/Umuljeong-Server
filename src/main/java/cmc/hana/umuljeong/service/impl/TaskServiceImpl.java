@@ -30,6 +30,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task create(TaskRequestDto.CreateTaskDto request, Member member) {
         Task task = TaskConverter.toTask(request, member);
+        // 방문건수랑 무슨건수 업데이트 쳐주기
         return taskRepository.save(task);
     }
 

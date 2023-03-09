@@ -1,19 +1,26 @@
 package cmc.hana.umuljeong.converter;
 
+import cmc.hana.umuljeong.aws.s3.TaskImagePackageMetaData;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.Task;
+import cmc.hana.umuljeong.domain.common.Uuid;
 import cmc.hana.umuljeong.repository.BusinessRepository;
 import cmc.hana.umuljeong.repository.TaskCategoryRepository;
+import cmc.hana.umuljeong.service.impl.TaskImageProcess;
 import cmc.hana.umuljeong.web.dto.TaskRequestDto;
 import cmc.hana.umuljeong.web.dto.TaskResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Component
@@ -22,14 +29,17 @@ public class TaskConverter {
 
     private final BusinessRepository businessRepository;
     private final TaskCategoryRepository taskCategoryRepository;
+    private final TaskImageProcess taskImageProcess;
 
     private static BusinessRepository staticBusinessRepository;
     private static TaskCategoryRepository staticTaskCategoryRepository;
+    private static TaskImageProcess staticTaskImageProcess;
 
     @PostConstruct
     void init() {
         this.staticBusinessRepository = this.businessRepository;
         this.staticTaskCategoryRepository = this.taskCategoryRepository;
+        this.staticTaskImageProcess = this.taskImageProcess;
     }
 
     public static TaskResponseDto.CreateTaskDto toCreateTaskDto(Task task) {
@@ -55,8 +65,8 @@ public class TaskConverter {
                 .collect(Collectors.toList());
     }
 
-    public static TaskResponseDto.StaffTaskListDto toStaffTaskListDto(List<Task> taskList) {
-        TaskResponseDto.StaffTaskListDto staffTaskListDto =
+    public static TaskResponseDto.TaskListDto toStaffTaskListDto(List<Task> taskList) {
+        TaskResponseDto.TaskListDto staffTaskListDto =
                 TaskResponseDto.StaffTaskListDto.builder()
                 .taskDtoList(toTaskDtoList(taskList))
                 .build();
@@ -73,17 +83,21 @@ public class TaskConverter {
                 .build();
     }
 
-    public static TaskResponseDto.LeaderTaskListDto toLeaderTaskListDto(List<Task> taskList) {
+    public static TaskResponseDto.TaskListDto toLeaderTaskListDto(List<Task> taskList) {
         HashMap<Member, List<Task>> memberListHashMap = new HashMap<>();
         for(Task task : taskList) {
             if (memberListHashMap.containsKey(task.getMember())) memberListHashMap.get(task.getMember()).add(task);
-            else memberListHashMap.put(task.getMember(), List.of(task));
+            else {
+                List<Task> tasks = new ArrayList<>(); tasks.add(task);
+                memberListHashMap.put(task.getMember(), tasks);
+            }
         }
 
         TaskResponseDto.LeaderTaskListDto leaderTaskListDto =
                 TaskResponseDto.LeaderTaskListDto.builder()
                         .memberDtoList(new ArrayList<>())
                         .build();
+
         leaderTaskListDto.setCount(memberListHashMap.size());
 
         for (Map.Entry<Member, List<Task>> entry : memberListHashMap.entrySet()) {
@@ -112,8 +126,31 @@ public class TaskConverter {
                 .member(member)
                 .build();
 
-        // todo : 이미지
-
+        List<MultipartFile> taskImageDtoList = request.getTaskImageList();
+        if(!taskImageDtoList.isEmpty()) {
+               createAndMapTaskImage(taskImageDtoList, task);
+        }
         return task;
+    }
+
+    private static void createAndMapTaskImage(List<MultipartFile> taskImageDtoList, Task task) {
+        List<MultipartFile> imageFileList = taskImageDtoList;
+
+        ExecutorService executorService = Executors.newFixedThreadPool(Math.min(imageFileList.size(), 5));
+        List<CompletableFuture<Void>> futures = imageFileList.stream().map((image) -> CompletableFuture.runAsync(() -> {
+                    Uuid uuid = staticTaskImageProcess.createUUID();
+                    TaskImagePackageMetaData taskImagePackageMeta = TaskImagePackageMetaData.builder()
+                            .businessId(task.getBusiness().getId())
+                            .uuid(uuid.getUuid())
+                            .uuidEntity(uuid)
+                            .build();
+                    staticTaskImageProcess.uploadImageAndMapToReview(image, taskImagePackageMeta, task);
+                }, executorService))
+                .collect(Collectors.toList());
+
+        /** blocking **/
+        List<Void> blockingList = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+                .thenApply(Void -> futures.stream().map(CompletableFuture::join).collect(Collectors.toList()))
+                .join();
     }
 }

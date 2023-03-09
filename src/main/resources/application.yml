@@ -64,6 +64,12 @@ spring:
           auto: update
         default_batch_fetch_size: 1000 # JPA?? ????? ??? default_batch_fetch_size ???? ?????? ?? ???? ???? IN?? ??? ??? ??
 
+  servlet:
+    multipart:
+      maxFileSize: 20MB
+      maxRequestSize: 30MB
+
+
 logging:
   level:
     org:
@@ -73,13 +79,33 @@ logging:
 jwt:
   header: Authorization
   secret: ${JWT_SECRET}
-  token-validity-in-seconds: 86400
+  token-validity-in-seconds: 1800000
 
 cool-sms:
   api-key: ${COOL_SMS_API_KEY}
   api-secret: ${COOL_SMS_API_SECRET}
   from-number: ${COOL_SMS_FROM_NUMBER}
   domain: ${COOL_SMS_DOMAIN}
+
+cloud:
+    aws:
+      s3:
+        bucket: field-mate
+        folder:
+          task-image: task-image
+      region:
+        static: ap-northeast-2
+      stack:
+        auto: false
+      credentials:
+        accessKey: ${AWS_ACCESS_KEY_ID}
+        secretKey: ${AWS_SECRET_ACCESS_KEY}
+      cloudFront:
+        distributionDomain: https://d3j1uqx77q4q2.cloudfront.net
+
+server:
+  tomcat:
+    max-swallow-size: 20MB
 
 ---
 spring:
@@ -106,6 +132,11 @@ spring:
           auto: update
         default_batch_fetch_size: 1000 # JPA?? ????? ??? default_batch_fetch_size ???? ?????? ?? ???? ???? IN?? ??? ??? ??
 
+  servlet:
+    multipart:
+      maxFileSize: 20MB
+      maxRequestSize: 30MB
+
 logging:
   level:
     org:
@@ -122,4 +153,3 @@ cool-sms:
   api-secret: ${cool.sms.api.secret}
   from-number: ${cool.sms.from.number}
   domain: ${cool.sms.domain}
-

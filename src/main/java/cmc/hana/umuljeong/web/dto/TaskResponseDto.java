@@ -10,7 +10,7 @@ public class TaskResponseDto {
 
     @Builder
     @Getter
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class TaskDto {
         private Long taskId;
