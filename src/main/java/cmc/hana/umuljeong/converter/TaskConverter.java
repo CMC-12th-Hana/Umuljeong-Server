@@ -119,12 +119,13 @@ public class TaskConverter {
     public static Task toTask(TaskRequestDto.CreateTaskDto request, Member member) {
         Task task = Task.builder()
                 .taskCategory(staticTaskCategoryRepository.findById(request.getTaskCategoryId()).get())
-                .business(staticBusinessRepository.findById(request.getBusinessId()).get())
                 .taskImageList(new ArrayList<>())
                 .date(request.getDate())
                 .description(request.getDescription())
                 .member(member)
                 .build();
+
+        task.setBusiness(staticBusinessRepository.findById(request.getBusinessId()).get());
 
         List<MultipartFile> taskImageDtoList = request.getTaskImageList();
         if(!taskImageDtoList.isEmpty()) {

@@ -39,7 +39,7 @@ public class Task extends BaseEntity {
     @JoinColumn(name = "task_category_id")
     private TaskCategory taskCategory;
 
-    void setBusiness(Business business) {
+    public void setBusiness(Business business) {
         if (this.business != null) {
             this.business.getTaskList().remove(this);
         }

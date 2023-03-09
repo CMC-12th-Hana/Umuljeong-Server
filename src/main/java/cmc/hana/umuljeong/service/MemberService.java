@@ -18,4 +18,6 @@ public interface MemberService {
     Member joinCompany(Member member);
 
     Member updateProfile(Member member, MemberRequestDto.UpdateProfileDto request);
+
+    Member findById(Long memberId);
 }

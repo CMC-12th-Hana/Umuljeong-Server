@@ -85,4 +85,8 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findByCompany(company);
     }
 
+    @Override
+    public Member findById(Long memberId) {
+        return memberRepository.findById(memberId).get();
+    }
 }

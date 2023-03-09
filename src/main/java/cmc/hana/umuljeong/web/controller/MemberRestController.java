@@ -4,10 +4,12 @@ import cmc.hana.umuljeong.auth.annotation.AuthUser;
 import cmc.hana.umuljeong.converter.MemberConverter;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.exception.CompanyException;
+import cmc.hana.umuljeong.exception.MemberException;
 import cmc.hana.umuljeong.exception.common.ApiErrorResult;
 import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.service.MemberService;
 import cmc.hana.umuljeong.validation.annotation.ExistCompany;
+import cmc.hana.umuljeong.validation.annotation.ExistMember;
 import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
 import cmc.hana.umuljeong.web.dto.MemberRequestDto;
 import cmc.hana.umuljeong.web.dto.MemberResponseDto;
@@ -50,6 +52,18 @@ public class MemberRestController {
         if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
         List<Member> memberList = memberService.findByCompany(companyId);
         return ResponseEntity.ok(MemberConverter.toMemberProfileListDto(memberList));
+    }
+
+    @Operation(summary = "", description = "다른 사원 조회")
+    @Parameters({
+            @Parameter(name = "loginMember", hidden = true)
+    })
+    @GetMapping("/company/member/{memberId}/profile")
+    public ResponseEntity<MemberResponseDto.ProfileDto> getMember(@PathVariable(name = "memberId") @ExistMember Long memberId, @AuthUser Member loginMember) {
+        if(!loginMember.getCompany().getMemberList().stream().anyMatch(member -> member.getId() == memberId))
+            throw new MemberException(ErrorCode.MEMBER_ACCESS_DENIED);
+        Member member = memberService.findById(memberId);
+        return ResponseEntity.ok(MemberConverter.toProfileDto(member));
     }
 
     @Operation(summary = "[005_03]", description = "사원 프로필 조회")

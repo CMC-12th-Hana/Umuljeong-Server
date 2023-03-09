@@ -129,6 +129,9 @@ public class SecurityConfig {
                 .antMatchers(
                         HttpMethod.GET, "/company/{companyId}/members"
                 ).hasAnyRole(STAFF, LEADER)
+                .antMatchers(
+                        HttpMethod.GET, "/company/member/{memberId}/profile"
+                ).hasAnyRole(STAFF, LEADER)
 
                 /**JwtSecurityConfig 적용 */
                 .and()

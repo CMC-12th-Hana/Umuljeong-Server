@@ -18,6 +18,7 @@ public enum ErrorCode {
 
     // Member
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 사용자가 존재하지 않습니다."),
+    MEMBER_ACCESS_DENIED(HttpStatus.FORBIDDEN, "본인 회사의 구성원만 조회할 수 있습니다."),
 
     // Task
     TASK_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 업무가 존재하지 않습니다."),
