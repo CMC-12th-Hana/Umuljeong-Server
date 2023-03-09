@@ -103,10 +103,6 @@ cloud:
       cloudFront:
         distributionDomain: https://d3j1uqx77q4q2.cloudfront.net
 
-server:
-  tomcat:
-    max-swallow-size: 20MB
-
 ---
 spring:
   config:
@@ -153,3 +149,19 @@ cool-sms:
   api-secret: ${cool.sms.api.secret}
   from-number: ${cool.sms.from.number}
   domain: ${cool.sms.domain}
+
+cloud:
+  aws:
+    s3:
+      bucket: field-mate
+      folder:
+        task-image: task-image
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${aws.access.key.id}
+      secretKey: ${aws.secret.access.key}
+    cloudFront:
+      distributionDomain: https://d3j1uqx77q4q2.cloudfront.net
