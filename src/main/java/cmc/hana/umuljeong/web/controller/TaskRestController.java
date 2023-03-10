@@ -8,19 +8,26 @@ import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.Task;
 import cmc.hana.umuljeong.domain.enums.MemberRole;
 import cmc.hana.umuljeong.exception.BusinessException;
+import cmc.hana.umuljeong.exception.ClientCompanyException;
 import cmc.hana.umuljeong.exception.CompanyException;
 import cmc.hana.umuljeong.exception.TaskException;
+import cmc.hana.umuljeong.exception.common.ApiErrorResult;
 import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.service.TaskService;
 import cmc.hana.umuljeong.util.MemberUtil;
 import cmc.hana.umuljeong.validation.annotation.ExistBusiness;
 import cmc.hana.umuljeong.validation.annotation.ExistCompany;
 import cmc.hana.umuljeong.validation.annotation.ExistTask;
+import cmc.hana.umuljeong.web.dto.MemberResponseDto;
 import cmc.hana.umuljeong.web.dto.TaskRequestDto;
 import cmc.hana.umuljeong.web.dto.TaskResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -66,6 +73,13 @@ public class TaskRestController {
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200 (리더)", description = "OK : 정상응답 (리더)", content = @Content(schema = @Schema(implementation = TaskResponseDto.LeaderTaskListDto.class))),
+            @ApiResponse(responseCode = "200 (사원)", description = "OK : 정상응답 (사원)", content = @Content(schema = @Schema(implementation = TaskResponseDto.StaffTaskListDto.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND : companyId에 해당하는 회사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
+    })
     @GetMapping("/company/{companyId}/client/business/tasks")
     public ResponseEntity<TaskResponseDto.TaskListDto> getTaskList(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, @AuthUser Member member) {
         if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
@@ -90,9 +104,26 @@ public class TaskRestController {
 //        return ResponseEntity.ok(TaskConverter.toLeaderTaskListDto(taskList)); // todo : 요구사항에 따라 변경
 //    }
 
+    /*
+    @Operation(summary = "[003_03_3]", description = "누적 업무 건수 그래프 조회")
+    @GetMapping("/company/client/{clientId}/business/task/statistic")
+    public ResponseEntity<TaskResponseDto.StatisticDto> taskStatistic(@PathVariable(name = "clientId") Long clientCompanyId, @AuthUser Member member) {
+        if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
+            throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
+
+
+    }
+     */
+
+
     @Operation(summary = "[002_05]", description = "업무 추가")
     @Parameters({
             @Parameter(name = "member", hidden = true)
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200)", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = TaskResponseDto.CreateTaskDto.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 사업이나 업무카테고리가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
     })
     @PostMapping(value = "/company/client/business/task", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<TaskResponseDto.CreateTaskDto> createTask(@ModelAttribute @Valid TaskRequestDto.CreateTaskDto request, @AuthUser Member member) {
@@ -111,6 +142,12 @@ public class TaskRestController {
     @Operation(summary = "[002_05_5.1]", description = "업무 수정")
     @Parameters({
             @Parameter(name = "member", hidden = true)
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200)", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = TaskResponseDto.UpdateTaskDto.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 업무가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND : taskId에 해당하는 업무가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
     })
     @PatchMapping("/company/client/business/task/{taskId}")
     public ResponseEntity<TaskResponseDto.UpdateTaskDto> updateTask(@PathVariable(name = "taskId") @ExistTask Long taskId, @RequestPart @Valid TaskRequestDto.UpdateTaskDto request, @AuthUser Member member) {

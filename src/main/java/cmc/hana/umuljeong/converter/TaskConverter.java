@@ -52,6 +52,7 @@ public class TaskConverter {
     public static TaskResponseDto.TaskDto toTaskDto(Task task) {
         return TaskResponseDto.TaskDto.builder()
                 .taskId(task.getId())
+                .title(task.getTitle())
                 .taskCategory(task.getTaskCategory().getName())
                 .clientName(task.getBusiness().getClientCompany().getName())
                 .businessName(task.getBusiness().getName())
@@ -119,6 +120,7 @@ public class TaskConverter {
     public static Task toTask(TaskRequestDto.CreateTaskDto request, Member member) {
         Task task = Task.builder()
                 .taskCategory(staticTaskCategoryRepository.findById(request.getTaskCategoryId()).get())
+                .title(request.getTitle())
                 .taskImageList(new ArrayList<>())
                 .date(request.getDate())
                 .description(request.getDescription())

@@ -16,6 +16,7 @@ public class TaskResponseDto {
         private Long taskId;
         private String businessName;
         private String clientName;
+        private String title;
         private String taskCategory;
         private LocalDate date;
     }
@@ -70,5 +71,13 @@ public class TaskResponseDto {
     public static class UpdateTaskDto {
         private Long taskId;
         private LocalDateTime updatedAt;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class StatisticDto {
+        private String field;
     }
 }

@@ -22,6 +22,7 @@ public class TaskRequestDto {
         private Long taskCategoryId;
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         private LocalDate date;
+        private String title;
         private String description;
         private List<MultipartFile> taskImageList = new ArrayList<>();
     }

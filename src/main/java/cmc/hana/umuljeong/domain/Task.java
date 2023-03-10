@@ -31,6 +31,8 @@ public class Task extends BaseEntity {
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     private List<TaskImage> taskImageList = new ArrayList<>();
 
+    private String title;
+
     private LocalDate date;
 
     private String description;
