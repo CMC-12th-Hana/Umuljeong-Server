@@ -37,6 +37,8 @@ public class MemberResponseDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class CreateDto {
         private Long memberId;
+        private String memberName;
+        private String companyName;
         private LocalDateTime createdAt;
     }
 

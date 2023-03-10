@@ -99,6 +99,8 @@ public class MemberConverter {
     public static MemberResponseDto.CreateDto toCreateDto(Member createdMember) {
         return MemberResponseDto.CreateDto.builder()
                 .memberId(createdMember.getId())
+                .memberName(createdMember.getName())
+                .companyName(createdMember.getCompany().getName())
                 .createdAt(createdMember.getCreatedAt())
                 .build();
     }
