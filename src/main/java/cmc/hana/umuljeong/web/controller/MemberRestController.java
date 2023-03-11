@@ -94,6 +94,8 @@ public class MemberRestController {
         return ResponseEntity.ok(MemberConverter.toUpdateProfileDto(updatedMember));
     }
 
+
+
     @Operation(summary = "[005_03]", description = "내 비밀번호 재설정")
     @Parameters({
             @Parameter(name = "member", hidden = true)

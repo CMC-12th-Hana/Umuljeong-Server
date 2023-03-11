@@ -28,6 +28,7 @@ public class TaskResponseDto {
         private String clientName;
         private String title;
         private String taskCategory;
+        private String taskCategoryColor;
         private String description;
         private LocalDate date;
         private List<TaskImageDto> taskImageDtoList;

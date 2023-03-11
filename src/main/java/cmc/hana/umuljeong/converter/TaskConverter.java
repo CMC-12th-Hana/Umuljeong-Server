@@ -77,6 +77,7 @@ public class TaskConverter {
                 .taskId(task.getId())
                 .title(task.getTitle())
                 .taskCategory(task.getTaskCategory().getName())
+                .taskCategoryColor(task.getTaskCategory().getColor())
                 .clientName(task.getBusiness().getClientCompany().getName())
                 .businessName(task.getBusiness().getName())
                 .description(task.getDescription())
