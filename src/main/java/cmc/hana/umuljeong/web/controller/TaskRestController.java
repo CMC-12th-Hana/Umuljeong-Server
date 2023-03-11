@@ -71,27 +71,28 @@ public class TaskRestController {
 
     @Operation(summary = "[002_02, 002_03]", description = "업무 목록 조회")
     @Parameters({
-            @Parameter(name = "member", hidden = true)
+            @Parameter(name = "member", hidden = true),
+            @Parameter(name = "type", description = "MEMBER | TASK")
     })
     @ApiResponses({
-            @ApiResponse(responseCode = "200 (리더)", description = "OK : 정상응답 (리더)", content = @Content(schema = @Schema(implementation = TaskResponseDto.LeaderTaskListDto.class))),
-            @ApiResponse(responseCode = "200 (사원)", description = "OK : 정상응답 (사원)", content = @Content(schema = @Schema(implementation = TaskResponseDto.StaffTaskListDto.class))),
+            @ApiResponse(responseCode = "200 (리더)", description = "OK : 정상응답 (구성원별)", content = @Content(schema = @Schema(implementation = TaskResponseDto.LeaderTaskListDto.class))),
+            @ApiResponse(responseCode = "200 (사원)", description = "OK : 정상응답 (업무별)", content = @Content(schema = @Schema(implementation = TaskResponseDto.StaffTaskListDto.class))),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND : companyId에 해당하는 회사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
     })
     @GetMapping("/company/{companyId}/client/business/tasks")
-    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskList(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, @AuthUser Member member) {
+    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskList(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, @RequestParam(name = "type") String type, @AuthUser Member member) {
         if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
 
         List<Task> taskList;
-        if(member.getMemberRole() == MemberRole.LEADER) {
+        if(type.equals("MEMBER")) {
             taskList = taskService.findByCompanyAndDate(companyId, date);
-            return ResponseEntity.ok(TaskConverter.toLeaderTaskListDto(taskList));
+            return ResponseEntity.ok(TaskConverter.toLeaderTaskListDto(taskList)); // 구성원별
         }
 
         taskList = taskService.findByMemberAndDate(member, date);
-        return ResponseEntity.ok(TaskConverter.toStaffTaskListDto(taskList));
+        return ResponseEntity.ok(TaskConverter.toStaffTaskListDto(taskList)); // 업무별
     }
 
 //    @Deprecated
