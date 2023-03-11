@@ -5,6 +5,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public class TaskResponseDto {
 
@@ -77,7 +78,7 @@ public class TaskResponseDto {
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class StatisticDto {
-        private String field;
+    public static class TaskStatisticDto {
+        Map<String, Integer> statistic;
     }
 }

@@ -35,6 +35,12 @@ public class TaskConverter {
     private static TaskCategoryRepository staticTaskCategoryRepository;
     private static TaskImageProcess staticTaskImageProcess;
 
+    public static TaskResponseDto.TaskStatisticDto toTaskStatisticDto(Map<String, Integer> taskStatistic) {
+        return TaskResponseDto.TaskStatisticDto.builder()
+                .statistic(taskStatistic)
+                .build();
+    }
+
     @PostConstruct
     void init() {
         this.staticBusinessRepository = this.businessRepository;

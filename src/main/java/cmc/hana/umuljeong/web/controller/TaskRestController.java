@@ -40,6 +40,7 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "Task API", description = "업무 조회, 추가")
 @Validated
@@ -105,16 +106,20 @@ public class TaskRestController {
 //        return ResponseEntity.ok(TaskConverter.toLeaderTaskListDto(taskList)); // todo : 요구사항에 따라 변경
 //    }
 
-    /*
+
     @Operation(summary = "[003_03_3]", description = "누적 업무 건수 그래프 조회")
+    @Parameters({
+            @Parameter(name = "member", hidden = true)
+    })
     @GetMapping("/company/client/{clientId}/business/task/statistic")
-    public ResponseEntity<TaskResponseDto.StatisticDto> taskStatistic(@PathVariable(name = "clientId") Long clientCompanyId, @AuthUser Member member) {
+    public ResponseEntity<TaskResponseDto.TaskStatisticDto> taskStatistic(@PathVariable(name = "clientId") Long clientCompanyId, @AuthUser Member member) {
         if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
             throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
 
-
+        Map<String, Integer> taskStatistic = taskService.getStatistic(member.getCompany(), clientCompanyId);
+        return ResponseEntity.ok(TaskConverter.toTaskStatisticDto(taskStatistic));
     }
-     */
+
 
 
     @Operation(summary = "[002_05]", description = "업무 추가")
