@@ -58,4 +58,13 @@ public class MemberResponseDto {
     public static class DeleteDto {
         private LocalDateTime deletedAt;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UpdatePasswordDto {
+        private Long memberId;
+        private LocalDateTime updatedAt;
+    }
 }

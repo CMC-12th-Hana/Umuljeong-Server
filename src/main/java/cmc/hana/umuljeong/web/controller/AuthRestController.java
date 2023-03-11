@@ -139,4 +139,6 @@ public class AuthRestController {
              return ResponseEntity.ok(AuthConverter.toJoinVerifyMessageDto(verifyMessageStatus));
          }
     }
+
+
 }

@@ -79,6 +79,13 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
+    @Transactional
+    @Override
+    public Member updatePassword(Member member, MemberRequestDto.UpdatePasswordDto request) {
+        member.setPassword(passwordEncoder.encode(request.getPassword()));
+        return member;
+    }
+
     @Override
     public List<Member> findByCompany(Long companyId) {
         Company company = companyRepository.findById(companyId).get();

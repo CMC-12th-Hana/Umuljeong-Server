@@ -3,6 +3,7 @@ package cmc.hana.umuljeong.converter;
 import cmc.hana.umuljeong.aws.s3.TaskImagePackageMetaData;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.Task;
+import cmc.hana.umuljeong.domain.TaskImage;
 import cmc.hana.umuljeong.domain.common.Uuid;
 import cmc.hana.umuljeong.repository.BusinessRepository;
 import cmc.hana.umuljeong.repository.TaskCategoryRepository;
@@ -55,6 +56,15 @@ public class TaskConverter {
                 .build();
     }
 
+    public static List<TaskResponseDto.TaskImageDto> toTaskImageDtoList(List<TaskImage> taskImageList) {
+        return taskImageList.stream()
+                .map(taskImage -> TaskResponseDto.TaskImageDto.builder()
+                        .taskImageId(taskImage.getId())
+                        .url(taskImage.getUrl()).build()
+                )
+                .collect(Collectors.toList());
+    }
+
     public static TaskResponseDto.TaskDto toTaskDto(Task task) {
         return TaskResponseDto.TaskDto.builder()
                 .taskId(task.getId())
@@ -63,6 +73,7 @@ public class TaskConverter {
                 .clientName(task.getBusiness().getClientCompany().getName())
                 .businessName(task.getBusiness().getName())
                 .date(task.getDate())
+                .taskImageDtoList(toTaskImageDtoList(task.getTaskImageList()))
                 .build();
     }
 

@@ -22,4 +22,6 @@ public interface MemberService {
     Member findById(Long memberId);
 
     void delete(Long memberId);
+
+    Member updatePassword(Member member, MemberRequestDto.UpdatePasswordDto request);
 }

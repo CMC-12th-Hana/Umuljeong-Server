@@ -13,6 +13,15 @@ public class TaskResponseDto {
     @Getter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class TaskImageDto {
+        private Long taskImageId;
+        private String url;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class TaskDto {
         private Long taskId;
         private String businessName;
@@ -20,6 +29,7 @@ public class TaskResponseDto {
         private String title;
         private String taskCategory;
         private LocalDate date;
+        private List<TaskImageDto> taskImageDtoList;
     }
 
     @Builder

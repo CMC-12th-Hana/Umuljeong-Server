@@ -24,7 +24,7 @@ public class TaskRequestDto {
         private LocalDate date;
         private String title;
         private String description;
-        private List<MultipartFile> taskImageList = new ArrayList<>();
+        private List<MultipartFile> taskImageList;
     }
 
     @Getter

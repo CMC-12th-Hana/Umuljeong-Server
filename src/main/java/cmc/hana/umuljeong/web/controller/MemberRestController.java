@@ -94,6 +94,21 @@ public class MemberRestController {
         return ResponseEntity.ok(MemberConverter.toUpdateProfileDto(updatedMember));
     }
 
+    @Operation(summary = "[005_03]", description = "내 비밀번호 재설정")
+    @Parameters({
+            @Parameter(name = "member", hidden = true)
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = MemberResponseDto.UpdatePasswordDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST : 요청 데이터의 값이 형식에 맞지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
+    })
+    @PatchMapping("/company/member/password")
+    public ResponseEntity<MemberResponseDto.UpdatePasswordDto> updatePassword(@RequestBody @Valid MemberRequestDto.UpdatePasswordDto request, @AuthUser Member member) {
+        Member updatedMember = memberService.updatePassword(member, request);
+        return ResponseEntity.ok(MemberConverter.toUpdatePasswordDto(updatedMember));
+    }
+
     @Operation(summary = "[005_02.1]", description = "사원 추가")
     @Parameters({
             @Parameter(name = "leader", hidden = true)
