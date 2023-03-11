@@ -58,4 +58,9 @@ public class Member extends BaseEntity {
     public void setMemberRole(MemberRole memberRole) {
         this.memberRole = memberRole;
     }
+
+    public void removeRelationship() {
+        this.company.getMemberList().remove(this);
+        this.company = null;
+    }
 }
