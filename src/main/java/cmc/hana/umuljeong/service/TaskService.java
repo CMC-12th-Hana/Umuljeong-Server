@@ -23,4 +23,6 @@ public interface TaskService {
     Task update(TaskRequestDto.UpdateTaskDto request);
 
     Map<String, Integer> getStatistic(Company company, Long clientCompanyId);
+
+    List<Task> findByBusinessAndDateAndTaskCategory(Long businessId, Integer year, Integer month, Integer day, Long categoryId);
 }

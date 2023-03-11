@@ -72,6 +72,7 @@ public class TaskConverter {
                 .taskCategory(task.getTaskCategory().getName())
                 .clientName(task.getBusiness().getClientCompany().getName())
                 .businessName(task.getBusiness().getName())
+                .description(task.getDescription())
                 .date(task.getDate())
                 .taskImageDtoList(toTaskImageDtoList(task.getTaskImageList()))
                 .build();

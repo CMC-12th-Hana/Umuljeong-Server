@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,5 +74,26 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task findById(Long taskId) {
         return taskRepository.findById(taskId).get();
+    }
+
+    @Override
+    public List<Task> findByBusinessAndDateAndTaskCategory(Long businessId, Integer year, Integer month, Integer day, Long categoryId) {
+        Business business = businessRepository.findById(businessId).get();
+        TaskCategory taskCategory = null;
+        if(categoryId != null) taskCategory = taskCategoryRepository.findById(categoryId).get();
+
+        List<Task> taskList;
+
+        if(day == null) {
+            if(taskCategory == null) taskList = taskRepository.findByBusinessAndYearAndMonth(business, year, month);
+            else taskList = taskRepository.findByBusinessAndYearAndMonthAndTaskCategory(business, year, month, taskCategory);
+        }
+        else {
+            LocalDate date = LocalDate.of(year, month, day);
+            if(taskCategory == null) taskList = taskRepository.findByBusinessAndDate(business, date);
+            else taskList = taskRepository.findByBusinessAndDateAndTaskCategory(business, date, taskCategory);
+        }
+
+        return taskList;
     }
 }
