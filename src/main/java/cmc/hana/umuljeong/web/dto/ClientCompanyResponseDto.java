@@ -57,4 +57,12 @@ public class ClientCompanyResponseDto {
         private Long clientCompanyId;
         private LocalDateTime updatedAt;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class DeleteClientCompany {
+        private LocalDateTime deletedAt;
+    }
 }

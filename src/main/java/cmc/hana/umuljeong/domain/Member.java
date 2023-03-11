@@ -3,10 +3,13 @@ package cmc.hana.umuljeong.domain;
 import cmc.hana.umuljeong.domain.common.BaseEntity;
 import cmc.hana.umuljeong.domain.enums.JoinCompanyStatus;
 import cmc.hana.umuljeong.domain.enums.MemberRole;
+import cmc.hana.umuljeong.domain.mapping.BusinessMember;
 import lombok.*;
 import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -41,6 +44,12 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private JoinCompanyStatus joinCompanyStatus;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BusinessMember> businessMemberList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> taskList = new ArrayList<>();
 
     public void setCompany(Company company) {
         this.company = company;

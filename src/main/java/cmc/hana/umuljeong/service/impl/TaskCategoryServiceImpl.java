@@ -51,8 +51,8 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
 
     @Transactional
     @Override
-    public void deleteList(TaskCategoryRequestDto.DeleteTaskCategoryListDto request) {
-        taskCategoryRepository.deleteAllByIdInQuery(request.getTaskCategoryIdList());
+    public void deleteList(List<Long> categoryIds) {
+        taskCategoryRepository.deleteAllByIdInQuery(categoryIds);
         return ;
     }
 

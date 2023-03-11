@@ -50,4 +50,12 @@ public class MemberResponseDto {
         private Long memberId;
         private LocalDateTime updatedAt;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class DeleteDto {
+        private LocalDateTime deletedAt;
+    }
 }

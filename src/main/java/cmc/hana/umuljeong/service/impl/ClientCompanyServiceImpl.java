@@ -1,17 +1,22 @@
 package cmc.hana.umuljeong.service.impl;
 
 import cmc.hana.umuljeong.converter.ClientCompanyConverter;
+import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.ClientCompany;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.domain.mapping.BusinessMember;
+import cmc.hana.umuljeong.repository.BusinessRepository;
 import cmc.hana.umuljeong.repository.ClientCompanyRepository;
 import cmc.hana.umuljeong.repository.CompanyRepository;
+import cmc.hana.umuljeong.repository.mapping.BusinessMemberRepository;
 import cmc.hana.umuljeong.service.ClientCompanyService;
 import cmc.hana.umuljeong.web.dto.ClientCompanyRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,6 +26,9 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
 
     private final ClientCompanyRepository clientCompanyRepository;
     private final CompanyRepository companyRepository;
+
+    private final BusinessMemberRepository businessMemberRepository;
+    private final BusinessRepository businessRepository;
 
     @Transactional
     @Override
@@ -41,6 +49,20 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
         clientCompany.getSalesRepresentative().setDepartment(request.getSalesRepresentativeDto().getDepartment());
         clientCompany.getSalesRepresentative().setPhoneNumber(request.getSalesRepresentativeDto().getPhoneNumber());
         return clientCompany;
+    }
+
+    @Transactional
+    @Override
+    public void delete(Long clientCompanyId) {
+        ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyId).get();
+        List<Business> businessList = businessRepository.findByClientCompany(clientCompany);
+        businessList.stream().forEach(business -> {
+            businessMemberRepository.findByBusiness(business).stream()
+                    .forEach(businessMember -> businessMember.removeRelationship());
+        });
+
+        clientCompanyRepository.deleteById(clientCompanyId);
+        return ;
     }
 
     @Override

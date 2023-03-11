@@ -28,10 +28,10 @@ public class BusinessMemberConverter {
     }
 
     public static BusinessMember toBusinessMember(Business business, Long memberId) {
-        return BusinessMember.builder()
-                .business(business)
-                .member(staticMemberRepository.findById(memberId).orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND)))
-                .build();
+        BusinessMember businessMember = BusinessMember.builder().build();
+        businessMember.setBusiness(business);
+        businessMember.setMember(staticMemberRepository.findById(memberId).orElseThrow(() -> new MemberException(ErrorCode.MEMBER_NOT_FOUND)));
+        return businessMember;
     }
 
 

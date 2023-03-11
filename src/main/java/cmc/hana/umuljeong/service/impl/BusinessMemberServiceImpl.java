@@ -22,4 +22,7 @@ public class BusinessMemberServiceImpl implements BusinessMemberService {
     public List<BusinessMember> findByBusiness(Business business) {
         return businessMemberRepository.findByBusiness(business);
     }
+
+
+
 }

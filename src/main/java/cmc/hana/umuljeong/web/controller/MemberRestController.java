@@ -79,7 +79,7 @@ public class MemberRestController {
         return ResponseEntity.ok(MemberConverter.toProfileDto(member));
     }
 
-    @Operation(summary = "[005_03]", description = "사원 프로필 수정")
+    @Operation(summary = "[005_03]", description = "내 프로필 수정")
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })
@@ -110,5 +110,24 @@ public class MemberRestController {
         if(companyId != leader.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
         Member createdMember = memberService.create(companyId, request);
         return ResponseEntity.ok(MemberConverter.toCreateDto(createdMember));
+    }
+
+    // todo : 동작이 안 됨.. 찾아보기
+    @Operation(summary = "[005_03.2]", description = "사원 삭제")
+    @Parameters({
+            @Parameter(name = "leader", hidden = true)
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = MemberResponseDto.DeleteDto.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 구성원이 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND : memberId 해당하는 구성원이 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
+    })
+    @DeleteMapping("/company/member/{memberId}")
+    public ResponseEntity<MemberResponseDto.DeleteDto> delete(@PathVariable(name = "memberId") @ExistMember Long memberId, @AuthUser Member leader) {
+        if(!leader.getCompany().getMemberList().stream().anyMatch(member -> member.getId() == memberId))
+            throw new MemberException(ErrorCode.MEMBER_ACCESS_DENIED);
+        memberService.delete(memberId);
+        return ResponseEntity.ok(MemberConverter.toDeleteDto());
     }
 }

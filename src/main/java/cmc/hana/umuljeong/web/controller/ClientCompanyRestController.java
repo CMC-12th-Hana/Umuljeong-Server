@@ -113,4 +113,23 @@ public class ClientCompanyRestController {
         return ResponseEntity.ok(ClientCompanyConverter.toUpdateClientCompany(clientCompany));
     }
 
+    @Operation(summary = "[]", description = "고객사 삭제")
+    @Parameters({
+            @Parameter(name = "member", hidden = true)
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = ClientCompanyResponseDto.DeleteClientCompany.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST : 요청 데이터의 값이 형식에 맞지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 고객사가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND : clientId에 해당하는 고객사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
+    })
+    @DeleteMapping("/company/client/{clientId}")
+    public ResponseEntity<ClientCompanyResponseDto.DeleteClientCompany> deleteClientCompany(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @AuthUser Member member) {
+        if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
+            throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
+
+        clientCompanyService.delete(clientCompanyId);
+        return ResponseEntity.ok(ClientCompanyConverter.toDeleteClientCompany());
+    }
 }

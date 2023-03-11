@@ -8,6 +8,7 @@ import cmc.hana.umuljeong.domain.embedded.SalesRepresentative;
 import cmc.hana.umuljeong.web.dto.ClientCompanyRequestDto;
 import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,5 +81,11 @@ public class ClientCompanyConverter {
         clientCompany.setCompany(company);
 
         return clientCompany;
+    }
+
+    public static ClientCompanyResponseDto.DeleteClientCompany toDeleteClientCompany() {
+        return ClientCompanyResponseDto.DeleteClientCompany.builder()
+                .deletedAt(LocalDateTime.now())
+                .build();
     }
 }

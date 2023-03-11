@@ -89,4 +89,10 @@ public class MemberServiceImpl implements MemberService {
     public Member findById(Long memberId) {
         return memberRepository.findById(memberId).get();
     }
+
+    @Transactional
+    @Override
+    public void delete(Long memberId) {
+        memberRepository.deleteById(memberId);
+    }
 }

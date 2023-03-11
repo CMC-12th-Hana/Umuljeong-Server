@@ -26,6 +26,14 @@ public class BusinessMember {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    public void removeRelationship() {
+        member.getBusinessMemberList().remove(this);
+        this.member = null;
+
+        business.getBusinessMemberList().remove(this);
+        this.business = null;
+    }
+
     public void setBusiness(Business business) {
         if (this.business != null) {
             this.business.getBusinessMemberList().remove(this);
@@ -35,6 +43,10 @@ public class BusinessMember {
     }
 
     public void setMember(Member member) {
+        if (this.member != null) {
+            this.member.getBusinessMemberList().remove(this);
+        }
         this.member = member;
+        member.getBusinessMemberList().add(this);
     }
 }

@@ -12,7 +12,7 @@ public interface TaskCategoryService {
 
     // List<TaskCategory> updateList(Long companyId, TaskCategoryRequestDto.UpdateTaskCategoryListDto request);
 
-    void deleteList(TaskCategoryRequestDto.DeleteTaskCategoryListDto request);
+    void deleteList(List<Long> categoryIds);
 
     List<TaskCategory> findByCompany(Long companyId);
 

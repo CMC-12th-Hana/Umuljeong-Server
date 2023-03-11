@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,12 @@ public class MemberConverter {
         return MemberResponseDto.UpdateProfileDto.builder()
                 .memberId(updatedMember.getId())
                 .updatedAt(updatedMember.getUpdatedAt())
+                .build();
+    }
+
+    public static MemberResponseDto.DeleteDto toDeleteDto() {
+        return MemberResponseDto.DeleteDto.builder()
+                .deletedAt(LocalDateTime.now())
                 .build();
     }
 

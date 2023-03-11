@@ -20,4 +20,6 @@ public interface MemberService {
     Member updateProfile(Member member, MemberRequestDto.UpdateProfileDto request);
 
     Member findById(Long memberId);
+
+    void delete(Long memberId);
 }

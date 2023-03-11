@@ -48,4 +48,12 @@ public class Task extends BaseEntity {
         this.business = business;
         business.getTaskList().add(this);
     }
+
+    public void setMember(Member member) {
+        if (this.member != null) {
+            this.member.getTaskList().remove(this);
+        }
+        this.member = member;
+        member.getTaskList().add(this);
+    }
 }

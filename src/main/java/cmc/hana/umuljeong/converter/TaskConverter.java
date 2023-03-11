@@ -124,9 +124,8 @@ public class TaskConverter {
                 .taskImageList(new ArrayList<>())
                 .date(request.getDate())
                 .description(request.getDescription())
-                .member(member)
                 .build();
-
+        task.setMember(member);
         task.setBusiness(staticBusinessRepository.findById(request.getBusinessId()).get());
 
         List<MultipartFile> taskImageDtoList = request.getTaskImageList();

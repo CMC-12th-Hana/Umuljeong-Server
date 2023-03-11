@@ -104,16 +104,16 @@ public class TaskCategoryRestController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN : 삭제 요청 id들 중 본인 회사의 업무카테고리가 아닌 것이 있는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
     })
     @DeleteMapping("/company/client/business/task/categories")
-    public ResponseEntity<TaskCategoryResponseDto.DeleteTaskCategoryListDto> deleteTaskCategory(@RequestBody @Valid TaskCategoryRequestDto.DeleteTaskCategoryListDto request, @AuthUser Member member) {
+    public ResponseEntity<TaskCategoryResponseDto.DeleteTaskCategoryListDto> deleteTaskCategory(@RequestParam(name = "categoryIds") List<Long> categoryIds, @AuthUser Member member) {
         List<Long> taskCategoryIds = member.getCompany().getTaskCategoryList().stream()
                         .map(taskCategory -> taskCategory.getId())
                         .collect(Collectors.toList());
 
-        for(Long taskCategoryId : request.getTaskCategoryIdList()) {
+        for(Long taskCategoryId : categoryIds) {
             if(!taskCategoryIds.contains(taskCategoryId)) throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ACCESS_DENIED);
         }
 
-        taskCategoryService.deleteList(request);
+        taskCategoryService.deleteList(categoryIds);
         return ResponseEntity.ok(TaskCategoryConverter.toDeleteTaskCategoryListDto());
     }
 }
