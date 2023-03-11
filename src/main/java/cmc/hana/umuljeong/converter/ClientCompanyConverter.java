@@ -9,6 +9,7 @@ import cmc.hana.umuljeong.web.dto.ClientCompanyRequestDto;
 import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,6 +78,7 @@ public class ClientCompanyConverter {
                 .name(request.getName())
                 .tel(request.getTel())
                 .salesRepresentative(salesRepresentative)
+                .businessList(new ArrayList<>())
                 .build();
         clientCompany.setCompany(company);
 

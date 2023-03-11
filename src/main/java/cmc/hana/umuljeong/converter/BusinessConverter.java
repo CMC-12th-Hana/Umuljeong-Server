@@ -13,6 +13,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +31,22 @@ public class BusinessConverter {
                 .businessId(business.getId())
                 .updatedAt(business.getUpdatedAt())
                 .build();
+    }
+
+    public static Business toEtcBusiness(ClientCompany clientCompany) {
+        Business business = Business.builder()
+                .businessPeriod(BusinessPeriod.builder()
+                                .start(LocalDate.of(2000, 1, 1))
+                                .finish(LocalDate.of(2000, 1, 1))
+                                .build())
+                .businessMemberList(new ArrayList<>())
+                .revenue(0)
+                .description("사업 분류 없음")
+                .name("기타")
+                .revenue(0)
+                .build();
+        business.setClientCompany(clientCompany);
+        return business;
     }
 
     @PostConstruct

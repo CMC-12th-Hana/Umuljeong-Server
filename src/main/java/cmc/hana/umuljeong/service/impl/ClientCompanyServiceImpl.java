@@ -1,5 +1,6 @@
 package cmc.hana.umuljeong.service.impl;
 
+import cmc.hana.umuljeong.converter.BusinessConverter;
 import cmc.hana.umuljeong.converter.ClientCompanyConverter;
 import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.ClientCompany;
@@ -35,6 +36,10 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     public ClientCompany create(ClientCompanyRequestDto.CreateClientCompanyDto request, Long companyId) {
         Company company = companyRepository.findById(companyId).get();
         ClientCompany clientCompany = ClientCompanyConverter.toClientCompany(request, company);
+
+        Business etcBusiness = BusinessConverter.toEtcBusiness(clientCompany);
+        businessRepository.save(etcBusiness);
+
         return clientCompanyRepository.save(clientCompany);
     }
 
