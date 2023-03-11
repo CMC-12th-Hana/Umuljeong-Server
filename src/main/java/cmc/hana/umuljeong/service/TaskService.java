@@ -25,4 +25,6 @@ public interface TaskService {
     Map<String, Integer> getStatistic(Company company, Long clientCompanyId);
 
     List<Task> findByBusinessAndDateAndTaskCategory(Long businessId, Integer year, Integer month, Integer day, Long categoryId);
+
+    void delete(Long taskId);
 }

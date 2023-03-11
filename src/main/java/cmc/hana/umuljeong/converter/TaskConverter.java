@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,12 @@ public class TaskConverter {
     public static TaskResponseDto.TaskStatisticDto toTaskStatisticDto(Map<String, Integer> taskStatistic) {
         return TaskResponseDto.TaskStatisticDto.builder()
                 .statistic(taskStatistic)
+                .build();
+    }
+
+    public static TaskResponseDto.DeleteTaskDto toDeleteTaskDto() {
+        return TaskResponseDto.DeleteTaskDto.builder()
+                .deletedAt(LocalDateTime.now())
                 .build();
     }
 

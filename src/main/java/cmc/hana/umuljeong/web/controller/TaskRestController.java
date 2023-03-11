@@ -123,20 +123,6 @@ public class TaskRestController {
         return ResponseEntity.ok(TaskConverter.toStaffTaskListDto(taskList)); // 업무별
     }
 
-
-
-
-//    @Deprecated
-//    @Parameters({
-//            @Parameter(name = "member", hidden = true)
-//    })
-//    @GetMapping("/company/client/business/{businessId}/tasks")
-//    public ResponseEntity<TaskResponseDto.TaskListDto> getTaskListByBusiness(@PathVariable(name = "businessId") @ExistBusiness Long businessId,  @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, @AuthUser Member member) {
-//        List<Task> taskList = taskService.findByBusinessAndMemberAndDate(businessId, member, date);
-//        return ResponseEntity.ok(TaskConverter.toLeaderTaskListDto(taskList)); // todo : 요구사항에 따라 변경
-//    }
-
-
     @Operation(summary = "[003_03_3]", description = "누적 업무 건수 그래프 조회")
     @Parameters({
             @Parameter(name = "member", hidden = true)
@@ -149,8 +135,6 @@ public class TaskRestController {
         Map<String, Integer> taskStatistic = taskService.getStatistic(member.getCompany(), clientCompanyId);
         return ResponseEntity.ok(TaskConverter.toTaskStatisticDto(taskStatistic));
     }
-
-
 
     @Operation(summary = "[002_05]", description = "업무 추가")
     @Parameters({
@@ -200,4 +184,33 @@ public class TaskRestController {
         Task task = taskService.update(request);
         return ResponseEntity.ok(TaskConverter.toUpdateTaskDto(task));
     }
+
+    @Operation(summary = "[002_03]", description = "업무 삭제")
+    @Parameters({
+            @Parameter(name = "member", hidden = true)
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200)", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = TaskResponseDto.DeleteTaskDto.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 업무가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND : taskId에 해당하는 업무가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
+    })
+    @DeleteMapping("/company/client/business/task/{taskId}")
+    public ResponseEntity<TaskResponseDto.DeleteTaskDto> deleteTask(@PathVariable(name = "taskId") @ExistTask Long taskId, @AuthUser Member member) {
+        boolean isValid = false;
+        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
+            for(Business business : clientCompany.getBusinessList()) {
+                isValid = business.getTaskList().stream().anyMatch(task -> task.getId() == taskId);
+                if(isValid) break;
+            }
+            if(isValid) break;
+        }
+        if(!isValid) throw new TaskException(ErrorCode.TASK_ACCESS_DENIED);
+
+        taskService.delete(taskId);
+
+        return ResponseEntity.ok(TaskConverter.toDeleteTaskDto());
+    }
+
+
 }

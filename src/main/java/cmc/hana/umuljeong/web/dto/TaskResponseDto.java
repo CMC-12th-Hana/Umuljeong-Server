@@ -90,6 +90,14 @@ public class TaskResponseDto {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class TaskStatisticDto {
-        Map<String, Integer> statistic;
+        private Map<String, Integer> statistic;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class DeleteTaskDto {
+        private LocalDateTime deletedAt;
     }
 }

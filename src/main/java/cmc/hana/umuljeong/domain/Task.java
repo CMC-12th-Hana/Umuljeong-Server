@@ -56,4 +56,9 @@ public class Task extends BaseEntity {
         this.member = member;
         member.getTaskList().add(this);
     }
+
+    public void removeRelationship() {
+        this.member.getTaskList().remove(this); this.member = null;
+        this.business.getTaskList().remove(this); this.business = null;
+    }
 }
