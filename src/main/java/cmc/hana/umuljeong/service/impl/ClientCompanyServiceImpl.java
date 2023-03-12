@@ -60,13 +60,8 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     @Override
     public void delete(Long clientCompanyId) {
         ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyId).get();
-        List<Business> businessList = businessRepository.findByClientCompany(clientCompany);
-        businessList.stream().forEach(business -> {
-            businessMemberRepository.findByBusiness(business).stream()
-                    .forEach(businessMember -> businessMember.removeRelationship());
-        });
-
-        clientCompanyRepository.deleteById(clientCompanyId);
+        clientCompany.removeRelationshop();
+        clientCompanyRepository.delete(clientCompany);
         return ;
     }
 

@@ -44,4 +44,8 @@ public class ClientCompany extends BaseEntity {
         this.company = company;
         company.getClientCompanyList().add(this);
     }
+
+    public void removeRelationshop() {
+        this.company.getClientCompanyList().remove(this); this.company = null;
+    }
 }
