@@ -28,6 +28,18 @@ public class MemberRequestDto {
     }
 
     @Getter
+    public static class UpdateMemberProfileDto {
+        @NotBlank
+        private String name;
+        @NotBlank
+        private String phoneNumber;
+        @NotBlank
+        private String staffRank;
+        @NotBlank
+        private String staffNumber;
+    }
+
+    @Getter
     public static class UpdatePasswordDto {
         @NotBlank
         @Size(min = 8, max = 20)

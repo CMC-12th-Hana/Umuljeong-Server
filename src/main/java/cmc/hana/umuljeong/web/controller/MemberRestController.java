@@ -94,6 +94,25 @@ public class MemberRestController {
         return ResponseEntity.ok(MemberConverter.toUpdateProfileDto(updatedMember));
     }
 
+    @Operation(summary = "[]", description = "사원 프로필 수정")
+    @Parameters({
+            @Parameter(name = "leader", hidden = true)
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = MemberResponseDto.UpdateProfileDto.class))),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST : 요청 데이터의 값이 형식에 맞지 않은 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 구성원이 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
+    })
+    @PatchMapping("/company/member/{memberId}/profile")
+    public ResponseEntity<MemberResponseDto.UpdateProfileDto> updateMemberProfile(@PathVariable(name = "memberId") @ExistMember Long memberId, @RequestBody @Valid MemberRequestDto.UpdateMemberProfileDto request, @AuthUser Member leader) {
+        if(!leader.getCompany().getMemberList().stream().anyMatch(member -> member.getId() == memberId))
+            throw new MemberException(ErrorCode.MEMBER_ACCESS_DENIED);
+
+        Member updatedMember = memberService.updateMemberProfile(memberId, request);
+        return ResponseEntity.ok(MemberConverter.toUpdateProfileDto(updatedMember));
+    }
+
 
 
     @Operation(summary = "[005_03]", description = "내 비밀번호 재설정")

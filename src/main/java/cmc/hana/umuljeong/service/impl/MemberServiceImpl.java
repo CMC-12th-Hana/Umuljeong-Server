@@ -81,6 +81,17 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
+    public Member updateMemberProfile(Long memberId, MemberRequestDto.UpdateMemberProfileDto request) {
+        Member member = memberRepository.findById(memberId).get();
+        member.setName(request.getName());
+        member.setPhoneNumber(request.getPhoneNumber());
+        member.setStaffNumber(request.getStaffNumber());
+        member.setStaffRank(request.getStaffRank());
+        return member;
+    }
+
+    @Transactional
+    @Override
     public Member updatePassword(Member member, MemberRequestDto.UpdatePasswordDto request) {
         member.setPassword(passwordEncoder.encode(request.getPassword()));
         return member;
