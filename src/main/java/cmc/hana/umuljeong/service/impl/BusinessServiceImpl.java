@@ -31,6 +31,8 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public Business create(Long clientCompanyId, BusinessRequestDto.CreateBusinessDto request) {
         ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyId).get();
+        clientCompanyRepository.increaseBusinessCount(clientCompany);
+
         Business business = BusinessConverter.toBusiness(clientCompany, request);
         return businessRepository.save(business);
     }
@@ -62,6 +64,9 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public void delete(Long businessId) {
         Business business = businessRepository.findById(businessId).get();
+        ClientCompany clientCompany = business.getClientCompany();
+        clientCompanyRepository.decreaseBusinessCount(clientCompany);
+
         business.removeRelationship();
         businessRepository.delete(business);
         return ;

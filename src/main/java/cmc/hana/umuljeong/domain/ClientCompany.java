@@ -30,12 +30,12 @@ public class ClientCompany extends BaseEntity {
     @JoinColumn(name = "sales_representative_id")
     private SalesRepresentative salesRepresentative;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "client_company_summary_id")
-    private ClientCompanySummary clientCompanySummary;
-
     @OneToMany(mappedBy = "clientCompany", cascade = CascadeType.ALL)
     private List<Business> businessList;
+
+    private Integer taskCount;
+
+    private Integer businessCount;
 
     public void setCompany(Company company) {
         if (this.company != null) {

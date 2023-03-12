@@ -1,9 +1,7 @@
 package cmc.hana.umuljeong.converter;
 
 import cmc.hana.umuljeong.domain.ClientCompany;
-import cmc.hana.umuljeong.domain.ClientCompanySummary;
 import cmc.hana.umuljeong.domain.Company;
-import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.embedded.SalesRepresentative;
 import cmc.hana.umuljeong.web.dto.ClientCompanyRequestDto;
 import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
@@ -36,8 +34,8 @@ public class ClientCompanyConverter {
                 .name(clientCompany.getName())
                 .tel(clientCompany.getTel())
                 .salesRepresentativeDto(toSalesRepresentativeDto(clientCompany.getSalesRepresentative()))
-                .taskCount(clientCompany.getClientCompanySummary().getTaskCount())
-                .businessCount(clientCompany.getClientCompanySummary().getBusinessCount())
+                .taskCount(clientCompany.getTaskCount())
+                .businessCount(clientCompany.getBusinessCount())
                 .build();
     }
 
@@ -60,11 +58,6 @@ public class ClientCompanyConverter {
     }
 
     public static ClientCompany toClientCompany(ClientCompanyRequestDto.CreateClientCompanyDto request, Company company) {
-        ClientCompanySummary clientCompanySummary = ClientCompanySummary.builder()
-                .businessCount(0)
-                .taskCount(0)
-                .build();
-
         ClientCompanyRequestDto.SalesRepresentativeDto salesRepresentativeDto = request.getSalesRepresentativeDto();
 
         SalesRepresentative salesRepresentative = SalesRepresentative.builder()
@@ -74,11 +67,12 @@ public class ClientCompanyConverter {
                 .build();
 
         ClientCompany clientCompany = ClientCompany.builder()
-                .clientCompanySummary(clientCompanySummary)
                 .name(request.getName())
                 .tel(request.getTel())
                 .salesRepresentative(salesRepresentative)
                 .businessList(new ArrayList<>())
+                .businessCount(0)
+                .taskCount(0)
                 .build();
         clientCompany.setCompany(company);
 

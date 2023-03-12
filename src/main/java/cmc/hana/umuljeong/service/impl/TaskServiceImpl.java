@@ -2,10 +2,7 @@ package cmc.hana.umuljeong.service.impl;
 
 import cmc.hana.umuljeong.converter.TaskConverter;
 import cmc.hana.umuljeong.domain.*;
-import cmc.hana.umuljeong.repository.BusinessRepository;
-import cmc.hana.umuljeong.repository.CompanyRepository;
-import cmc.hana.umuljeong.repository.TaskCategoryRepository;
-import cmc.hana.umuljeong.repository.TaskRepository;
+import cmc.hana.umuljeong.repository.*;
 import cmc.hana.umuljeong.repository.querydsl.TaskCustomRepository;
 import cmc.hana.umuljeong.service.TaskService;
 import cmc.hana.umuljeong.web.dto.TaskRequestDto;
@@ -29,14 +26,18 @@ public class TaskServiceImpl implements TaskService {
     private final BusinessRepository businessRepository;
     private final CompanyRepository companyRepository;
     private final TaskCategoryRepository taskCategoryRepository;
-
     private final TaskImageProcess taskImageProcess;
+
+    private final ClientCompanyRepository clientCompanyRepository;
+
 
     @Transactional
     @Override
     public Task create(TaskRequestDto.CreateTaskDto request, Member member) {
         Task task = TaskConverter.toTask(request, member);
-        // 방문건수랑 무슨건수 업데이트 쳐주기
+        ClientCompany clientCompany = task.getBusiness().getClientCompany();
+        clientCompanyRepository.increaseTaskCount(clientCompany);
+
         return taskRepository.save(task);
     }
 
@@ -103,6 +104,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void delete(Long taskId) {
         Task task = taskRepository.findById(taskId).get();
+
+        ClientCompany clientCompany = task.getBusiness().getClientCompany();
+        clientCompanyRepository.decreaseTaskCount(clientCompany);
 
         List<TaskImage> taskImageList = task.getTaskImageList();
         for(TaskImage taskImage : taskImageList) {

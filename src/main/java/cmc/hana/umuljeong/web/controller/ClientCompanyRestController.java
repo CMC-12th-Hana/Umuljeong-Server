@@ -39,7 +39,9 @@ public class ClientCompanyRestController {
 
     @Operation(summary = "[003_01]", description = "고객사 목록 조회")
     @Parameters({
-            @Parameter(name = "member", hidden = true)
+            @Parameter(name = "member", hidden = true),
+            @Parameter(name = "sort", description = "name | taskCount | businessCount"),
+            @Parameter(name = "order", description = "ASC | DESC")
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = ClientCompanyResponseDto.ClientCompanyListDto.class))),
@@ -49,10 +51,13 @@ public class ClientCompanyRestController {
     })
     @GetMapping("/company/{companyId}/clients")
     public ResponseEntity<ClientCompanyResponseDto.ClientCompanyListDto> getClientCompanyList(@PathVariable(name = "companyId") @ExistCompany Long companyId,
-                                                                                              @RequestParam(name = "name", required = false) String name, @AuthUser Member member) {
+                                                                                              @RequestParam(name = "name", required = false) String name,
+                                                                                              @RequestParam(name = "sort", required = false, defaultValue = "name") String sort,
+                                                                                              @RequestParam(name = "order", required = false, defaultValue = "ASC") String order,
+                                                                                              @AuthUser Member member) {
         if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
 
-        List<ClientCompany> clientCompanyList = clientCompanyService.findByCompanyAndName(companyId, name);
+        List<ClientCompany> clientCompanyList = clientCompanyService.findByCompanyAndName(companyId, name, sort, order);
         return ResponseEntity.ok(ClientCompanyConverter.toClientCompanyListDto(clientCompanyList));
     }
 

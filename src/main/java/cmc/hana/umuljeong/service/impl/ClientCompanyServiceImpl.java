@@ -73,8 +73,8 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     }
 
     @Override
-    public List<ClientCompany> findByCompanyAndName(Long companyId, String name) {
+    public List<ClientCompany> findByCompanyAndName(Long companyId, String name, String sort, String order) {
         Company company = companyRepository.findById(companyId).get();
-        return clientCompanyCustomRepository.findByCompanyAndName(company, name);
+        return clientCompanyCustomRepository.findByCompanyAndName(company, name, sort, order);
     }
 }
