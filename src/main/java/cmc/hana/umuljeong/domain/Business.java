@@ -50,4 +50,9 @@ public class Business extends BaseEntity {
         this.clientCompany = clientCompany;
         clientCompany.getBusinessList().add(this);
     }
+
+    public void removeRelationship() {
+        this.clientCompany.getBusinessList().remove(this);
+        this.clientCompany = null;
+    }
 }

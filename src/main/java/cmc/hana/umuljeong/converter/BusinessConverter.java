@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,6 +48,12 @@ public class BusinessConverter {
                 .build();
         business.setClientCompany(clientCompany);
         return business;
+    }
+
+    public static BusinessResponseDto.DeleteBusinessDto DeleteBusinessDto() {
+        return BusinessResponseDto.DeleteBusinessDto.builder()
+                .deletedAt(LocalDateTime.now())
+                .build();
     }
 
     @PostConstruct

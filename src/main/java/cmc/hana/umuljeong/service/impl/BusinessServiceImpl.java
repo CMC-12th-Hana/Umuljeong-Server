@@ -10,6 +10,7 @@ import cmc.hana.umuljeong.repository.ClientCompanyRepository;
 import cmc.hana.umuljeong.repository.mapping.BusinessMemberRepository;
 import cmc.hana.umuljeong.service.BusinessService;
 import cmc.hana.umuljeong.web.dto.BusinessRequestDto;
+import cmc.hana.umuljeong.web.dto.BusinessResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +56,15 @@ public class BusinessServiceImpl implements BusinessService {
         business.setRevenue(request.getRevenue());
 
         return business;
+    }
+
+    @Transactional
+    @Override
+    public void delete(Long businessId) {
+        Business business = businessRepository.findById(businessId).get();
+        business.removeRelationship();
+        businessRepository.delete(business);
+        return ;
     }
 
     @Override

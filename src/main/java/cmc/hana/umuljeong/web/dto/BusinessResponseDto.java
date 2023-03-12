@@ -64,4 +64,12 @@ public class BusinessResponseDto {
         private Long businessId;
         private LocalDateTime updatedAt;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class DeleteBusinessDto {
+        private LocalDateTime deletedAt;
+    }
 }

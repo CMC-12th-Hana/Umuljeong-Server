@@ -120,4 +120,21 @@ public class BusinessRestController {
         Business business = businessService.update(businessId, request);
         return ResponseEntity.ok(BusinessConverter.toUpdateBusinessDto(business));
     }
+
+    @Operation(summary = "[003_04]", description = "사업 삭제")
+    @Parameters({
+            @Parameter(name = "member", hidden = true)
+    })
+    @DeleteMapping("/company/client/business/{businessId}")
+    public ResponseEntity<BusinessResponseDto.DeleteBusinessDto> deleteBusiness(@PathVariable (name = "businessId") @ExistBusiness Long businessId, @AuthUser Member member) {
+        boolean isValid = false;
+        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
+            isValid = clientCompany.getBusinessList().stream().anyMatch(business -> business.getId() == businessId);
+            if(isValid) break;
+        }
+        if(!isValid) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
+
+        businessService.delete(businessId);
+        return ResponseEntity.ok(BusinessConverter.DeleteBusinessDto());
+    }
 }

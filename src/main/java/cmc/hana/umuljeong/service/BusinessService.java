@@ -14,4 +14,6 @@ public interface BusinessService {
     List<Business> findByClientCompany(ClientCompany clientCompany);
 
     Business update(Long businessId, BusinessRequestDto.UpdateBusinessDto request);
+
+    void delete(Long businessId);
 }
