@@ -30,6 +30,7 @@ public class TaskServiceImpl implements TaskService {
     private final CompanyRepository companyRepository;
     private final TaskCategoryRepository taskCategoryRepository;
 
+    private final TaskImageProcess taskImageProcess;
 
     @Transactional
     @Override
@@ -103,8 +104,10 @@ public class TaskServiceImpl implements TaskService {
     public void delete(Long taskId) {
         Task task = taskRepository.findById(taskId).get();
 
-        List<TaskImage> taskImage = task.getTaskImageList();
-
+        List<TaskImage> taskImageList = task.getTaskImageList();
+        for(TaskImage taskImage : taskImageList) {
+            taskImageProcess.deleteImage(taskImage.getUrl());
+        }
 
         task.removeRelationship();
         taskRepository.delete(task);

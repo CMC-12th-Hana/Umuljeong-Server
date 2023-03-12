@@ -52,6 +52,10 @@ public abstract class FileProcessServiceImpl<T extends FilePackageMeta> {
         return filePath;
     }
 
+    public String getDeleteFilePath(T imagePackage, String uuid, String originFilename) {
+        return amazonS3Service.getFileFolder(imagePackage.createCommand()) + createFileName(uuid, originFilename);
+    }
+
     protected ObjectMetadata generateObjectMetadata(MultipartFile file) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());
@@ -81,6 +85,16 @@ public abstract class FileProcessServiceImpl<T extends FilePackageMeta> {
         String trimedString = originalFileName.trim();
         String result = trimedString.replaceAll(" ", "-");
         return result;
+    }
+
+    public void deleteImage(String url) {
+        amazonS3Service.deleteFile(getFileName(url));
+    }
+
+    // ex) task-image/24/b9328363-882f-4708-95cb-5d6b694bca34.png
+    private String getFileName(String url) {
+        String[] paths = url.split("/");
+        return paths[3] + "/" + paths[4] + "/" + paths[5];
     }
 
 //    public void deleteImage(String url) {
