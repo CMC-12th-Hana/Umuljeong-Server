@@ -24,6 +24,7 @@ public class TaskResponseDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class TaskDto {
         private Long taskId;
+        private Long memberId;
         private String businessName;
         private String clientName;
         private String title;

@@ -75,6 +75,7 @@ public class TaskConverter {
     public static TaskResponseDto.TaskDto toTaskDto(Task task) {
         return TaskResponseDto.TaskDto.builder()
                 .taskId(task.getId())
+                .memberId(task.getMember().getId())
                 .title(task.getTitle())
                 .taskCategory(task.getTaskCategory().getName())
                 .taskCategoryColor(task.getTaskCategory().getColor())
