@@ -13,7 +13,7 @@ public interface ClientCompanyService {
 
     ClientCompany findById(Long clientCompanyId);
 
-    List<ClientCompany> findByCompany(Long companyId);
+    List<ClientCompany> findByCompanyAndName(Long companyId, String name);
 
     ClientCompany update(Long clientCompanyId, ClientCompanyRequestDto.UpdateClientCompanyDto request, Member member);
 

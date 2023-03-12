@@ -48,10 +48,11 @@ public class ClientCompanyRestController {
             @ApiResponse(responseCode = "404", description = "NOT_FOUND : companyId에 해당하는 회사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
     })
     @GetMapping("/company/{companyId}/clients")
-    public ResponseEntity<ClientCompanyResponseDto.ClientCompanyListDto> getClientCompanyList(@PathVariable(name = "companyId") @ExistCompany Long companyId, @AuthUser Member member) {
+    public ResponseEntity<ClientCompanyResponseDto.ClientCompanyListDto> getClientCompanyList(@PathVariable(name = "companyId") @ExistCompany Long companyId,
+                                                                                              @RequestParam(name = "name", required = false) String name, @AuthUser Member member) {
         if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
 
-        List<ClientCompany> clientCompanyList = clientCompanyService.findByCompany(companyId);
+        List<ClientCompany> clientCompanyList = clientCompanyService.findByCompanyAndName(companyId, name);
         return ResponseEntity.ok(ClientCompanyConverter.toClientCompanyListDto(clientCompanyList));
     }
 
