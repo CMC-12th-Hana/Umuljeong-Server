@@ -5,6 +5,7 @@ import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.enums.JoinCompanyStatus;
+import cmc.hana.umuljeong.domain.enums.MemberRole;
 import cmc.hana.umuljeong.repository.CompanyRepository;
 import cmc.hana.umuljeong.repository.MemberRepository;
 import cmc.hana.umuljeong.repository.VerificationMessageRepository;
@@ -76,6 +77,7 @@ public class MemberServiceImpl implements MemberService {
     public Member updateProfile(Member member, MemberRequestDto.UpdateProfileDto request) {
         member.setName(request.getName());
         member.setStaffNumber(request.getStaffNumber());
+        member.setStaffRank(request.getStaffRank());
         return member;
     }
 
@@ -94,6 +96,15 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member updatePassword(Member member, MemberRequestDto.UpdatePasswordDto request) {
         member.setPassword(passwordEncoder.encode(request.getPassword()));
+        return member;
+    }
+
+    @Transactional
+    @Override
+    public Member updateMemberRole(Member leader, Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        member.setMemberRole(MemberRole.LEADER);
+        leader.setMemberRole(MemberRole.STAFF);
         return member;
     }
 

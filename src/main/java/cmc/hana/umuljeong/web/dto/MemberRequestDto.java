@@ -25,6 +25,8 @@ public class MemberRequestDto {
         private String name;
         @NotBlank
         private String staffNumber;
+        @NotBlank
+        private String staffRank;
     }
 
     @Getter

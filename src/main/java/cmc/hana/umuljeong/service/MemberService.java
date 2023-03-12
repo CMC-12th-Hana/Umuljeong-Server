@@ -26,4 +26,6 @@ public interface MemberService {
     Member updatePassword(Member member, MemberRequestDto.UpdatePasswordDto request);
 
     Member updateMemberProfile(Long memberId, MemberRequestDto.UpdateMemberProfileDto request);
+
+    Member updateMemberRole(Member leader, Long memberId);
 }

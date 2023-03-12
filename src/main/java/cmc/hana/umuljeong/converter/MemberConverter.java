@@ -49,6 +49,14 @@ public class MemberConverter {
                 .build();
     }
 
+    public static MemberResponseDto.UpdateRoleDto toUpdateRoleDto(Member updatedMember) {
+        return MemberResponseDto.UpdateRoleDto.builder()
+                .memberId(updatedMember.getId())
+                .role(updatedMember.getMemberRole().getDescription())
+                .updatedAt(updatedMember.getUpdatedAt())
+                .build();
+    }
+
     @PostConstruct
     public void init() {
         staticPasswordEncoder = this.passwordEncoder;
