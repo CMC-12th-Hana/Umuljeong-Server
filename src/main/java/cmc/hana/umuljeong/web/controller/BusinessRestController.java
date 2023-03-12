@@ -68,12 +68,16 @@ public class BusinessRestController {
         return ResponseEntity.ok(BusinessConverter.toBusinessDto(business));
     }
 
-    @Deprecated
+    @Operation(summary = "[]", description = "사업 조회 by 고객사")
+    @Parameters({
+            @Parameter(name = "member", hidden = true)
+    })
     @GetMapping("/company/client/{clientId}/businesses")
     public ResponseEntity<BusinessResponseDto.BusinessListDto> getBusinessList(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @AuthUser Member member) {
-        // todo : 멤버의 회사에 속한 고객사인지 검증
-        ClientCompany clientCompany = clientCompanyService.findById(clientCompanyId);
-        List<Business> businessList = businessService.findByClientCompany(clientCompany);
+        if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
+            throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
+
+        List<Business> businessList = businessService.findByClientCompany(clientCompanyId);
         return ResponseEntity.ok(BusinessConverter.toBusinessListDto(businessList));
     }
 

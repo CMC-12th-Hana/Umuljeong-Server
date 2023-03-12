@@ -73,7 +73,8 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public List<Business> findByClientCompany(ClientCompany clientCompany) {
+    public List<Business> findByClientCompany(Long clientCompanyId) {
+        ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyId).get();
         return businessRepository.findByClientCompany(clientCompany);
     }
 }

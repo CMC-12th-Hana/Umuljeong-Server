@@ -11,7 +11,7 @@ public interface BusinessService {
 
     Business findById(Long businessId);
 
-    List<Business> findByClientCompany(ClientCompany clientCompany);
+    List<Business> findByClientCompany(Long clientCompanyId);
 
     Business update(Long businessId, BusinessRequestDto.UpdateBusinessDto request);
 
