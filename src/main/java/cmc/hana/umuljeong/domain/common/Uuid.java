@@ -1,14 +1,12 @@
 package cmc.hana.umuljeong.domain.common;
 
+import cmc.hana.umuljeong.domain.TaskImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Builder
 @Getter
@@ -22,4 +20,13 @@ public class Uuid extends BaseEntity {
 
     @Column(unique = true)
     private String uuid;
+
+    @OneToOne
+    @JoinColumn(name = "task_image_id")
+    private TaskImage taskImage;
+
+    public void setTaskImage(TaskImage taskImage) {
+        this.taskImage = taskImage;
+        taskImage.setUuid(this);
+    }
 }

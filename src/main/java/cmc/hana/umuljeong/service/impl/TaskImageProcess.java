@@ -4,6 +4,7 @@ import cmc.hana.umuljeong.aws.s3.FileService;
 import cmc.hana.umuljeong.aws.s3.TaskImagePackageMetaData;
 import cmc.hana.umuljeong.domain.Task;
 import cmc.hana.umuljeong.domain.TaskImage;
+import cmc.hana.umuljeong.domain.common.Uuid;
 import cmc.hana.umuljeong.exception.TaskException;
 import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.repository.UuidCustomRepositoryImpl;
@@ -11,6 +12,7 @@ import cmc.hana.umuljeong.repository.UuidRepository;
 import cmc.hana.umuljeong.service.FileProcessServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -35,9 +37,11 @@ public class TaskImageProcess extends FileProcessServiceImpl<TaskImagePackageMet
 
         TaskImage taskImage = TaskImage.builder()
                     .url(url)
-                    .uuid(taskImagePackageMeta.getUuidEntity())
                     .fileName(file.getOriginalFilename())
                     .build();
+
+        Uuid uuid = taskImagePackageMeta.getUuidEntity();
+        uuid.setTaskImage(taskImage);
 
         taskImage.setTask(task);
         return task;

@@ -7,6 +7,7 @@ import cmc.hana.umuljeong.domain.common.Uuid;
 import cmc.hana.umuljeong.repository.UuidCustomRepositoryImpl;
 import cmc.hana.umuljeong.repository.UuidRepository;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -37,6 +38,7 @@ public abstract class FileProcessServiceImpl<T extends FilePackageMeta> {
 
         return amazonS3Service.getFileUrl(filePath);
     }
+
 
     public String uploadImage(InputStream inputStream, ObjectMetadata objectMetadata, String filePath, String fileName) {
         amazonS3Service.uploadFile(inputStream, objectMetadata, filePath);
@@ -71,7 +73,7 @@ public abstract class FileProcessServiceImpl<T extends FilePackageMeta> {
         if (uuidCustomRepository.exist(candidate)) {
             savedUuid = createUUID();
         }
-        savedUuid = uuidRepository.save(Uuid.builder().uuid(candidate).build());
+        savedUuid = Uuid.builder().uuid(candidate).build();
         return savedUuid;
     }
 

@@ -6,6 +6,7 @@ import cmc.hana.umuljeong.repository.BusinessRepository;
 import cmc.hana.umuljeong.repository.CompanyRepository;
 import cmc.hana.umuljeong.repository.TaskCategoryRepository;
 import cmc.hana.umuljeong.repository.TaskRepository;
+import cmc.hana.umuljeong.repository.querydsl.TaskCustomRepository;
 import cmc.hana.umuljeong.service.TaskService;
 import cmc.hana.umuljeong.web.dto.TaskRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,11 @@ import java.util.Map;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final TaskCustomRepository taskCustomRepository;
     private final BusinessRepository businessRepository;
     private final CompanyRepository companyRepository;
     private final TaskCategoryRepository taskCategoryRepository;
+
 
     @Transactional
     @Override
@@ -85,13 +88,11 @@ public class TaskServiceImpl implements TaskService {
         List<Task> taskList;
 
         if(day == null) {
-            if(taskCategory == null) taskList = taskRepository.findByBusinessAndYearAndMonth(business, year, month);
-            else taskList = taskRepository.findByBusinessAndYearAndMonthAndTaskCategory(business, year, month, taskCategory);
+            taskList = taskCustomRepository.findByBusinessAndYearAndMonthAndTaskCategory(business, year, month, taskCategory);
         }
         else {
             LocalDate date = LocalDate.of(year, month, day);
-            if(taskCategory == null) taskList = taskRepository.findByBusinessAndDate(business, date);
-            else taskList = taskRepository.findByBusinessAndDateAndTaskCategory(business, date, taskCategory);
+            taskList = taskCustomRepository.findByBusinessAndDateAndTaskCategory(business, date, taskCategory);
         }
 
         return taskList;
@@ -101,6 +102,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void delete(Long taskId) {
         Task task = taskRepository.findById(taskId).get();
+
+        List<TaskImage> taskImage = task.getTaskImageList();
+
+
         task.removeRelationship();
         taskRepository.delete(task);
         return ;

@@ -25,9 +25,12 @@ public class TaskImage extends BaseEntity {
 
     private String url;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "uuid_id")
+    @OneToOne(mappedBy = "taskImage", cascade = CascadeType.ALL)
     private Uuid uuid;
+
+    public void setUuid(Uuid uuid) {
+        this.uuid = uuid;
+    }
 
     public void setTask(Task task) {
         if (this.task != null) {

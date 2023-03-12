@@ -37,7 +37,7 @@ public class MemberRestController {
 
     private final MemberService memberService;
 
-    @Operation(summary = "[005_02.1]", description = "사원 추가")
+    @Operation(summary = "[005_02.1]", description = "사원 목록 조회")
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })
@@ -66,7 +66,7 @@ public class MemberRestController {
         return ResponseEntity.ok(MemberConverter.toProfileDto(member));
     }
 
-    @Operation(summary = "[005_03]", description = "사원 프로필 조회")
+    @Operation(summary = "[005_03]", description = "내 프로필 조회")
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })
