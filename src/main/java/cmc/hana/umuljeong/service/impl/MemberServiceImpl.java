@@ -9,6 +9,7 @@ import cmc.hana.umuljeong.domain.enums.MemberRole;
 import cmc.hana.umuljeong.repository.CompanyRepository;
 import cmc.hana.umuljeong.repository.MemberRepository;
 import cmc.hana.umuljeong.repository.VerificationMessageRepository;
+import cmc.hana.umuljeong.repository.querydsl.MemberCustomRepository;
 import cmc.hana.umuljeong.service.MemberService;
 import cmc.hana.umuljeong.web.dto.AuthRequestDto;
 import cmc.hana.umuljeong.web.dto.MemberRequestDto;
@@ -27,6 +28,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final MemberCustomRepository memberCustomRepository;
     private final CompanyRepository companyRepository;
 
     @Transactional
@@ -109,9 +111,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<Member> findByCompany(Long companyId) {
+    public List<Member> findByCompanyAndName(Long companyId, String name) {
         Company company = companyRepository.findById(companyId).get();
-        return memberRepository.findByCompany(company);
+        return memberCustomRepository.findByCompanyAndName(company, name);
     }
 
     @Override

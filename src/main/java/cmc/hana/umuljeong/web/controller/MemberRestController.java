@@ -48,9 +48,10 @@ public class MemberRestController {
             @ApiResponse(responseCode = "404", description = "NOT_FOUND : companyId에 해당하는 회사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
     })
     @GetMapping("/company/{companyId}/members")
-    public ResponseEntity<MemberResponseDto.ProfileListDto> getMemberList(@PathVariable(name = "companyId") @ExistCompany Long companyId, @AuthUser Member member) {
+    public ResponseEntity<MemberResponseDto.ProfileListDto> getMemberList(@PathVariable(name = "companyId") @ExistCompany Long companyId,
+                                                                          @RequestParam(name = "name", required = false) String name, @AuthUser Member member) {
         if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
-        List<Member> memberList = memberService.findByCompany(companyId);
+        List<Member> memberList = memberService.findByCompanyAndName(companyId, name);
         return ResponseEntity.ok(MemberConverter.toMemberProfileListDto(memberList));
     }
 

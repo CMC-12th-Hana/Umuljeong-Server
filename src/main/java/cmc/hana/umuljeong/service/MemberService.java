@@ -13,7 +13,7 @@ public interface MemberService {
 
     Member create(Long companyId, MemberRequestDto.CreateDto request);
 
-    List<Member> findByCompany(Long companyId);
+    List<Member> findByCompanyAndName(Long companyId, String name);
 
     Member joinCompany(Member member);
 
