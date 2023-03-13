@@ -31,6 +31,7 @@ public class TaskCustomRepositoryImpl implements TaskCustomRepository {
 
         return factory.selectFrom(task)
                 .where(builder)
+                .orderBy(task.date.asc())
                 .fetch();
     }
 
@@ -46,6 +47,7 @@ public class TaskCustomRepositoryImpl implements TaskCustomRepository {
 
         return factory.selectFrom(task)
                 .where(builder)
+                .orderBy(task.date.asc())
                 .fetch();
     }
 }
