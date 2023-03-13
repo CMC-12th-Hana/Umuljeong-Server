@@ -10,6 +10,7 @@ import cmc.hana.umuljeong.repository.TaskCategoryRepository;
 import cmc.hana.umuljeong.service.impl.TaskImageProcess;
 import cmc.hana.umuljeong.web.dto.TaskRequestDto;
 import cmc.hana.umuljeong.web.dto.TaskResponseDto;
+import kotlin.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,9 +38,24 @@ public class TaskConverter {
     private static TaskCategoryRepository staticTaskCategoryRepository;
     private static TaskImageProcess staticTaskImageProcess;
 
-    public static TaskResponseDto.TaskStatisticDto toTaskStatisticDto(Map<String, Integer> taskStatistic) {
+    public static TaskResponseDto.TaskStatisticListDto toTaskStatisticListDto(Map<String, Pair<String, Integer>> taskStatistic) {
+        List<TaskResponseDto.TaskStatisticDto> taskStatisticDtoList = new ArrayList<>();
+
+        for(Map.Entry<String, Pair<String, Integer>> entry : taskStatistic.entrySet()) {
+            String name = entry.getKey(); String color = entry.getValue().component1(); Integer count = entry.getValue().component2();
+            taskStatisticDtoList.add(toTaskStatisticDto(name, color, count));
+        }
+
+        return TaskResponseDto.TaskStatisticListDto.builder()
+                .taskStatisticDtoList(taskStatisticDtoList)
+                .build();
+    }
+
+    private static TaskResponseDto.TaskStatisticDto toTaskStatisticDto(String name, String color, Integer count) {
         return TaskResponseDto.TaskStatisticDto.builder()
-                .statistic(taskStatistic)
+                .name(name)
+                .color(color)
+                .count(count)
                 .build();
     }
 

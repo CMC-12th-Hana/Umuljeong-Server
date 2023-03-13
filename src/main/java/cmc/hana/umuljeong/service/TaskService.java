@@ -4,6 +4,7 @@ import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.Task;
 import cmc.hana.umuljeong.web.dto.TaskRequestDto;
+import kotlin.Pair;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,7 +23,7 @@ public interface TaskService {
 
     Task update(TaskRequestDto.UpdateTaskDto request);
 
-    Map<String, Integer> getStatistic(Company company, Long clientCompanyId);
+    Map<String, Pair<String, Integer>> getStatistic(Company company, Long clientCompanyId);
 
     List<Task> findByBusinessAndDateAndTaskCategory(Long businessId, Integer year, Integer month, Integer day, Long categoryId);
 

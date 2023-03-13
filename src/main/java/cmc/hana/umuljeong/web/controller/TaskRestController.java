@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kotlin.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -128,12 +129,12 @@ public class TaskRestController {
             @Parameter(name = "member", hidden = true)
     })
     @GetMapping("/company/client/{clientId}/business/task/statistic")
-    public ResponseEntity<TaskResponseDto.TaskStatisticDto> taskStatistic(@PathVariable(name = "clientId") Long clientCompanyId, @AuthUser Member member) {
+    public ResponseEntity<TaskResponseDto.TaskStatisticListDto> taskStatistic(@PathVariable(name = "clientId") Long clientCompanyId, @AuthUser Member member) {
         if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
             throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
 
-        Map<String, Integer> taskStatistic = taskService.getStatistic(member.getCompany(), clientCompanyId);
-        return ResponseEntity.ok(TaskConverter.toTaskStatisticDto(taskStatistic));
+        Map<String, Pair<String, Integer>> taskStatistic = taskService.getStatistic(member.getCompany(), clientCompanyId);
+        return ResponseEntity.ok(TaskConverter.toTaskStatisticListDto(taskStatistic));
     }
 
     @Operation(summary = "[002_05]", description = "업무 추가")

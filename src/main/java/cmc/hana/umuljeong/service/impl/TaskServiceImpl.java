@@ -6,6 +6,7 @@ import cmc.hana.umuljeong.repository.*;
 import cmc.hana.umuljeong.repository.querydsl.TaskCustomRepository;
 import cmc.hana.umuljeong.service.TaskService;
 import cmc.hana.umuljeong.web.dto.TaskRequestDto;
+import kotlin.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,12 +49,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Map<String, Integer> getStatistic(Company company, Long clientCompanyId) {
-        Map<String, Integer> statisticMap = new HashMap<>();
+    public Map<String, Pair<String, Integer>> getStatistic(Company company, Long clientCompanyId) {
+        Map<String, Pair<String, Integer>> statisticMap = new HashMap<>();
         List<TaskCategory> taskCategoryList = taskCategoryRepository.findByCompany(company);
 
         taskCategoryList.stream().forEach(taskCategory -> {
-            statisticMap.put(taskCategory.getName(), taskRepository.countByTaskCategoryAndClientCompany_Id(taskCategory, clientCompanyId));
+            statisticMap.put(taskCategory.getName(), new Pair<>(taskCategory.getColor(), taskRepository.countByTaskCategoryAndClientCompany_Id(taskCategory, clientCompanyId)));
         });
 
         return statisticMap;

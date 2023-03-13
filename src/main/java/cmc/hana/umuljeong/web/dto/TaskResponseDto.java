@@ -91,8 +91,18 @@ public class TaskResponseDto {
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class TaskStatisticListDto {
+        private List<TaskStatisticDto> taskStatisticDtoList;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class TaskStatisticDto {
-        private Map<String, Integer> statistic;
+        private String name;
+        private String color;
+        private Integer count;
     }
 
     @Builder
