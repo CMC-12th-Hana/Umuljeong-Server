@@ -1,9 +1,10 @@
 package cmc.hana.umuljeong.service;
 
 import cmc.hana.umuljeong.domain.Business;
-import cmc.hana.umuljeong.domain.ClientCompany;
+import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.web.dto.BusinessRequestDto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface BusinessService {
@@ -16,4 +17,6 @@ public interface BusinessService {
     Business update(Long businessId, BusinessRequestDto.UpdateBusinessDto request);
 
     void delete(Long businessId);
+
+    List<Business> findByCompanyAndNameAndStartAndFinishAndMember(Long companyId, String name, LocalDate start, LocalDate finish, Member member);
 }

@@ -8,6 +8,7 @@ import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.mapping.BusinessMember;
 import cmc.hana.umuljeong.exception.BusinessException;
 import cmc.hana.umuljeong.exception.ClientCompanyException;
+import cmc.hana.umuljeong.exception.CompanyException;
 import cmc.hana.umuljeong.exception.common.ApiErrorResult;
 import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.service.BusinessMemberService;
@@ -16,6 +17,7 @@ import cmc.hana.umuljeong.service.ClientCompanyService;
 import cmc.hana.umuljeong.service.MemberService;
 import cmc.hana.umuljeong.validation.annotation.ExistBusiness;
 import cmc.hana.umuljeong.validation.annotation.ExistClientCompany;
+import cmc.hana.umuljeong.validation.annotation.ExistCompany;
 import cmc.hana.umuljeong.web.dto.BusinessRequestDto;
 import cmc.hana.umuljeong.web.dto.BusinessResponseDto;
 import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
@@ -28,11 +30,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Tag(name = "Business API", description = "사업 조회, 추가")
@@ -78,6 +83,22 @@ public class BusinessRestController {
             throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
 
         List<Business> businessList = businessService.findByClientCompany(clientCompanyId);
+        return ResponseEntity.ok(BusinessConverter.toBusinessListDto(businessList));
+    }
+
+    @Operation(summary = "[004_01]", description = "사업 검색")
+    @Parameters({
+            @Parameter(name = "member", hidden = true)
+    })
+    @GetMapping("/company/{companyId}/client/businesses")
+    public ResponseEntity<BusinessResponseDto.BusinessListDto> searchBusinessList(@PathVariable(name = "companyId") @ExistCompany Long companyId,
+                                                                                  @RequestParam(name = "name", required = false) String name,
+                                                                                  @RequestParam(name = "start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+                                                                                  @RequestParam(name = "finish") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finish,
+                                                                                  @AuthUser Member member) {
+        if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+
+        List<Business> businessList = businessService.findByCompanyAndNameAndStartAndFinishAndMember(companyId, name, start, finish, member);
         return ResponseEntity.ok(BusinessConverter.toBusinessListDto(businessList));
     }
 

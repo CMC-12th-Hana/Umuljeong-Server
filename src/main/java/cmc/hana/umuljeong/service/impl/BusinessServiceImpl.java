@@ -4,17 +4,21 @@ import cmc.hana.umuljeong.converter.BusinessConverter;
 import cmc.hana.umuljeong.converter.BusinessMemberConverter;
 import cmc.hana.umuljeong.domain.Business;
 import cmc.hana.umuljeong.domain.ClientCompany;
+import cmc.hana.umuljeong.domain.Company;
+import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.mapping.BusinessMember;
 import cmc.hana.umuljeong.repository.BusinessRepository;
 import cmc.hana.umuljeong.repository.ClientCompanyRepository;
+import cmc.hana.umuljeong.repository.CompanyRepository;
 import cmc.hana.umuljeong.repository.mapping.BusinessMemberRepository;
+import cmc.hana.umuljeong.repository.querydsl.BusinessCustomRepository;
 import cmc.hana.umuljeong.service.BusinessService;
 import cmc.hana.umuljeong.web.dto.BusinessRequestDto;
-import cmc.hana.umuljeong.web.dto.BusinessResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +28,10 @@ import java.util.stream.Collectors;
 public class BusinessServiceImpl implements BusinessService {
 
     private final BusinessRepository businessRepository;
+    private final BusinessCustomRepository businessCustomRepository;
     private final ClientCompanyRepository clientCompanyRepository;
     private final BusinessMemberRepository businessMemberRepository;
+    private final CompanyRepository companyRepository;
 
     @Transactional
     @Override
@@ -81,5 +87,12 @@ public class BusinessServiceImpl implements BusinessService {
     public List<Business> findByClientCompany(Long clientCompanyId) {
         ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyId).get();
         return businessRepository.findByClientCompany(clientCompany);
+    }
+
+    @Override
+    public List<Business> findByCompanyAndNameAndStartAndFinishAndMember(Long companyId, String name, LocalDate start, LocalDate finish, Member member) {
+        Company company = companyRepository.findById(companyId).get();
+
+        return businessCustomRepository.findByCompanyAndNameAndStartAndFinishAndMember(company, name, start, finish, member);
     }
 }
