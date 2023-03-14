@@ -19,4 +19,6 @@ public interface BusinessService {
     void delete(Long businessId);
 
     List<Business> findByCompanyAndNameAndStartAndFinishAndMember(Long companyId, String name, LocalDate start, LocalDate finish, Member member);
+
+    List<Business> findByClientCompanyAndNameAndStartAndFinishAndMember(Long clientCompanyId, String name, LocalDate start, LocalDate finish, Member member);
 }

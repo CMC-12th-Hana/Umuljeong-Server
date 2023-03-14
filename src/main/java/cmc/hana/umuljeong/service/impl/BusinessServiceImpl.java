@@ -95,4 +95,11 @@ public class BusinessServiceImpl implements BusinessService {
 
         return businessCustomRepository.findByCompanyAndNameAndStartAndFinishAndMember(company, name, start, finish, member);
     }
+
+    @Override
+    public List<Business> findByClientCompanyAndNameAndStartAndFinishAndMember(Long clientCompanyId, String name, LocalDate start, LocalDate finish, Member member) {
+        ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyId).get();
+
+        return businessCustomRepository.findByClientCompanyAndNameAndStartAndFinishAndMember(clientCompany, name, start, finish, member);
+    }
 }

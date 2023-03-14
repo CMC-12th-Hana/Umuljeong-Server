@@ -1,6 +1,7 @@
 package cmc.hana.umuljeong.repository.querydsl.impl;
 
 import cmc.hana.umuljeong.domain.Business;
+import cmc.hana.umuljeong.domain.ClientCompany;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.enums.MemberRole;
@@ -30,6 +31,33 @@ public class BusinessCustomRepositoryImpl implements BusinessCustomRepository {
 
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(business.clientCompany.company.eq(company));
+
+        if(start != null && finish != null) {
+            builder.and(business.businessPeriod.start.between(start, finish));
+            builder.and(business.businessPeriod.finish.between(start, finish));
+        }
+
+        if(name != null) builder.and(business.name.contains(name));
+        if(member.getMemberRole() == MemberRole.STAFF) {
+            List<Long> businessIds = factory.selectFrom(businessMember)
+                    .where(businessMember.member.eq(member))
+                    .fetch()
+                    .stream()
+                    .map(businessMember1 -> businessMember1.getBusiness().getId())
+                    .collect(Collectors.toList());
+            builder.and(business.id.in(businessIds));
+        }
+
+        return factory.selectFrom(business)
+                .where(builder)
+                .orderBy(business.name.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<Business> findByClientCompanyAndNameAndStartAndFinishAndMember(ClientCompany clientCompany, String name, LocalDate start, LocalDate finish, Member member) {
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(business.clientCompany.eq(clientCompany));
 
         if(start != null && finish != null) {
             builder.and(business.businessPeriod.start.between(start, finish));

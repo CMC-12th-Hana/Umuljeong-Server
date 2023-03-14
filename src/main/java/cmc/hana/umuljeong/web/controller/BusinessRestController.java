@@ -71,17 +71,20 @@ public class BusinessRestController {
         return ResponseEntity.ok(BusinessConverter.toBusinessDto(business));
     }
 
-    // todo : 사업명, 기간 검색 가능하게
     @Operation(summary = "[003_03]", description = "사업 조회 by 고객사")
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })
     @GetMapping("/company/client/{clientId}/businesses")
-    public ResponseEntity<BusinessResponseDto.BusinessListDto> getBusinessList(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @AuthUser Member member) {
+    public ResponseEntity<BusinessResponseDto.BusinessListDto> getBusinessList(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId,
+                                                                               @RequestParam(name = "name", required = false) String name,
+                                                                               @RequestParam(name = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+                                                                               @RequestParam(name = "finish", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finish,
+                                                                               @AuthUser Member member) {
         if(!ClientCompanyValidator.isAccessible(member, clientCompanyId))
             throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
 
-        List<Business> businessList = businessService.findByClientCompany(clientCompanyId);
+        List<Business> businessList = businessService.findByClientCompanyAndNameAndStartAndFinishAndMember(clientCompanyId, name, start, finish, member);
         return ResponseEntity.ok(BusinessConverter.toBusinessListDto(businessList));
     }
 

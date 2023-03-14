@@ -110,7 +110,7 @@ public class TaskCategoryRestController {
     })
     @DeleteMapping("/company/client/business/task/categories")
     public ResponseEntity<TaskCategoryResponseDto.DeleteTaskCategoryListDto> deleteTaskCategory(@RequestParam(name = "categoryIds") List<Long> categoryIds, @AuthUser Member member) {
-        if(TaskCategoryValidator.isAccessible(member, categoryIds))
+        if(!TaskCategoryValidator.isAccessible(member, categoryIds))
             throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ACCESS_DENIED);
 
         taskCategoryService.deleteList(categoryIds);
