@@ -113,7 +113,7 @@ public class SecurityConfig {
                 ).hasAnyRole(STAFF, LEADER)
                 .antMatchers(
                         HttpMethod.DELETE, "/company/client/business/task/{taskId}"
-                ).hasRole(LEADER) // ??
+                ).hasAnyRole(STAFF, LEADER)
 
                 // Company API
                 .antMatchers(
