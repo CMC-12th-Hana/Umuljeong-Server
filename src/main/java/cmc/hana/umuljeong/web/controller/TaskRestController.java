@@ -123,7 +123,7 @@ public class TaskRestController {
                                                                              @RequestParam(name = "categoryId", required = false) Long categoryId,
                                                                              @AuthUser Member member) {
         if(!BusinessValidator.isAccessible(member, businessId)) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
-        if(categoryId != null && TaskCategoryValidator.isAccessible(member, categoryId)) throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ACCESS_DENIED);
+        if(categoryId != null && !TaskCategoryValidator.isAccessible(member, categoryId)) throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ACCESS_DENIED);
 
         List<Task> taskList = taskService.findByBusinessAndDateAndTaskCategory(businessId, year, month, day, categoryId);
         return ResponseEntity.ok(TaskConverter.toStaffTaskListDto(taskList)); // 업무별

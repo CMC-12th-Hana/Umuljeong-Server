@@ -121,7 +121,7 @@ public class ClientCompanyRestController {
         return ResponseEntity.ok(ClientCompanyConverter.toUpdateClientCompany(clientCompany));
     }
 
-    @Operation(summary = "[]", description = "고객사 삭제")
+    @Operation(summary = "[003_03]", description = "고객사 삭제")
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })

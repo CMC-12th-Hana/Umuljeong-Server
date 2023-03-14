@@ -71,7 +71,8 @@ public class BusinessRestController {
         return ResponseEntity.ok(BusinessConverter.toBusinessDto(business));
     }
 
-    @Operation(summary = "[]", description = "사업 조회 by 고객사")
+    // todo : 사업명, 기간 검색 가능하게
+    @Operation(summary = "[003_03]", description = "사업 조회 by 고객사")
     @Parameters({
             @Parameter(name = "member", hidden = true)
     })

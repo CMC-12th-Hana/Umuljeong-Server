@@ -6,9 +6,12 @@ import cmc.hana.umuljeong.auth.provider.TokenProvider;
 import cmc.hana.umuljeong.converter.AuthConverter;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.enums.VerifyMessageStatus;
+import cmc.hana.umuljeong.exception.AuthException;
 import cmc.hana.umuljeong.exception.common.ApiErrorResult;
+import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.service.MemberService;
 import cmc.hana.umuljeong.service.MessageService;
+import cmc.hana.umuljeong.validation.validator.AuthValidator;
 import cmc.hana.umuljeong.web.dto.AuthRequestDto;
 import cmc.hana.umuljeong.web.dto.AuthResponseDto;
 
@@ -93,7 +96,7 @@ public class AuthRestController {
             2. 해당 정보로 토큰 발급
          */
 
-        // todo : 여기서 폰인증 안된 상태이면 아예 가입로직으로 넘어가지 않고 예외던져주기!! & 중복인 경우 예외
+        if(!AuthValidator.isVerified(joinDto.getPhoneNumber())) throw new AuthException(ErrorCode.UNVERIFIED_PHONE_NUMBER);
 
         Member member = memberService.join(joinDto);
 
@@ -124,7 +127,6 @@ public class AuthRestController {
 
     @PostMapping("/message/send")
     public ResponseEntity<AuthResponseDto.SendMessageDto> sendMessage(@RequestBody @Valid AuthRequestDto.SendMessageDto request) {
-        // todo : 예외처리, 중복
         messageService.sendMessage(request);
         return ResponseEntity.ok(AuthConverter.toSendMessageDto());
     }
@@ -135,7 +137,6 @@ public class AuthRestController {
          if(request.getMessageType() == AuthRequestDto.MessageType.JOIN) return ResponseEntity.ok(AuthConverter.toJoinVerifyMessageDto(verifyMessageStatus));
          else {
              messageService.sendTempPassword(request.getPhoneNumber());
-             // 인증번호 전송 및 리턴
              return ResponseEntity.ok(AuthConverter.toJoinVerifyMessageDto(verifyMessageStatus));
          }
     }

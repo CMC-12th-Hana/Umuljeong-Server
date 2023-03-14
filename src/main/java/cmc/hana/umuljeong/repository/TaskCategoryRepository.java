@@ -15,4 +15,6 @@ public interface TaskCategoryRepository extends JpaRepository<TaskCategory, Long
     @Modifying
     @Query("delete from TaskCategory tc where tc.id in :ids")
     void deleteAllByIdInQuery(@Param("ids") List<Long> ids);
+
+    boolean existsByNameAndCompany_Id(String name, Long companyId);
 }

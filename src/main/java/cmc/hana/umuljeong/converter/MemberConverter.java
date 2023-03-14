@@ -59,8 +59,8 @@ public class MemberConverter {
 
     @PostConstruct
     public void init() {
-        staticPasswordEncoder = this.passwordEncoder;
-        staticMemberRepository = this.memberRepository;
+        this.staticPasswordEncoder = this.passwordEncoder;
+        this.staticMemberRepository = this.memberRepository;
     }
 
     public static Member toMember(AuthRequestDto.JoinDto joinDto) {

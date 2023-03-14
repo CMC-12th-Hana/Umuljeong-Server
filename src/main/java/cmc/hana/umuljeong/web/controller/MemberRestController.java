@@ -52,14 +52,20 @@ public class MemberRestController {
     @GetMapping("/company/{companyId}/members")
     public ResponseEntity<MemberResponseDto.ProfileListDto> getMemberList(@PathVariable(name = "companyId") @ExistCompany Long companyId,
                                                                           @RequestParam(name = "name", required = false) String name, @AuthUser Member member) {
-        if(CompanyValidator.isAccessible(member, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+        if(!CompanyValidator.isAccessible(member, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
         List<Member> memberList = memberService.findByCompanyAndName(companyId, name);
         return ResponseEntity.ok(MemberConverter.toMemberProfileListDto(memberList));
     }
 
-    @Operation(summary = "", description = "다른 사원 조회")
+    @Operation(summary = "[005_01]", description = "다른 사원 프로필 조회")
     @Parameters({
             @Parameter(name = "loginMember", hidden = true)
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = MemberResponseDto.ProfileDto.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 구성원이 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "404", description = "NOT_FOUND : memberId에 해당하는 회사가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
     })
     @GetMapping("/company/member/{memberId}/profile")
     public ResponseEntity<MemberResponseDto.ProfileDto> getMember(@PathVariable(name = "memberId") @ExistMember Long memberId, @AuthUser Member loginMember) {
@@ -97,7 +103,7 @@ public class MemberRestController {
         return ResponseEntity.ok(MemberConverter.toUpdateProfileDto(updatedMember));
     }
 
-    @Operation(summary = "[]", description = "사원 프로필 수정")
+    @Operation(summary = "[005_03.3]", description = "다른 사원 프로필 수정")
     @Parameters({
             @Parameter(name = "leader", hidden = true)
     })
@@ -109,6 +115,7 @@ public class MemberRestController {
     })
     @PatchMapping("/company/member/{memberId}/profile")
     public ResponseEntity<MemberResponseDto.UpdateProfileDto> updateMemberProfile(@PathVariable(name = "memberId") @ExistMember Long memberId, @RequestBody @Valid MemberRequestDto.UpdateMemberProfileDto request, @AuthUser Member leader) {
+        if(MemberValidator.isSameMember(leader, memberId)) throw new MemberException(ErrorCode.MEMBER_UPDATE_SAME);
         if(!MemberValidator.isAccessible(leader, memberId))
             throw new MemberException(ErrorCode.MEMBER_ACCESS_DENIED);
 
@@ -116,7 +123,7 @@ public class MemberRestController {
         return ResponseEntity.ok(MemberConverter.toUpdateProfileDto(updatedMember));
     }
 
-    @Operation(summary = "[]", description = "사원 권한 변경 (리더)")
+    @Operation(summary = "[176985]", description = "사원 권한 변경 (일반 사원을 리더로)")
     @Parameters({
             @Parameter(name = "leader", hidden = true)
     })
@@ -163,7 +170,7 @@ public class MemberRestController {
     })
     @PostMapping("/company/{companyId}/member")
     public ResponseEntity<MemberResponseDto.CreateDto> create(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody @Valid MemberRequestDto.CreateDto request, @AuthUser Member leader) {
-        if(CompanyValidator.isAccessible(leader, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+        if(!CompanyValidator.isAccessible(leader, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
         Member createdMember = memberService.create(companyId, request);
         return ResponseEntity.ok(MemberConverter.toCreateDto(createdMember));
     }

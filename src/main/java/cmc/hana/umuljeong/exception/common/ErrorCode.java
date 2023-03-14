@@ -14,11 +14,12 @@ public enum ErrorCode {
     JWT_ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
     JWT_UNSUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, "지원하지 않는 JWT 토큰입니다."),
     JWT_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "유효한 JWT 토큰이 없습니다."),
-
+    UNVERIFIED_PHONE_NUMBER(HttpStatus.CONFLICT, "인증되지 않은 휴대전화 번호입니다."),
 
     // Member
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 사용자가 존재하지 않습니다."),
     MEMBER_ACCESS_DENIED(HttpStatus.FORBIDDEN, "본인 회사의 구성원만 조회할 수 있습니다."),
+    MEMBER_UPDATE_SAME(HttpStatus.CONFLICT, "본인 정보는 내 정보 수정을 이용하세요."),
 
     // Task
     TASK_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 업무가 존재하지 않습니다."),
@@ -41,6 +42,7 @@ public enum ErrorCode {
     // TaskCategory
     TASK_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 업무 카테고리가 존재하지 않습니다."),
     TASK_CATEGORY_ACCESS_DENIED(HttpStatus.FORBIDDEN, "본인 회사의 업무 카테고리가 아닙니다."),
+    TASK_CATEGORY_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 업무 카테고리명입니다."),
 
     // Message
     MESSAGE_SEND_FAILED(HttpStatus.BAD_REQUEST, "메시지 전송이 실패했습니다. 올바른 번호인지 확인하세요."),
