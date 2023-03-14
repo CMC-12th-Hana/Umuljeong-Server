@@ -83,6 +83,9 @@ public class SecurityConfig {
                 .antMatchers(
                         HttpMethod.PATCH, "/company/client/{clientId}"
                 ).hasAnyRole(STAFF, LEADER)
+                .antMatchers(
+                        HttpMethod.DELETE, "/company/client/{clientId}"
+                ).hasRole(LEADER)
 
                 // TaskCategory API
                 .antMatchers(
@@ -99,6 +102,18 @@ public class SecurityConfig {
                 ).hasAnyRole(STAFF, LEADER)
 
                 // TASK API
+                .antMatchers(
+                        HttpMethod.GET, "/company/client/business/task/{taskId}", "/company/{companyId}/client/business/tasks", "/company/client/business/{businessId}/tasks", "/company/client/{clientId}/business/task/statistic"
+                ).hasAnyRole(STAFF, LEADER)
+                .antMatchers(
+                        HttpMethod.POST, "/company/client/business/task"
+                ).hasAnyRole(STAFF, LEADER)
+                .antMatchers(
+                        HttpMethod.PATCH, "/company/client/business/task/{taskId}"
+                ).hasAnyRole(STAFF, LEADER)
+                .antMatchers(
+                        HttpMethod.DELETE, "/company/client/business/task/{taskId}"
+                ).hasRole(LEADER) // ??
 
                 // Company API
                 .antMatchers(
@@ -110,28 +125,28 @@ public class SecurityConfig {
                         HttpMethod.POST, "/company/client/{clientId}/business"
                 ).hasAnyRole(STAFF, LEADER)
                 .antMatchers(
-                        HttpMethod.GET, "/company/client/business/{businessId}"
+                        HttpMethod.GET, "/company/client/business/{businessId}", "/company/client/{clientId}/businesses", "/company/{companyId}/client/businesses"
                 ).hasAnyRole(STAFF, LEADER)
                 .antMatchers(
                         HttpMethod.PATCH, "/company/client/business/{businessId}"
                 ).hasAnyRole(STAFF, LEADER)
+                .antMatchers(
+                        HttpMethod.DELETE, "/company/client/business/{businessId}"
+                ).hasRole(LEADER)
 
                 // Member API
                 .antMatchers(
                         HttpMethod.POST, "/company/{companyId}/member"
                 ).hasRole(LEADER)
                 .antMatchers(
-                        HttpMethod.GET, "/company/member/profile"
+                        HttpMethod.GET, "/company/member/profile", "/company/{companyId}/members", "/company/member/{memberId}/profile"
                 ).hasAnyRole(STAFF, LEADER)
                 .antMatchers(
-                        HttpMethod.PATCH, "/company/member/profile"
+                        HttpMethod.PATCH, "/company/member/profile", "/company/member/password"
                 ).hasAnyRole(STAFF, LEADER)
                 .antMatchers(
-                        HttpMethod.GET, "/company/{companyId}/members"
-                ).hasAnyRole(STAFF, LEADER)
-                .antMatchers(
-                        HttpMethod.GET, "/company/member/{memberId}/profile"
-                ).hasAnyRole(STAFF, LEADER)
+                        HttpMethod.PATCH, "/company/member/{memberId}/profile", "/company/member/{memberId}/role"
+                ).hasRole(LEADER)
                 .antMatchers(
                         HttpMethod.DELETE, "/company/member/{memberId}"
                 ).hasRole(LEADER)

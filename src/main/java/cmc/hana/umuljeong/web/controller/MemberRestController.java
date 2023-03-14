@@ -166,7 +166,6 @@ public class MemberRestController {
         return ResponseEntity.ok(MemberConverter.toCreateDto(createdMember));
     }
 
-    // todo : 동작이 안 됨.. 찾아보기
     @Operation(summary = "[005_03.2]", description = "사원 삭제")
     @Parameters({
             @Parameter(name = "leader", hidden = true)
