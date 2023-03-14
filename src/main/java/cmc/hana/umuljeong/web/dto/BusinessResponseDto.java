@@ -41,6 +41,7 @@ public class BusinessResponseDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class BusinessDto {
         private Long businessId;
+        private String clientName;
         private String name;
         private BusinessPeriodDto businessPeriodDto;
         private Integer revenue;

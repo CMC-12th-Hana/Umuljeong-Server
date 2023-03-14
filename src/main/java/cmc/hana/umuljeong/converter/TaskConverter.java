@@ -172,13 +172,13 @@ public class TaskConverter {
         task.setBusiness(staticBusinessRepository.findById(request.getBusinessId()).get());
 
         List<MultipartFile> taskImageDtoList = request.getTaskImageList();
-        if(!taskImageDtoList.isEmpty()) {
+        if(taskImageDtoList != null && !taskImageDtoList.isEmpty()) {
                createAndMapTaskImage(taskImageDtoList, task);
         }
         return task;
     }
 
-    private static void createAndMapTaskImage(List<MultipartFile> taskImageDtoList, Task task) {
+    public static void createAndMapTaskImage(List<MultipartFile> taskImageDtoList, Task task) {
         List<MultipartFile> imageFileList = taskImageDtoList;
 
         ExecutorService executorService = Executors.newFixedThreadPool(Math.min(imageFileList.size(), 5));

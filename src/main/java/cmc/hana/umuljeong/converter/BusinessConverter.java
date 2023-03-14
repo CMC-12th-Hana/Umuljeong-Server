@@ -99,6 +99,7 @@ public class BusinessConverter {
         return BusinessResponseDto.BusinessDto.
                 builder()
                 .businessId(business.getId())
+                .clientName(business.getClientCompany().getName())
                 .name(business.getName())
                 .businessPeriodDto(toBusinessPeriodDto(business.getBusinessPeriod()))
                 .memberDtoList(toMemberDtoList(business.getBusinessMemberList()))

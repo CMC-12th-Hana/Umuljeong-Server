@@ -4,12 +4,14 @@ import cmc.hana.umuljeong.converter.TaskConverter;
 import cmc.hana.umuljeong.domain.*;
 import cmc.hana.umuljeong.repository.*;
 import cmc.hana.umuljeong.repository.querydsl.TaskCustomRepository;
+import cmc.hana.umuljeong.repository.querydsl.TaskImageCustomRepository;
 import cmc.hana.umuljeong.service.TaskService;
 import cmc.hana.umuljeong.web.dto.TaskRequestDto;
 import kotlin.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,6 +30,8 @@ public class TaskServiceImpl implements TaskService {
     private final CompanyRepository companyRepository;
     private final TaskCategoryRepository taskCategoryRepository;
     private final TaskImageProcess taskImageProcess;
+    private final TaskImageRepository taskImageRepository;
+    private final TaskImageCustomRepository taskImageCustomRepository;
 
     private final ClientCompanyRepository clientCompanyRepository;
 
@@ -44,8 +48,38 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional
     @Override
-    public Task update(TaskRequestDto.UpdateTaskDto request) {
-        return null;
+    public Task update(Long taskId, TaskRequestDto.UpdateTaskDto request) {
+        Task task = taskRepository.findById(taskId).get();
+        Business business = businessRepository.findById(request.getBusinessId()).get();
+        TaskCategory taskCategory = taskCategoryRepository.findById(request.getTaskCategoryId()).get();
+
+        task.setTitle(request.getTitle());
+        task.setDescription(request.getDescription());
+        task.setBusiness(business);
+        task.setTaskCategory(taskCategory);
+
+        // Delete Images
+        if(request.getDeleteImageIdList() != null) {
+            List<TaskImage> taskImageList = taskImageCustomRepository.findByIds(List.of(request.getDeleteImageIdList()));
+            System.out.println("SIZE : " + taskImageList.size());
+            for(TaskImage taskImage : taskImageList) {
+                taskImageProcess.deleteImage(taskImage.getUrl());
+                taskImage.removeRelationship();
+                taskImageRepository.delete(taskImage);
+            }
+        }
+
+
+        // Add Images
+        if(request.getAddTaskImageList() != null) {
+            List<MultipartFile> taskImageDtoList = request.getAddTaskImageList();
+            if(!taskImageDtoList.isEmpty()) {
+                System.out.println("ADD IMAGE START!");
+                TaskConverter.createAndMapTaskImage(taskImageDtoList, task);
+            }
+        }
+
+        return task;
     }
 
     @Override

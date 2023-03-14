@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +26,21 @@ public class TaskRequestDto {
         private LocalDate date;
         private String title;
         private String description;
-        private List<MultipartFile> taskImageList;
+        @Size(min = 0, max = 10)
+        private List<MultipartFile> taskImageList = new ArrayList<>();
     }
 
-    @Getter
+    @Getter @Setter
     public static class UpdateTaskDto {
+        @ExistBusiness
+        private Long businessId;
+        @ExistTaskCategory
+        private Long taskCategoryId;
+        private String title;
+        private String description;
+        private Long[] deleteImageIdList;
+
+        @Size(min = 0, max = 10)
+        private List<MultipartFile> addTaskImageList = new ArrayList<>();
     }
 }

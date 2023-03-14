@@ -21,7 +21,7 @@ public interface TaskService {
 
     Task findById(Long taskId);
 
-    Task update(TaskRequestDto.UpdateTaskDto request);
+    Task update(Long taskId, TaskRequestDto.UpdateTaskDto request);
 
     Map<String, Pair<String, Integer>> getStatistic(Company company, Long clientCompanyId);
 

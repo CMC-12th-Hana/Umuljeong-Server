@@ -39,11 +39,10 @@ public class TaskImageProcess extends FileProcessServiceImpl<TaskImagePackageMet
                     .url(url)
                     .fileName(file.getOriginalFilename())
                     .build();
+        taskImage.setTask(task);
 
         Uuid uuid = taskImagePackageMeta.getUuidEntity();
         uuid.setTaskImage(taskImage);
-
-        taskImage.setTask(task);
         return task;
     }
 }

@@ -33,9 +33,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.beans.PropertyEditorSupport;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +51,19 @@ import java.util.Map;
 public class TaskRestController {
 
     private final TaskService taskService;
+
+    // 빈 리스트가 요청으로 넘어올 때 빈 문자열로 인식되어 Cannot convert value of type 'java.lang.String' to required type 'org.springframework.web.multipart.MultipartFile' 발생
+    @InitBinder
+    public void initBinder(WebDataBinder binder) throws Exception {
+        binder.registerCustomEditor(List.class, new PropertyEditorSupport() {
+
+            @Override
+            public void setAsText(String text) {
+                setValue(null);
+            }
+
+        });
+    }
 
     @Operation(summary = "[002_05_5]", description = "업무 조회")
     @Parameters({
@@ -159,7 +175,6 @@ public class TaskRestController {
         return ResponseEntity.ok(TaskConverter.toCreateTaskDto(task));
     }
 
-    @Deprecated
     @Operation(summary = "[002_05_5.1]", description = "업무 수정")
     @Parameters({
             @Parameter(name = "member", hidden = true)
@@ -170,19 +185,14 @@ public class TaskRestController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 업무가 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
             @ApiResponse(responseCode = "404", description = "NOT_FOUND : taskId에 해당하는 업무가 존재하지 않는 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class)))
     })
-    @PatchMapping("/company/client/business/task/{taskId}")
-    public ResponseEntity<TaskResponseDto.UpdateTaskDto> updateTask(@PathVariable(name = "taskId") @ExistTask Long taskId, @RequestPart @Valid TaskRequestDto.UpdateTaskDto request, @AuthUser Member member) {
-        boolean isValid = false;
-        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
-            for(Business business : clientCompany.getBusinessList()) {
-                isValid = business.getTaskList().stream().anyMatch(task -> task.getId() == taskId);
-                if(isValid) break;
-            }
-            if(isValid) break;
-        }
-        if(!isValid) throw new TaskException(ErrorCode.TASK_ACCESS_DENIED);
+    @PatchMapping(value = "/company/client/business/task/{taskId}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<TaskResponseDto.UpdateTaskDto> updateTask(@PathVariable(name = "taskId") @ExistTask Long taskId,
+                                                                    @ModelAttribute @Valid TaskRequestDto.UpdateTaskDto request,
+                                                                    @AuthUser Member member) {
 
-        Task task = taskService.update(request);
+        if(!member.getTaskList().stream().anyMatch(task -> task.getId() == taskId)) throw new TaskException(ErrorCode.TASK_UPDATE_ACCESS_DENIED);
+
+        Task task = taskService.update(taskId, request);
         return ResponseEntity.ok(TaskConverter.toUpdateTaskDto(task));
     }
 
