@@ -16,6 +16,7 @@ import cmc.hana.umuljeong.validation.annotation.ExistBusiness;
 import cmc.hana.umuljeong.validation.annotation.ExistCompany;
 import cmc.hana.umuljeong.validation.annotation.ExistTask;
 import cmc.hana.umuljeong.validation.annotation.ExistTaskCategory;
+import cmc.hana.umuljeong.validation.validator.*;
 import cmc.hana.umuljeong.web.dto.MemberResponseDto;
 import cmc.hana.umuljeong.web.dto.TaskRequestDto;
 import cmc.hana.umuljeong.web.dto.TaskResponseDto;
@@ -71,15 +72,8 @@ public class TaskRestController {
     })
     @GetMapping("/company/client/business/task/{taskId}")
     public ResponseEntity<TaskResponseDto.TaskDto> getTask(@PathVariable(name = "taskId") @ExistTask Long taskId, @AuthUser Member member) {
-        boolean isValid = false;
-        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
-            for(Business business : clientCompany.getBusinessList()) {
-                isValid = business.getTaskList().stream().anyMatch(task -> task.getId() == taskId);
-                if(isValid) break;
-            }
-            if(isValid) break;
-        }
-        if(!isValid) throw new TaskException(ErrorCode.TASK_ACCESS_DENIED);
+
+        if(!TaskValidator.isAccessible(member, taskId)) throw new TaskException(ErrorCode.TASK_ACCESS_DENIED);
 
         Task task = taskService.findById(taskId);
         return ResponseEntity.ok(TaskConverter.toTaskDto(task));
@@ -99,7 +93,7 @@ public class TaskRestController {
     })
     @GetMapping("/company/{companyId}/client/business/tasks")
     public ResponseEntity<TaskResponseDto.TaskListDto> getTaskListByCompany(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, @RequestParam(name = "type") String type, @AuthUser Member member) {
-        if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+        if(!CompanyValidator.isAccessible(member, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
 
         List<Task> taskList;
         if(type.equals("MEMBER")) {
@@ -128,13 +122,8 @@ public class TaskRestController {
                                                                              @RequestParam(name = "day", required = false) Integer day,
                                                                              @RequestParam(name = "categoryId", required = false) Long categoryId,
                                                                              @AuthUser Member member) {
-        boolean isValid = false;
-        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
-            isValid = clientCompany.getBusinessList().stream().anyMatch(business -> business.getId() == businessId);
-            if(isValid) break;
-        }
-        if(!isValid) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
-        if(categoryId != null && !member.getCompany().getTaskCategoryList().stream().anyMatch(taskCategory -> taskCategory.getId() == categoryId)) throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ACCESS_DENIED);
+        if(!BusinessValidator.isAccessible(member, businessId)) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
+        if(categoryId != null && TaskCategoryValidator.isAccessible(member, categoryId)) throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ACCESS_DENIED);
 
         List<Task> taskList = taskService.findByBusinessAndDateAndTaskCategory(businessId, year, month, day, categoryId);
         return ResponseEntity.ok(TaskConverter.toStaffTaskListDto(taskList)); // 업무별
@@ -146,7 +135,7 @@ public class TaskRestController {
     })
     @GetMapping("/company/client/{clientId}/business/task/statistic")
     public ResponseEntity<TaskResponseDto.TaskStatisticListDto> taskStatistic(@PathVariable(name = "clientId") Long clientCompanyId, @AuthUser Member member) {
-        if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
+        if(!ClientCompanyValidator.isAccessible(member, clientCompanyId))
             throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
 
         Map<String, Pair<String, Integer>> taskStatistic = taskService.getStatistic(member.getCompany(), clientCompanyId);
@@ -164,12 +153,7 @@ public class TaskRestController {
     })
     @PostMapping(value = "/company/client/business/task", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<TaskResponseDto.CreateTaskDto> createTask(@ModelAttribute @Valid TaskRequestDto.CreateTaskDto request, @AuthUser Member member) {
-        boolean isValid = false;
-        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
-            isValid = clientCompany.getBusinessList().stream().anyMatch(business -> business.getId() == request.getBusinessId());
-            if(isValid) break;
-        }
-        if(!isValid) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
+        if(!BusinessValidator.isAccessible(member, request.getBusinessId())) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
 
         Task task = taskService.create(request, member);
         return ResponseEntity.ok(TaskConverter.toCreateTaskDto(task));
@@ -189,8 +173,7 @@ public class TaskRestController {
     public ResponseEntity<TaskResponseDto.UpdateTaskDto> updateTask(@PathVariable(name = "taskId") @ExistTask Long taskId,
                                                                     @ModelAttribute @Valid TaskRequestDto.UpdateTaskDto request,
                                                                     @AuthUser Member member) {
-
-        if(!member.getTaskList().stream().anyMatch(task -> task.getId() == taskId)) throw new TaskException(ErrorCode.TASK_UPDATE_ACCESS_DENIED);
+        if(!TaskValidator.isAccessible(member, taskId)) throw new TaskException(ErrorCode.TASK_UPDATE_ACCESS_DENIED);
 
         Task task = taskService.update(taskId, request);
         return ResponseEntity.ok(TaskConverter.toUpdateTaskDto(task));
@@ -208,15 +191,7 @@ public class TaskRestController {
     })
     @DeleteMapping("/company/client/business/task/{taskId}")
     public ResponseEntity<TaskResponseDto.DeleteTaskDto> deleteTask(@PathVariable(name = "taskId") @ExistTask Long taskId, @AuthUser Member member) {
-        boolean isValid = false;
-        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
-            for(Business business : clientCompany.getBusinessList()) {
-                isValid = business.getTaskList().stream().anyMatch(task -> task.getId() == taskId);
-                if(isValid) break;
-            }
-            if(isValid) break;
-        }
-        if(!isValid) throw new TaskException(ErrorCode.TASK_ACCESS_DENIED);
+        if(!TaskValidator.isAccessible(member, taskId)) throw new TaskException(ErrorCode.TASK_ACCESS_DENIED);
 
         taskService.delete(taskId);
 

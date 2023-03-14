@@ -11,6 +11,8 @@ import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.service.ClientCompanyService;
 import cmc.hana.umuljeong.validation.annotation.ExistClientCompany;
 import cmc.hana.umuljeong.validation.annotation.ExistCompany;
+import cmc.hana.umuljeong.validation.validator.ClientCompanyValidator;
+import cmc.hana.umuljeong.validation.validator.CompanyValidator;
 import cmc.hana.umuljeong.web.dto.ClientCompanyRequestDto;
 import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,7 +57,7 @@ public class ClientCompanyRestController {
                                                                                               @RequestParam(name = "sort", required = false, defaultValue = "name") String sort,
                                                                                               @RequestParam(name = "order", required = false, defaultValue = "ASC") String order,
                                                                                               @AuthUser Member member) {
-        if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+        if(!CompanyValidator.isAccessible(member, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
 
         List<ClientCompany> clientCompanyList = clientCompanyService.findByCompanyAndName(companyId, name, sort, order);
         return ResponseEntity.ok(ClientCompanyConverter.toClientCompanyListDto(clientCompanyList));
@@ -73,7 +75,7 @@ public class ClientCompanyRestController {
     })
     @GetMapping("/company/client/{clientId}")
     public ResponseEntity<ClientCompanyResponseDto.ClientCompanyDto> getClientCompany(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @AuthUser Member member) {
-        if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
+        if(!ClientCompanyValidator.isAccessible(member, clientCompanyId))
             throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
 
         ClientCompany clientCompany = clientCompanyService.findById(clientCompanyId);
@@ -93,7 +95,7 @@ public class ClientCompanyRestController {
     })
     @PostMapping("/company/{companyId}/client")
     public ResponseEntity<ClientCompanyResponseDto.CreateClientCompany> createClientCompany(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody @Valid ClientCompanyRequestDto.CreateClientCompanyDto request, @AuthUser Member member) {
-        if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+        if(!CompanyValidator.isAccessible(member, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
 
         ClientCompany clientCompany = clientCompanyService.create(request, companyId);
         return ResponseEntity.ok(ClientCompanyConverter.toCreateClientCompany(clientCompany));
@@ -112,7 +114,7 @@ public class ClientCompanyRestController {
     })
     @PatchMapping("/company/client/{clientId}")
     public ResponseEntity<ClientCompanyResponseDto.UpdateClientCompany> updateClientCompany(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @RequestBody @Valid ClientCompanyRequestDto.UpdateClientCompanyDto request, @AuthUser Member member) {
-        if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
+        if(!ClientCompanyValidator.isAccessible(member, clientCompanyId))
             throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
 
         ClientCompany clientCompany = clientCompanyService.update(clientCompanyId, request, member);
@@ -132,7 +134,7 @@ public class ClientCompanyRestController {
     })
     @DeleteMapping("/company/client/{clientId}")
     public ResponseEntity<ClientCompanyResponseDto.DeleteClientCompany> deleteClientCompany(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @AuthUser Member member) {
-        if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
+        if(!ClientCompanyValidator.isAccessible(member, clientCompanyId))
             throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
 
         clientCompanyService.delete(clientCompanyId);

@@ -10,6 +10,8 @@ import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.service.MemberService;
 import cmc.hana.umuljeong.validation.annotation.ExistCompany;
 import cmc.hana.umuljeong.validation.annotation.ExistMember;
+import cmc.hana.umuljeong.validation.validator.CompanyValidator;
+import cmc.hana.umuljeong.validation.validator.MemberValidator;
 import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
 import cmc.hana.umuljeong.web.dto.MemberRequestDto;
 import cmc.hana.umuljeong.web.dto.MemberResponseDto;
@@ -50,7 +52,7 @@ public class MemberRestController {
     @GetMapping("/company/{companyId}/members")
     public ResponseEntity<MemberResponseDto.ProfileListDto> getMemberList(@PathVariable(name = "companyId") @ExistCompany Long companyId,
                                                                           @RequestParam(name = "name", required = false) String name, @AuthUser Member member) {
-        if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+        if(CompanyValidator.isAccessible(member, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
         List<Member> memberList = memberService.findByCompanyAndName(companyId, name);
         return ResponseEntity.ok(MemberConverter.toMemberProfileListDto(memberList));
     }
@@ -61,7 +63,7 @@ public class MemberRestController {
     })
     @GetMapping("/company/member/{memberId}/profile")
     public ResponseEntity<MemberResponseDto.ProfileDto> getMember(@PathVariable(name = "memberId") @ExistMember Long memberId, @AuthUser Member loginMember) {
-        if(!loginMember.getCompany().getMemberList().stream().anyMatch(member -> member.getId() == memberId))
+        if(!MemberValidator.isAccessible(loginMember, memberId))
             throw new MemberException(ErrorCode.MEMBER_ACCESS_DENIED);
         Member member = memberService.findById(memberId);
         return ResponseEntity.ok(MemberConverter.toProfileDto(member));
@@ -107,7 +109,7 @@ public class MemberRestController {
     })
     @PatchMapping("/company/member/{memberId}/profile")
     public ResponseEntity<MemberResponseDto.UpdateProfileDto> updateMemberProfile(@PathVariable(name = "memberId") @ExistMember Long memberId, @RequestBody @Valid MemberRequestDto.UpdateMemberProfileDto request, @AuthUser Member leader) {
-        if(!leader.getCompany().getMemberList().stream().anyMatch(member -> member.getId() == memberId))
+        if(!MemberValidator.isAccessible(leader, memberId))
             throw new MemberException(ErrorCode.MEMBER_ACCESS_DENIED);
 
         Member updatedMember = memberService.updateMemberProfile(memberId, request);
@@ -126,7 +128,7 @@ public class MemberRestController {
     })
     @PatchMapping("/company/member/{memberId}/role")
     public ResponseEntity<MemberResponseDto.UpdateRoleDto> updateRole(@PathVariable(name = "memberId") @ExistMember Long memberId, @AuthUser Member leader) {
-        if(!leader.getCompany().getMemberList().stream().anyMatch(member -> member.getId() == memberId))
+        if(!MemberValidator.isAccessible(leader, memberId))
             throw new MemberException(ErrorCode.MEMBER_ACCESS_DENIED);
 
         Member updatedMember = memberService.updateMemberRole(leader, memberId);
@@ -161,7 +163,7 @@ public class MemberRestController {
     })
     @PostMapping("/company/{companyId}/member")
     public ResponseEntity<MemberResponseDto.CreateDto> create(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody @Valid MemberRequestDto.CreateDto request, @AuthUser Member leader) {
-        if(companyId != leader.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+        if(CompanyValidator.isAccessible(leader, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
         Member createdMember = memberService.create(companyId, request);
         return ResponseEntity.ok(MemberConverter.toCreateDto(createdMember));
     }
@@ -178,7 +180,7 @@ public class MemberRestController {
     })
     @DeleteMapping("/company/member/{memberId}")
     public ResponseEntity<MemberResponseDto.DeleteDto> delete(@PathVariable(name = "memberId") @ExistMember Long memberId, @AuthUser Member leader) {
-        if(!leader.getCompany().getMemberList().stream().anyMatch(member -> member.getId() == memberId))
+        if(!MemberValidator.isAccessible(leader, memberId))
             throw new MemberException(ErrorCode.MEMBER_ACCESS_DENIED);
         memberService.delete(memberId);
         return ResponseEntity.ok(MemberConverter.toDeleteDto());

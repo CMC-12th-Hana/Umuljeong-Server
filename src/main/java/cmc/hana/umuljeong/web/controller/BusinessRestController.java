@@ -18,6 +18,9 @@ import cmc.hana.umuljeong.service.MemberService;
 import cmc.hana.umuljeong.validation.annotation.ExistBusiness;
 import cmc.hana.umuljeong.validation.annotation.ExistClientCompany;
 import cmc.hana.umuljeong.validation.annotation.ExistCompany;
+import cmc.hana.umuljeong.validation.validator.BusinessValidator;
+import cmc.hana.umuljeong.validation.validator.ClientCompanyValidator;
+import cmc.hana.umuljeong.validation.validator.CompanyValidator;
 import cmc.hana.umuljeong.web.dto.BusinessRequestDto;
 import cmc.hana.umuljeong.web.dto.BusinessResponseDto;
 import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
@@ -62,12 +65,7 @@ public class BusinessRestController {
     })
     @GetMapping("/company/client/business/{businessId}")
     public ResponseEntity<BusinessResponseDto.BusinessDto> getBusiness(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @AuthUser Member member) {
-        boolean isValid = false;
-        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
-            isValid = clientCompany.getBusinessList().stream().anyMatch(business -> business.getId() == businessId);
-            if(isValid) break;
-        }
-        if(!isValid) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
+        if(!BusinessValidator.isAccessible(member, businessId)) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
 
         Business business = businessService.findById(businessId);
         return ResponseEntity.ok(BusinessConverter.toBusinessDto(business));
@@ -79,7 +77,7 @@ public class BusinessRestController {
     })
     @GetMapping("/company/client/{clientId}/businesses")
     public ResponseEntity<BusinessResponseDto.BusinessListDto> getBusinessList(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @AuthUser Member member) {
-        if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
+        if(!ClientCompanyValidator.isAccessible(member, clientCompanyId))
             throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
 
         List<Business> businessList = businessService.findByClientCompany(clientCompanyId);
@@ -96,7 +94,7 @@ public class BusinessRestController {
                                                                                   @RequestParam(name = "start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
                                                                                   @RequestParam(name = "finish") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finish,
                                                                                   @AuthUser Member member) {
-        if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+        if(!CompanyValidator.isAccessible(member, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
 
         List<Business> businessList = businessService.findByCompanyAndNameAndStartAndFinishAndMember(companyId, name, start, finish, member);
         return ResponseEntity.ok(BusinessConverter.toBusinessListDto(businessList));
@@ -115,7 +113,7 @@ public class BusinessRestController {
     })
     @PostMapping("/company/client/{clientId}/business")
     public ResponseEntity<BusinessResponseDto.CreateBusinessDto> createBusiness(@PathVariable(name = "clientId") @ExistClientCompany Long clientCompanyId, @RequestBody @Valid BusinessRequestDto.CreateBusinessDto request, @AuthUser Member member) {
-        if(!member.getCompany().getClientCompanyList().stream().anyMatch(clientCompany -> clientCompany.getId() == clientCompanyId))
+        if(!ClientCompanyValidator.isAccessible(member,clientCompanyId))
             throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
 
         Business business = businessService.create(clientCompanyId, request);
@@ -135,12 +133,7 @@ public class BusinessRestController {
     })
     @PatchMapping("/company/client/business/{businessId}")
     public ResponseEntity<BusinessResponseDto.UpdateBusinessDto> updateBusiness(@PathVariable(name = "businessId") @ExistBusiness Long businessId, @RequestBody @Valid BusinessRequestDto.UpdateBusinessDto request, @AuthUser Member member) {
-        boolean isValid = false;
-        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
-            isValid = clientCompany.getBusinessList().stream().anyMatch(business -> business.getId() == businessId);
-            if(isValid) break;
-        }
-        if(!isValid) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
+        if(!BusinessValidator.isAccessible(member, businessId)) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
 
         Business business = businessService.update(businessId, request);
         return ResponseEntity.ok(BusinessConverter.toUpdateBusinessDto(business));
@@ -152,12 +145,7 @@ public class BusinessRestController {
     })
     @DeleteMapping("/company/client/business/{businessId}")
     public ResponseEntity<BusinessResponseDto.DeleteBusinessDto> deleteBusiness(@PathVariable (name = "businessId") @ExistBusiness Long businessId, @AuthUser Member member) {
-        boolean isValid = false;
-        for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
-            isValid = clientCompany.getBusinessList().stream().anyMatch(business -> business.getId() == businessId);
-            if(isValid) break;
-        }
-        if(!isValid) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
+        if(!BusinessValidator.isAccessible(member, businessId)) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
 
         businessService.delete(businessId);
         return ResponseEntity.ok(BusinessConverter.DeleteBusinessDto());

@@ -8,6 +8,7 @@ import cmc.hana.umuljeong.exception.CompanyException;
 import cmc.hana.umuljeong.exception.common.ApiErrorResult;
 import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.service.CompanyService;
+import cmc.hana.umuljeong.validation.validator.CompanyValidator;
 import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
 import cmc.hana.umuljeong.web.dto.CompanyRequestDto;
 import cmc.hana.umuljeong.web.dto.CompanyResponseDto;
@@ -47,7 +48,7 @@ public class CompanyRestController {
     })
     @PostMapping("/company")
     public ResponseEntity<CompanyResponseDto.CompanyCreateDto> createCompany(@RequestBody @Valid CompanyRequestDto.CompanyCreateDto request, @AuthUser Member member) {
-        if(member.getCompany() != null) throw new CompanyException(ErrorCode.COMPANY_ALREADY_EXISTS);
+        if(CompanyValidator.existsByMember(member)) throw new CompanyException(ErrorCode.COMPANY_ALREADY_EXISTS);
         Company company = companyService.create(member, request);
         return ResponseEntity.ok(CompanyConverter.toCompanyCreateDto(company));
     }

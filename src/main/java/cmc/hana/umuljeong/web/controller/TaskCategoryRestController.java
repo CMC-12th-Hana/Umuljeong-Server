@@ -12,6 +12,8 @@ import cmc.hana.umuljeong.service.TaskCategoryService;
 import cmc.hana.umuljeong.util.MemberUtil;
 import cmc.hana.umuljeong.validation.annotation.ExistCompany;
 import cmc.hana.umuljeong.validation.annotation.ExistTaskCategory;
+import cmc.hana.umuljeong.validation.validator.CompanyValidator;
+import cmc.hana.umuljeong.validation.validator.TaskCategoryValidator;
 import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
 import cmc.hana.umuljeong.web.dto.TaskCategoryRequestDto;
 import cmc.hana.umuljeong.web.dto.TaskCategoryResponseDto;
@@ -52,7 +54,7 @@ public class TaskCategoryRestController {
     })
     @GetMapping("/company/{companyId}/client/business/task/categories")
     public ResponseEntity<TaskCategoryResponseDto.TaskCategoryListDto> getTaskCategoryList(@PathVariable(name = "companyId") @ExistCompany Long companyId, @AuthUser Member member) {
-        if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+        if(!CompanyValidator.isAccessible(member, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
         List<TaskCategory> taskCategoryList = taskCategoryService.findByCompany(companyId);
         return ResponseEntity.ok(TaskCategoryConverter.toTaskCategoryListDto(taskCategoryList));
     }
@@ -70,7 +72,7 @@ public class TaskCategoryRestController {
     })
     @PostMapping("/company/{companyId}/client/business/task/category")
     public ResponseEntity<TaskCategoryResponseDto.CreateTaskCategoryDto> createTaskCategory(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody @Valid TaskCategoryRequestDto.CreateTaskCategoryDto request, @AuthUser Member member) {
-        if(companyId != member.getCompany().getId()) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+        if(!CompanyValidator.isAccessible(member, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
         TaskCategory taskCategory = taskCategoryService.create(companyId, request);
         return ResponseEntity.ok(TaskCategoryConverter.toCreateTaskCategoryDto(taskCategory));
     }
@@ -88,8 +90,9 @@ public class TaskCategoryRestController {
     })
     @PatchMapping("/company/client/business/task/category/{categoryId}")
     public ResponseEntity<TaskCategoryResponseDto.UpdateTaskCategoryDto> updateTaskCategory(@PathVariable(name = "categoryId") @ExistTaskCategory Long taskCategoryId, @RequestBody @Valid TaskCategoryRequestDto.UpdateTaskCategoryDto request, @AuthUser Member member) {
+        if(!TaskCategoryValidator.isAccessible(member, taskCategoryId)) throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ACCESS_DENIED);
+
         TaskCategory taskCategory = taskCategoryService.update(taskCategoryId, request);
-        if(!member.getCompany().getTaskCategoryList().contains(taskCategory)) throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ACCESS_DENIED);
         return ResponseEntity.ok(TaskCategoryConverter.toUpdateTaskCategory(taskCategory));
     }
 
@@ -105,13 +108,8 @@ public class TaskCategoryRestController {
     })
     @DeleteMapping("/company/client/business/task/categories")
     public ResponseEntity<TaskCategoryResponseDto.DeleteTaskCategoryListDto> deleteTaskCategory(@RequestParam(name = "categoryIds") List<Long> categoryIds, @AuthUser Member member) {
-        List<Long> taskCategoryIds = member.getCompany().getTaskCategoryList().stream()
-                        .map(taskCategory -> taskCategory.getId())
-                        .collect(Collectors.toList());
-
-        for(Long taskCategoryId : categoryIds) {
-            if(!taskCategoryIds.contains(taskCategoryId)) throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ACCESS_DENIED);
-        }
+        if(TaskCategoryValidator.isAccessible(member, categoryIds))
+            throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ACCESS_DENIED);
 
         taskCategoryService.deleteList(categoryIds);
         return ResponseEntity.ok(TaskCategoryConverter.toDeleteTaskCategoryListDto());
