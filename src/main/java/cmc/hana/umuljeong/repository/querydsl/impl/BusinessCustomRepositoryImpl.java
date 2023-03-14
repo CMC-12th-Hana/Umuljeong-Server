@@ -30,8 +30,11 @@ public class BusinessCustomRepositoryImpl implements BusinessCustomRepository {
 
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(business.clientCompany.company.eq(company));
-        builder.and(business.businessPeriod.start.between(start, finish));
-        builder.and(business.businessPeriod.finish.between(start, finish));
+
+        if(start != null && finish != null) {
+            builder.and(business.businessPeriod.start.between(start, finish));
+            builder.and(business.businessPeriod.finish.between(start, finish));
+        }
 
         if(name != null) builder.and(business.name.contains(name));
         if(member.getMemberRole() == MemberRole.STAFF) {

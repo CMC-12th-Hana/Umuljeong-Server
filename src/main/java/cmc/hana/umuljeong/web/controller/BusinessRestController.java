@@ -92,8 +92,8 @@ public class BusinessRestController {
     @GetMapping("/company/{companyId}/client/businesses")
     public ResponseEntity<BusinessResponseDto.BusinessListDto> searchBusinessList(@PathVariable(name = "companyId") @ExistCompany Long companyId,
                                                                                   @RequestParam(name = "name", required = false) String name,
-                                                                                  @RequestParam(name = "start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-                                                                                  @RequestParam(name = "finish") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finish,
+                                                                                  @RequestParam(name = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+                                                                                  @RequestParam(name = "finish", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate finish,
                                                                                   @AuthUser Member member) {
         if(!CompanyValidator.isAccessible(member, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
 
