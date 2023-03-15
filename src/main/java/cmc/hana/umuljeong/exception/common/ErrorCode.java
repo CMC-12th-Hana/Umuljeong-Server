@@ -11,7 +11,8 @@ public enum ErrorCode {
 
     // Auth
     JWT_BAD_REQUEST(HttpStatus.UNAUTHORIZED, "잘못된 JWT 서명입니다."),
-    JWT_ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+    JWT_ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "액세스 토큰이 만료되었습니다."),
+    JWT_REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "리프레시 토큰이 만료되었습니다. 다시 로그인하시기 바랍니다."),
     JWT_UNSUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, "지원하지 않는 JWT 토큰입니다."),
     JWT_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "유효한 JWT 토큰이 없습니다."),
     UNVERIFIED_PHONE_NUMBER(HttpStatus.CONFLICT, "인증되지 않은 휴대전화 번호입니다."),

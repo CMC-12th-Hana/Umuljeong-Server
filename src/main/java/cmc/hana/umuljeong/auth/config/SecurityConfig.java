@@ -40,6 +40,7 @@ public class SecurityConfig {
                         "/favicon.ico",
                         "/join",
                         "/login",
+                        "/reissue",
                         "/message/send",
                         "/message/verify",
                         "/health",

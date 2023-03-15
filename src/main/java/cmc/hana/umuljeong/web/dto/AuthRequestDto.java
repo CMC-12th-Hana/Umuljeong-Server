@@ -59,4 +59,9 @@ public class AuthRequestDto {
 
         private MessageType messageType;
     }
+
+    @Getter
+    public static class RefreshDto {
+        private String refreshToken;
+    }
 }

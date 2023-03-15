@@ -128,4 +128,9 @@ public class MemberServiceImpl implements MemberService {
         member.removeRelationship();
         memberRepository.delete(member);
     }
+
+    @Override
+    public Optional<Member> findByPhoneNumber(String phoneNumber) {
+        return memberRepository.findByPhoneNumber(phoneNumber);
+    }
 }

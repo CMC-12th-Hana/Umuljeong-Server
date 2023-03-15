@@ -1,8 +1,11 @@
 package cmc.hana.umuljeong.exception.handler;
 
+import cmc.hana.umuljeong.exception.JwtAuthenticationException;
 import cmc.hana.umuljeong.exception.common.ApiErrorResult;
 import cmc.hana.umuljeong.exception.common.CustomException;
 import cmc.hana.umuljeong.exception.common.ErrorCode;
+import cmc.hana.umuljeong.web.controller.AuthRestController;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,6 +49,17 @@ public class GlobalRestControllerExceptionHandler extends ResponseEntityExceptio
                 .body(ApiErrorResult.builder().message(message).cause(cause).build());
     }
 
+
+    @ExceptionHandler
+    public ResponseEntity<ApiErrorResult> handleExpiredJwtException(JwtAuthenticationException ex) {
+        ErrorCode errorCode = ErrorCode.valueOf(ex.getMessage());
+        return ResponseEntity.status(errorCode.getStatus())
+                .body(ApiErrorResult.builder()
+                        .errorCode(errorCode)
+                        .message(errorCode.getMessage())
+                        .cause(AuthRestController.class.getName())
+                        .build());
+    }
 
     @ExceptionHandler // PathVariable 검증 예외
     public ResponseEntity<ApiErrorResult> ConstraintViolationExceptionHandler(ConstraintViolationException e) {

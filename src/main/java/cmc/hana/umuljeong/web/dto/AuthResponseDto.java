@@ -12,9 +12,17 @@ public class AuthResponseDto {
     @Getter
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class ReissueDto {
+        private String accessToken;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class LoginDto {
         private String accessToken;
-        // todo : refreshToken
+        private String refreshToken;
     }
 
     @Builder
@@ -24,6 +32,7 @@ public class AuthResponseDto {
     public static class JoinDto {
         private Long memberId;
         private String accessToken;
+        private String refreshToken;
     }
 
     @Builder

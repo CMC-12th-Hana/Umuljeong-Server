@@ -10,16 +10,18 @@ import java.time.LocalDateTime;
 
 public class AuthConverter {
 
-    public static AuthResponseDto.LoginDto toLoginDto(String token) {
+    public static AuthResponseDto.LoginDto toLoginDto(String accessToken, String refreshToken) {
         return AuthResponseDto.LoginDto.builder()
-                .accessToken(token)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 
-    public static AuthResponseDto.JoinDto toJoinDto(Member member, String accessToken) {
+    public static AuthResponseDto.JoinDto toJoinDto(Member member, String accessToken, String refreshToken) {
         return AuthResponseDto.JoinDto.builder()
                 .memberId(member.getId())
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -53,6 +55,12 @@ public class AuthConverter {
                 .verificationNumber(verificationNumber)
                 .ExpirationTime(LocalDateTime.now().plusMinutes(5))
                 .phoneNumber(request.getPhoneNumber())
+                .build();
+    }
+
+    public static AuthResponseDto.ReissueDto toReissueDto(String newAccessToken) {
+        return AuthResponseDto.ReissueDto.builder()
+                .accessToken(newAccessToken)
                 .build();
     }
 }

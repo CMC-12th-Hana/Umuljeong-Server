@@ -14,7 +14,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Base64;
@@ -28,16 +30,26 @@ public class TokenProvider implements InitializingBean {
 
     private final Logger LOGGER = LoggerFactory.getLogger(TokenProvider.class);
 
-    private static final String AUTHORITIES_KEY = "NeighborAPI"; // todo : 환경변수로 세팅하기
+    private final String AUTHORITIES_KEY;
+    public static final String AUTHORIZATION_HEADER = "Authorization";
 
     private final String secret;
-    private final long tokenValidityInMilliseconds;
+    private final long accessTokenValidityInMilliseconds;
+    private final long refreshTokenValidityInMilliseconds;
     private Key key;
 
+    public enum TokenType {
+        ACCESS, REFRESH;
+    }
+
     public TokenProvider(@Value("${jwt.secret}") String secret,
-                         @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds){
+                         @Value("${jwt.authorities-key}") String authoritiesKey,
+                         @Value("${jwt.access-token-validity-in-seconds}") long accessTokenValidityInMilliseconds,
+                         @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInMilliseconds){
         this.secret = secret;
-        this.tokenValidityInMilliseconds = tokenValidityInMilliseconds;
+        this.AUTHORITIES_KEY = authoritiesKey;
+        this.accessTokenValidityInMilliseconds = accessTokenValidityInMilliseconds;
+        this.refreshTokenValidityInMilliseconds = refreshTokenValidityInMilliseconds;
     }
 
     @Override
@@ -47,15 +59,56 @@ public class TokenProvider implements InitializingBean {
     }
 
     /**token 생성 algorithm */
-    public String createToken(Authentication authentication){
+    public String createAccessToken(Authentication authentication){
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
         long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+        Date validity = new Date(now + this.accessTokenValidityInMilliseconds);
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authorities)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity)
+                .compact();
+    }
+
+    public String createRefreshToken(Authentication authentication){
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.refreshTokenValidityInMilliseconds);
+
+        return Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authorities)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity)
+                .compact();
+    }
+
+    /**token 생성 algorithm */
+    public String createAccessToken(String name, Collection<? extends GrantedAuthority> authorities){
+
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.accessTokenValidityInMilliseconds);
+
+        return Jwts.builder()
+                .setSubject(name)
+                .claim(AUTHORITIES_KEY, authorities)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity)
+                .compact();
+    }
+
+    public String createRefreshToken(String name, Collection<? extends GrantedAuthority> authorities) {
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.refreshTokenValidityInMilliseconds);
+
+        return Jwts.builder()
+                .setSubject(name)
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
@@ -78,14 +131,15 @@ public class TokenProvider implements InitializingBean {
     }
 
     /**token 유효성 검증 */
-    public boolean validateToken(String token) throws JwtAuthenticationException {
+    public boolean validateToken(String token, TokenType type) throws JwtAuthenticationException {
         try{
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         }catch(io.jsonwebtoken.security.SecurityException | MalformedJwtException e){
             throw new JwtAuthenticationException(ErrorCode.JWT_BAD_REQUEST);
         }catch(ExpiredJwtException e){
-            throw new JwtAuthenticationException(ErrorCode.JWT_ACCESS_TOKEN_EXPIRED);
+            if(type == TokenType.ACCESS) throw new JwtAuthenticationException(ErrorCode.JWT_ACCESS_TOKEN_EXPIRED);
+            else throw new JwtAuthenticationException(ErrorCode.JWT_REFRESH_TOKEN_EXPIRED);
         }catch(UnsupportedJwtException e){
             throw new JwtAuthenticationException(ErrorCode.JWT_UNSUPPORTED_TOKEN);
         }catch(IllegalArgumentException e){
@@ -93,4 +147,12 @@ public class TokenProvider implements InitializingBean {
         }
     }
 
+    /**토큰 정보 추출 */
+    public String resolveToken(HttpServletRequest request){
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
 }
