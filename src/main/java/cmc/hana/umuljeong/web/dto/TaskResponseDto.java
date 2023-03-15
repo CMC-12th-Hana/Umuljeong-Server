@@ -25,6 +25,9 @@ public class TaskResponseDto {
     public static class TaskDto {
         private Long taskId;
         private Long memberId;
+        private Long categoryId;
+        private Long clientId;
+        private Long businessId;
         private String businessName;
         private String clientName;
         private String title;
