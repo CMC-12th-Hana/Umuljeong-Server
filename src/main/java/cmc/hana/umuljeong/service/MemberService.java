@@ -31,4 +31,6 @@ public interface MemberService {
     Member updateMemberRole(Member leader, Long memberId);
 
     Optional<Member> findByPhoneNumber(String phoneNumber);
+
+    Member updateLeaderProfile(Member leader, MemberRequestDto.UpdateMemberProfileDto request);
 }

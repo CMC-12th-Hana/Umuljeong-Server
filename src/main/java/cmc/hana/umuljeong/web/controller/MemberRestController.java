@@ -103,7 +103,7 @@ public class MemberRestController {
         return ResponseEntity.ok(MemberConverter.toUpdateProfileDto(updatedMember));
     }
 
-    @Operation(summary = "[005_03.3]", description = "다른 사원 프로필 수정")
+    @Operation(summary = "[005_03.3]", description = "다른 사원 프로필 수정, 리더는 본인 프로필 수정")
     @Parameters({
             @Parameter(name = "leader", hidden = true)
     })
@@ -115,11 +115,14 @@ public class MemberRestController {
     })
     @PatchMapping("/company/member/{memberId}/profile")
     public ResponseEntity<MemberResponseDto.UpdateProfileDto> updateMemberProfile(@PathVariable(name = "memberId") @ExistMember Long memberId, @RequestBody @Valid MemberRequestDto.UpdateMemberProfileDto request, @AuthUser Member leader) {
-        if(MemberValidator.isSameMember(leader, memberId)) throw new MemberException(ErrorCode.MEMBER_UPDATE_SAME);
+        Member updatedMember;
+        if(MemberValidator.isSameMember(leader, memberId)) {
+            updatedMember = memberService.updateLeaderProfile(leader, request);
+        }
         if(!MemberValidator.isAccessible(leader, memberId))
             throw new MemberException(ErrorCode.MEMBER_ACCESS_DENIED);
 
-        Member updatedMember = memberService.updateMemberProfile(memberId, request);
+        updatedMember = memberService.updateMemberProfile(memberId, request);
         return ResponseEntity.ok(MemberConverter.toUpdateProfileDto(updatedMember));
     }
 
