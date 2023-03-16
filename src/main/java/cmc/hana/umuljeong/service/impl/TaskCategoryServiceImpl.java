@@ -3,9 +3,12 @@ package cmc.hana.umuljeong.service.impl;
 import cmc.hana.umuljeong.converter.TaskCategoryConverter;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.domain.Task;
 import cmc.hana.umuljeong.domain.TaskCategory;
 import cmc.hana.umuljeong.repository.CompanyRepository;
 import cmc.hana.umuljeong.repository.TaskCategoryRepository;
+import cmc.hana.umuljeong.repository.TaskRepository;
+import cmc.hana.umuljeong.repository.querydsl.TaskCategoryCustomRepository;
 import cmc.hana.umuljeong.service.TaskCategoryService;
 import cmc.hana.umuljeong.web.dto.TaskCategoryRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,8 @@ import java.util.stream.Collectors;
 public class TaskCategoryServiceImpl implements TaskCategoryService {
 
     private final TaskCategoryRepository taskCategoryRepository;
+    private final TaskRepository taskRepository;
+    private final TaskCategoryCustomRepository taskCategoryCustomRepository;
     private final CompanyRepository companyRepository;
 
     @Transactional
@@ -52,6 +57,14 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
     @Transactional
     @Override
     public void deleteList(List<Long> categoryIds) {
+        List<TaskCategory> taskCategoryList = taskCategoryCustomRepository.findByIds(categoryIds);
+        taskCategoryList.forEach(taskCategory -> {
+            taskCategory.removeRelationship();
+            taskRepository.findByTaskCategory(taskCategory)
+                    .stream()
+                    .forEach(task -> task.setTaskCategory(null));
+        });
+
         taskCategoryRepository.deleteAllByIdInQuery(categoryIds);
         return ;
     }

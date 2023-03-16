@@ -21,4 +21,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> { // todo : ê²
 
     @Query("select count(task) from Task task where task.taskCategory = :taskCategory and task.business.id = :businessId")
     Integer countByTaskCategoryAndBusiness_Id(TaskCategory taskCategory, Long businessId);
+
+    List<Task> findByTaskCategory(TaskCategory taskCategory);
 }

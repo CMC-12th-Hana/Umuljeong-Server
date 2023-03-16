@@ -80,8 +80,8 @@ jwt:
   header: Authorization
   secret: ${JWT_SECRET}
   authorities-key: ${JWT_AUTHORITIES_KEY}
-  access-token-validity-in-seconds: 40000
-  refresh-token-validity-in-seconds: 80000
+  access-token-validity-in-seconds: 1800000 # 30 m
+  refresh-token-validity-in-seconds: 1210000000 # 14 d
 
 cool-sms:
   api-key: ${COOL_SMS_API_KEY}
