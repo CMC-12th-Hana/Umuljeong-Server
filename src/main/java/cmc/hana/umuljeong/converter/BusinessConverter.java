@@ -41,10 +41,9 @@ public class BusinessConverter {
                                 .finish(LocalDate.of(2000, 1, 1))
                                 .build())
                 .businessMemberList(new ArrayList<>())
-                .revenue(0)
+                .revenue(0L)
                 .description("사업 분류 없음")
                 .name("기타")
-                .revenue(0)
                 .build();
         business.setClientCompany(clientCompany);
         return business;

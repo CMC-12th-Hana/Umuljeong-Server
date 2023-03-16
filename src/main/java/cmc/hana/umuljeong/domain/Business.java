@@ -35,7 +35,7 @@ public class Business extends BaseEntity {
     @Embedded
     private BusinessPeriod businessPeriod;
 
-    private Integer revenue;
+    private Long revenue;
 
     private String description;
 

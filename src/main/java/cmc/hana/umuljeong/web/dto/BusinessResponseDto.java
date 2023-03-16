@@ -44,7 +44,7 @@ public class BusinessResponseDto {
         private String clientName;
         private String name;
         private BusinessPeriodDto businessPeriodDto;
-        private Integer revenue;
+        private Long revenue;
         private List<MemberDto> memberDtoList;
         private String description;
     }

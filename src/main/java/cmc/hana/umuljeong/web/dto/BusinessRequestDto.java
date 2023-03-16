@@ -23,7 +23,7 @@ public class BusinessRequestDto {
         private BusinessPeriodDto businessPeriodDto;
         private List<Long> memberIdList;
         @NotNull
-        private Integer revenue;
+        private Long revenue;
         private String description;
     }
 
@@ -34,7 +34,7 @@ public class BusinessRequestDto {
         private BusinessPeriodDto businessPeriodDto;
         private List<Long> memberIdList;
         @NotNull
-        private Integer revenue;
+        private Long revenue;
         private String description;
     }
 }
