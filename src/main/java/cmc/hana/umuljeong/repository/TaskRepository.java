@@ -19,16 +19,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> { // todo : ê²
     @Query("select count(task) from Task task where task.taskCategory = :taskCategory and task.business.clientCompany.id = :clientCompanyId")
     Integer countByTaskCategoryAndClientCompany_Id(TaskCategory taskCategory, Long clientCompanyId);
 
-
-    @Query("select task from Task task where task.business = :business and task.date = :date and task.taskCategory = :taskCategory")
-    List<Task> findByBusinessAndDateAndTaskCategory(Business business, LocalDate date, TaskCategory taskCategory);
-
-    @Query("select task from Task task where task.business = :business and task.date = :date")
-    List<Task> findByBusinessAndDate(Business business, LocalDate date);
-
-    @Query("select task from Task task where task.business = :business and year(task.date) = :year and month(task.date) = :month and task.taskCategory = :taskCategory")
-    List<Task> findByBusinessAndYearAndMonthAndTaskCategory(Business business, Integer year, Integer month, TaskCategory taskCategory);
-
-    @Query("select task from Task task where task.business = :business and year(task.date) = :year and month(task.date) = :month")
-    List<Task> findByBusinessAndYearAndMonth(Business business, Integer year, Integer month);
+    @Query("select count(task) from Task task where task.taskCategory = :taskCategory and task.business.id = :businessId")
+    Integer countByTaskCategoryAndBusiness_Id(TaskCategory taskCategory, Long businessId);
 }

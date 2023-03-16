@@ -22,7 +22,8 @@ import java.util.Map;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class TaskServiceImpl implements TaskService {
+public class
+TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskCustomRepository taskCustomRepository;
@@ -89,6 +90,18 @@ public class TaskServiceImpl implements TaskService {
 
         taskCategoryList.stream().forEach(taskCategory -> {
             statisticMap.put(taskCategory.getName(), new Pair<>(taskCategory.getColor(), taskRepository.countByTaskCategoryAndClientCompany_Id(taskCategory, clientCompanyId)));
+        });
+
+        return statisticMap;
+    }
+
+    @Override
+    public Map<String, Pair<String, Integer>> getStatisticByBusiness(Company company, Long businessId) {
+        Map<String, Pair<String, Integer>> statisticMap = new HashMap<>();
+        List<TaskCategory> taskCategoryList = taskCategoryRepository.findByCompany(company);
+
+        taskCategoryList.stream().forEach(taskCategory -> {
+            statisticMap.put(taskCategory.getName(), new Pair<>(taskCategory.getColor(), taskRepository.countByTaskCategoryAndBusiness_Id(taskCategory, businessId)));
         });
 
         return statisticMap;

@@ -134,11 +134,24 @@ public class TaskRestController {
             @Parameter(name = "member", hidden = true)
     })
     @GetMapping("/company/client/{clientId}/business/task/statistic")
-    public ResponseEntity<TaskResponseDto.TaskStatisticListDto> taskStatistic(@PathVariable(name = "clientId") Long clientCompanyId, @AuthUser Member member) {
+    public ResponseEntity<TaskResponseDto.TaskStatisticListDto> taskStatisticByClientCompany(@PathVariable(name = "clientId") Long clientCompanyId, @AuthUser Member member) {
         if(!ClientCompanyValidator.isAccessible(member, clientCompanyId))
             throw new ClientCompanyException(ErrorCode.CLIENT_COMPANY_ACCESS_DENIED);
 
         Map<String, Pair<String, Integer>> taskStatistic = taskService.getStatistic(member.getCompany(), clientCompanyId);
+        return ResponseEntity.ok(TaskConverter.toTaskStatisticListDto(taskStatistic));
+    }
+
+    @Operation(summary = "[003_03_3]", description = "누적 업무 건수 그래프 조회")
+    @Parameters({
+            @Parameter(name = "member", hidden = true)
+    })
+    @GetMapping("/company/client/business/{businessId}/task/statistic")
+    public ResponseEntity<TaskResponseDto.TaskStatisticListDto> taskStatisticByBusiness(@PathVariable(name = "businessId") Long businessId, @AuthUser Member member) {
+        if(!BusinessValidator.isAccessible(member, businessId))
+            throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
+
+        Map<String, Pair<String, Integer>> taskStatistic = taskService.getStatisticByBusiness(member.getCompany(), businessId);
         return ResponseEntity.ok(TaskConverter.toTaskStatisticListDto(taskStatistic));
     }
 

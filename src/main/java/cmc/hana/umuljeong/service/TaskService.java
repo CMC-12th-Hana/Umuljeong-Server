@@ -28,4 +28,6 @@ public interface TaskService {
     List<Task> findByBusinessAndDateAndTaskCategory(Long businessId, Integer year, Integer month, Integer day, Long categoryId);
 
     void delete(Long taskId);
+
+    Map<String, Pair<String, Integer>> getStatisticByBusiness(Company company, Long businessId);
 }
