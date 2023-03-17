@@ -8,6 +8,7 @@ import cmc.hana.umuljeong.converter.AuthConverter;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.enums.VerifyMessageStatus;
 import cmc.hana.umuljeong.exception.AuthException;
+import cmc.hana.umuljeong.exception.CompanyException;
 import cmc.hana.umuljeong.exception.JwtAuthenticationException;
 import cmc.hana.umuljeong.exception.MemberException;
 import cmc.hana.umuljeong.exception.common.ApiErrorResult;
@@ -183,6 +184,7 @@ public class AuthRestController {
     })
     @PatchMapping("/company/join")
     public ResponseEntity<AuthResponseDto.JoinCompanyDto> joinCompany(@AuthUser Member member) {
+        if(member.getCompany() == null) throw new CompanyException(ErrorCode.COMPANY_NOT_FOUND);
         Member joinedMember = memberService.joinCompany(member);
         return ResponseEntity.ok(AuthConverter.toJoinCompanyDto(joinedMember));
     }

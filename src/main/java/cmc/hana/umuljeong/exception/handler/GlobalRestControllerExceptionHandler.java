@@ -67,7 +67,7 @@ public class GlobalRestControllerExceptionHandler extends ResponseEntityExceptio
         String errorCodeString = constraintViolation.getMessageTemplate();
         ErrorCode errorCode = ErrorCode.valueOf(errorCodeString);
         String cause = e.getClass().getName();
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ApiErrorResult.builder().errorCode(errorCode).message(errorCode.getMessage()).cause(cause).build());
     }
 

@@ -62,7 +62,7 @@ public class ClientCompanyServiceImpl implements ClientCompanyService {
     @Override
     public void delete(Long clientCompanyId) {
         ClientCompany clientCompany = clientCompanyRepository.findById(clientCompanyId).get();
-        clientCompany.removeRelationshop();
+        clientCompany.removeRelationship();
         clientCompanyRepository.delete(clientCompany);
         return ;
     }
