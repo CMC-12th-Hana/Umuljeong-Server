@@ -73,7 +73,6 @@ public class TaskCategoryRestController {
     @PostMapping("/company/{companyId}/client/business/task/category")
     public ResponseEntity<TaskCategoryResponseDto.CreateTaskCategoryDto> createTaskCategory(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody @Valid TaskCategoryRequestDto.CreateTaskCategoryDto request, @AuthUser Member member) {
         if(!CompanyValidator.isAccessible(member, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
-        if(TaskCategoryValidator.existsNameByCompany(request.getName(), companyId)) throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ALREADY_EXISTS);
         TaskCategory taskCategory = taskCategoryService.create(companyId, request);
         return ResponseEntity.ok(TaskCategoryConverter.toCreateTaskCategoryDto(taskCategory));
     }
@@ -92,7 +91,6 @@ public class TaskCategoryRestController {
     @PatchMapping("/company/client/business/task/category/{categoryId}")
     public ResponseEntity<TaskCategoryResponseDto.UpdateTaskCategoryDto> updateTaskCategory(@PathVariable(name = "categoryId") @ExistTaskCategory Long taskCategoryId, @RequestBody @Valid TaskCategoryRequestDto.UpdateTaskCategoryDto request, @AuthUser Member member) {
         if(!TaskCategoryValidator.isAccessible(member, taskCategoryId)) throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ACCESS_DENIED);
-        if(TaskCategoryValidator.existsNameByCompany(request.getName(), member.getCompany().getId())) throw new TaskCategoryException(ErrorCode.TASK_CATEGORY_ALREADY_EXISTS);
 
         TaskCategory taskCategory = taskCategoryService.update(taskCategoryId, request);
         return ResponseEntity.ok(TaskCategoryConverter.toUpdateTaskCategory(taskCategory));
