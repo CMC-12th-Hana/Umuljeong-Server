@@ -68,7 +68,7 @@ public class GlobalRestControllerExceptionHandler extends ResponseEntityExceptio
         String errorCodeString = constraintViolation.getMessageTemplate();
         ErrorCode errorCode = ErrorCode.valueOf(errorCodeString);
         String cause = e.getClass().getName();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(errorCode.getStatus())
                 .body(ApiErrorResult.builder().errorCode(errorCode).message(errorCode.getMessage()).cause(cause).build());
     }
 
@@ -77,7 +77,7 @@ public class GlobalRestControllerExceptionHandler extends ResponseEntityExceptio
 
         ErrorCode errorCode = ErrorCode.PHONE_NUMBER_ALREADY_EXISTS;
         String cause = e.getClass().getName();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(errorCode.getStatus())
                 .body(ApiErrorResult.builder().errorCode(errorCode).message(errorCode.getMessage()).cause(cause).build());
     }
 
