@@ -7,6 +7,7 @@ import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.web.controller.AuthRestController;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.core.convert.ConversionFailedException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,7 +73,7 @@ public class GlobalRestControllerExceptionHandler extends ResponseEntityExceptio
     }
 
     @ExceptionHandler // 중복 휴대폰 번호 예외
-    public ResponseEntity<ApiErrorResult> HibernateConstraintViolationExceptionHandler(org.hibernate.exception.ConstraintViolationException e) {
+    public ResponseEntity<ApiErrorResult> HibernateConstraintViolationExceptionHandler(DataIntegrityViolationException e) {
 
         ErrorCode errorCode = ErrorCode.PHONE_NUMBER_ALREADY_EXISTS;
         String cause = e.getClass().getName();
