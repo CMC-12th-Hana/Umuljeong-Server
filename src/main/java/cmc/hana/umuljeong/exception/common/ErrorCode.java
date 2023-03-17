@@ -21,7 +21,7 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 사용자가 존재하지 않습니다."),
     MEMBER_ACCESS_DENIED(HttpStatus.FORBIDDEN, "본인 회사의 구성원만 조회할 수 있습니다."),
     MEMBER_UPDATE_SAME(HttpStatus.CONFLICT, "본인 정보는 내 정보 수정을 이용하세요."),
-    PHONE_NUMBER_ALERADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 휴대폰번호입니다."),
+    PHONE_NUMBER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "중복된 휴대폰번호입니다."),
 
     // Task
     TASK_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 업무가 존재하지 않습니다."),

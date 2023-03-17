@@ -71,6 +71,15 @@ public class GlobalRestControllerExceptionHandler extends ResponseEntityExceptio
                 .body(ApiErrorResult.builder().errorCode(errorCode).message(errorCode.getMessage()).cause(cause).build());
     }
 
+    @ExceptionHandler // 중복 휴대폰 번호 예외
+    public ResponseEntity<ApiErrorResult> HibernateConstraintViolationExceptionHandler(org.hibernate.exception.ConstraintViolationException e) {
+
+        ErrorCode errorCode = ErrorCode.PHONE_NUMBER_ALREADY_EXISTS;
+        String cause = e.getClass().getName();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiErrorResult.builder().errorCode(errorCode).message(errorCode.getMessage()).cause(cause).build());
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
