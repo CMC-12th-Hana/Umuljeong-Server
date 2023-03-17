@@ -52,7 +52,9 @@ public class Business extends BaseEntity {
     }
 
     public void removeRelationship() {
-        this.clientCompany.getBusinessList().remove(this);
-        this.clientCompany = null;
+        if(this.clientCompany != null) {
+            this.clientCompany.getBusinessList().remove(this);
+            this.clientCompany = null;
+        }
     }
 }

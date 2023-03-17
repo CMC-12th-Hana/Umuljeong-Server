@@ -33,7 +33,9 @@ public class TaskCategory extends BaseEntity {
     }
 
     public void removeRelationship() {
-        this.company.getTaskCategoryList().remove(this);
-        this.company = null;
+        if(this.company != null) {
+            this.company.getTaskCategoryList().remove(this);
+            this.company = null;
+        }
     }
 }

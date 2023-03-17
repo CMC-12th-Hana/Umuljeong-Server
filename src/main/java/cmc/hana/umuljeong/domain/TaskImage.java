@@ -41,7 +41,9 @@ public class TaskImage extends BaseEntity {
     }
 
     public void removeRelationship() {
-        this.task.getTaskImageList().remove(this);
-        this.task = null;
+        if(this.task != null) {
+            this.task.getTaskImageList().remove(this);
+            this.task = null;
+        }
     }
 }
