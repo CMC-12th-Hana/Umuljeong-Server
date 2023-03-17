@@ -143,8 +143,8 @@ jwt:
   header: Authorization
   secret: ${jwt.secret}
   authorities-key: ${jwt.authorities.key}
-  access-token-validity-in-seconds: 60000 # 30 m 테스트로 1, 4분
-  refresh-token-validity-in-seconds: 240000 # 14 d
+  access-token-validity-in-seconds: 1800000 # 30 m
+  refresh-token-validity-in-seconds: 1210000000 # 14 d
 
 cool-sms:
   api-key: ${cool.sms.api.key}
