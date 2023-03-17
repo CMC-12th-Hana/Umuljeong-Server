@@ -60,7 +60,9 @@ public class Member extends BaseEntity {
     }
 
     public void removeRelationship() {
-        this.company.getMemberList().remove(this);
-        this.company = null;
+        if(this.company != null) {
+            this.company.getMemberList().remove(this);
+            this.company = null;
+        }
     }
 }

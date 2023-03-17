@@ -195,4 +195,19 @@ public class MemberRestController {
         memberService.delete(memberId);
         return ResponseEntity.ok(MemberConverter.toDeleteDto());
     }
+
+    @Operation(summary = "[]", description = "회원 탈퇴")
+    @Parameters({
+            @Parameter(name = "member", hidden = true)
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK : 정상응답", content = @Content(schema = @Schema(implementation = MemberResponseDto.DeleteDto.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED : 인증되지 않은 사용자", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN : 본인 회사의 구성원이 아닌 경우", content = @Content(schema = @Schema(implementation = ApiErrorResult.class))),
+    })
+    @DeleteMapping("/company/member")
+    public ResponseEntity<MemberResponseDto.DeleteDto> exit(@AuthUser Member member) {
+        memberService.delete(member.getId());
+        return ResponseEntity.ok(MemberConverter.toDeleteDto());
+    }
 }
