@@ -5,6 +5,7 @@ import cmc.hana.umuljeong.domain.embedded.SalesRepresentative;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,7 +32,7 @@ public class ClientCompany extends BaseEntity {
     private SalesRepresentative salesRepresentative;
 
     @OneToMany(mappedBy = "clientCompany", cascade = CascadeType.ALL)
-    private List<Business> businessList;
+    private List<Business> businessList = new ArrayList<>();
 
     private Integer taskCount;
 

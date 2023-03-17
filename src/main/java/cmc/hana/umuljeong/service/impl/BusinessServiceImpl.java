@@ -72,6 +72,8 @@ public class BusinessServiceImpl implements BusinessService {
         Business business = businessRepository.findById(businessId).get();
         ClientCompany clientCompany = business.getClientCompany();
         clientCompanyRepository.decreaseBusinessCount(clientCompany);
+        for (int i  = 0; i<business.getTaskList().size(); i++)
+            clientCompanyRepository.decreaseTaskCount(clientCompany); // todo : 나중에 리팩토링
 
         business.removeRelationship();
         businessRepository.delete(business);

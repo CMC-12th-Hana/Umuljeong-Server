@@ -10,7 +10,7 @@ public class TaskValidator {
         boolean isValid = false;
         for(ClientCompany clientCompany : member.getCompany().getClientCompanyList()) {
             for(Business business : clientCompany.getBusinessList()) {
-                isValid = business.getTaskList().stream().anyMatch(task -> task.getId() == taskId);
+                isValid = business.getTaskList().stream().anyMatch(task -> task.getId().equals(taskId));
                 if(isValid) break;
             }
             if(isValid) break;

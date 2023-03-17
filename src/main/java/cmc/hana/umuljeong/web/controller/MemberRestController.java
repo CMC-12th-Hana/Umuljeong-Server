@@ -174,6 +174,7 @@ public class MemberRestController {
     @PostMapping("/company/{companyId}/member")
     public ResponseEntity<MemberResponseDto.CreateDto> create(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody @Valid MemberRequestDto.CreateDto request, @AuthUser Member leader) {
         if(!CompanyValidator.isAccessible(leader, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+
         Member createdMember = memberService.create(companyId, request);
         return ResponseEntity.ok(MemberConverter.toCreateDto(createdMember));
     }
@@ -207,6 +208,7 @@ public class MemberRestController {
     })
     @DeleteMapping("/company/member")
     public ResponseEntity<MemberResponseDto.DeleteDto> exit(@AuthUser Member member) {
+
         memberService.delete(member.getId());
         return ResponseEntity.ok(MemberConverter.toDeleteDto());
     }

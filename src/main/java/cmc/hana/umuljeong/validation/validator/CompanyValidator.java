@@ -4,7 +4,7 @@ import cmc.hana.umuljeong.domain.Member;
 
 public class CompanyValidator {
     public static boolean isAccessible(Member member, Long companyId) {
-        return companyId == member.getCompany().getId();
+        return companyId.equals(member.getCompany().getId());
     }
 
     public static boolean existsByMember(Member member) {

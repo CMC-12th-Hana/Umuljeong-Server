@@ -24,7 +24,7 @@ public class TaskCategoryValidator {
     }
 
     public static boolean isAccessible(Member member, Long taskCategoryId) {
-        return member.getCompany().getTaskCategoryList().stream().anyMatch(taskCategory -> taskCategory.getId() == taskCategoryId);
+        return member.getCompany().getTaskCategoryList().stream().anyMatch(taskCategory -> taskCategory.getId().equals(taskCategoryId));
     }
 
     public static boolean isAccessible(Member member, List<Long> categoryIds) {
