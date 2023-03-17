@@ -37,6 +37,7 @@ public class Business extends BaseEntity {
 
     private Long revenue;
 
+    @Column(length = 300)
     private String description;
 
     public void setBusinessMemberList(List<BusinessMember> businessMemberList) {

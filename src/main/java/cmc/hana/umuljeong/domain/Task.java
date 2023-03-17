@@ -35,6 +35,7 @@ public class Task extends BaseEntity {
 
     private LocalDate date;
 
+    @Column(length = 300)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
