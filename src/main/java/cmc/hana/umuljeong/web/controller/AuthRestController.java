@@ -158,6 +158,8 @@ public class AuthRestController {
          */
 
         if(!AuthValidator.isVerified(joinDto.getPhoneNumber())) throw new AuthException(ErrorCode.UNVERIFIED_PHONE_NUMBER);
+        if(AuthValidator.existsByJoinCompanyStatusAndPhoneNumber(joinDto.getPhoneNumber())) throw new AuthException(ErrorCode.PHONE_NUMBER_ALREADY_EXISTS);
+
 
         Member member = memberService.join(joinDto);
 
