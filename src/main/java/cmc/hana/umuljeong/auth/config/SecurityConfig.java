@@ -151,6 +151,9 @@ public class SecurityConfig {
                 .antMatchers(
                         HttpMethod.DELETE, "/company/member/{memberId}"
                 ).hasRole(LEADER)
+                .antMatchers(
+                        HttpMethod.DELETE, "/company/member"
+                ).hasAnyRole(STAFF, LEADER)
 
                 /**JwtSecurityConfig 적용 */
                 .and()
