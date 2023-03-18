@@ -96,6 +96,7 @@ public class TaskConverter {
                 .businessId(task.getBusiness().getId())
                 .clientId(task.getBusiness().getClientCompany().getId())
                 .title(task.getTitle())
+                .memberName(task.getMember().getName())
                 .taskCategory(task.getTaskCategory() != null ? task.getTaskCategory().getName() : "미지정")
                 .taskCategoryColor(task.getTaskCategory() != null ? task.getTaskCategory().getColor() : "")
                 .clientName(task.getBusiness().getClientCompany().getName())
