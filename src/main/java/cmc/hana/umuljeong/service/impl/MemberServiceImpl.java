@@ -1,11 +1,10 @@
 package cmc.hana.umuljeong.service.impl;
 
 import cmc.hana.umuljeong.converter.MemberConverter;
-import cmc.hana.umuljeong.domain.Business;
-import cmc.hana.umuljeong.domain.Company;
-import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.domain.*;
 import cmc.hana.umuljeong.domain.enums.JoinCompanyStatus;
 import cmc.hana.umuljeong.domain.enums.MemberRole;
+import cmc.hana.umuljeong.repository.ClientCompanyRepository;
 import cmc.hana.umuljeong.repository.CompanyRepository;
 import cmc.hana.umuljeong.repository.MemberRepository;
 import cmc.hana.umuljeong.repository.VerificationMessageRepository;
@@ -30,6 +29,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final MemberCustomRepository memberCustomRepository;
     private final CompanyRepository companyRepository;
+    private final ClientCompanyRepository clientCompanyRepository;
 
     @Transactional
     @Override
@@ -135,6 +135,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void delete(Long memberId) {
         Member member = memberRepository.findById(memberId).get();
+        for(Task task : member.getTaskList()) { // todo : 나중에 리팩토링
+            ClientCompany clientCompany = task.getBusiness().getClientCompany();
+            clientCompanyRepository.decreaseTaskCount(clientCompany);
+        }
+
         member.removeRelationship();
         memberRepository.delete(member);
     }
