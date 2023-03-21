@@ -22,7 +22,7 @@ public class BusinessMemberConverter {
     private static MemberRepository staticMemberRepository;
 
     @PostConstruct
-    void init() {
+    public void init() {
         this.staticBusinessRepository = this.businessRepository;
         this.staticMemberRepository = this.memberRepository;
     }

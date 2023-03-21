@@ -150,6 +150,7 @@ public class BusinessRestController {
     @DeleteMapping("/company/client/business/{businessId}")
     public ResponseEntity<BusinessResponseDto.DeleteBusinessDto> deleteBusiness(@PathVariable (name = "businessId") @ExistBusiness Long businessId, @AuthUser Member member) {
         if(!BusinessValidator.isAccessible(member, businessId)) throw new BusinessException(ErrorCode.BUSINESS_ACCESS_DENIED);
+        if(BusinessValidator.isEtcBusiness(businessId)) throw new BusinessException(ErrorCode.ETC_BUSINESS_ACCESS_DENIED);
 
         businessService.delete(businessId);
         return ResponseEntity.ok(BusinessConverter.DeleteBusinessDto());

@@ -36,6 +36,7 @@ public enum ErrorCode {
     // Business
     BUSINESS_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 사업이 존재하지 않습니다."),
     BUSINESS_ACCESS_DENIED(HttpStatus.FORBIDDEN, "본인 회사 고객사의 사업이 아닙니다."),
+    ETC_BUSINESS_ACCESS_DENIED(HttpStatus.FORBIDDEN, "기타 사업은 삭제할 수 없습니다."),
 
     // ClientCompany
     CLIENT_COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 고객사가 존재하지 않습니다."),

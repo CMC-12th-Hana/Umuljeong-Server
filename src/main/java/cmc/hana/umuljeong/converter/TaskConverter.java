@@ -66,7 +66,7 @@ public class TaskConverter {
     }
 
     @PostConstruct
-    void init() {
+    public void init() {
         this.staticBusinessRepository = this.businessRepository;
         this.staticTaskCategoryRepository = this.taskCategoryRepository;
         this.staticTaskImageProcess = this.taskImageProcess;

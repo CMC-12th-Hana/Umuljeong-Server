@@ -56,7 +56,7 @@ public class BusinessConverter {
     }
 
     @PostConstruct
-    void init() {
+    public void init() {
         this.staticMemberRepository = this.memberRepository;
     }
 
