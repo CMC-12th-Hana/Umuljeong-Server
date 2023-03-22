@@ -50,7 +50,8 @@ public enum ErrorCode {
     // Message
     MESSAGE_SEND_FAILED(HttpStatus.BAD_REQUEST, "메시지 전송이 실패했습니다. 올바른 번호인지 확인하세요."),
     MESSAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "인증번호 전송 기록이 존재하지 않습니다."),
-    MESSAGE_VERIFICATION_TIMEOUT(HttpStatus.BAD_REQUEST, "인증 번호가 만료되었습니다.");
+    MESSAGE_VERIFICATION_TIMEOUT(HttpStatus.BAD_REQUEST, "인증 번호가 만료되었습니다."),
+    VERIFICATION_DID_NOT_MATCH(HttpStatus.BAD_REQUEST, "인증 번호가 일치하지 않습니다.");
 
     private final HttpStatus status;
     private final String message;

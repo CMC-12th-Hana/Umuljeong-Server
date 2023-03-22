@@ -123,12 +123,11 @@ public class MessageServiceImpl implements MessageService {
                     default:
                         if(request.getMessageType() == JOIN) verificationMessage.setVerificationJoin(VerifyMessageStatus.FAILED);
                         if(request.getMessageType() == PASSWORD) verificationMessage.setVerificationJoin(VerifyMessageStatus.FAILED);
-                        return VerifyMessageStatus.FAILED;
                 }
             }
-        } else throw new MessageException(ErrorCode.MESSAGE_NOT_FOUND);
-
-        return VerifyMessageStatus.FAILED;
+            else throw new MessageException(ErrorCode.VERIFICATION_DID_NOT_MATCH);
+        }
+        throw new MessageException(ErrorCode.MESSAGE_NOT_FOUND);
     }
 
     @Transactional
