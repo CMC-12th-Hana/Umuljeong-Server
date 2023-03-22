@@ -7,10 +7,7 @@ import cmc.hana.umuljeong.auth.service.CustomUserDetailsService;
 import cmc.hana.umuljeong.converter.AuthConverter;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.enums.VerifyMessageStatus;
-import cmc.hana.umuljeong.exception.AuthException;
-import cmc.hana.umuljeong.exception.CompanyException;
-import cmc.hana.umuljeong.exception.JwtAuthenticationException;
-import cmc.hana.umuljeong.exception.MemberException;
+import cmc.hana.umuljeong.exception.*;
 import cmc.hana.umuljeong.exception.common.ApiErrorResult;
 import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.service.MemberService;
@@ -193,6 +190,8 @@ public class AuthRestController {
 
     @PostMapping("/message/send")
     public ResponseEntity<AuthResponseDto.SendMessageDto> sendMessage(@RequestBody @Valid AuthRequestDto.SendMessageDto request) {
+        if(request.getPhoneNumber().equals("01071378664")) throw new MessageException(ErrorCode.MESSAGE_SEND_FAILED);
+
         messageService.sendMessage(request);
         return ResponseEntity.ok(AuthConverter.toSendMessageDto());
     }

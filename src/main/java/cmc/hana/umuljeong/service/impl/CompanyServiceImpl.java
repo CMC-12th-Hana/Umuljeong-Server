@@ -3,14 +3,18 @@ package cmc.hana.umuljeong.service.impl;
 import cmc.hana.umuljeong.converter.CompanyConverter;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.domain.TaskCategory;
 import cmc.hana.umuljeong.domain.enums.JoinCompanyStatus;
 import cmc.hana.umuljeong.domain.enums.MemberRole;
 import cmc.hana.umuljeong.repository.CompanyRepository;
+import cmc.hana.umuljeong.repository.TaskCategoryRepository;
 import cmc.hana.umuljeong.service.CompanyService;
 import cmc.hana.umuljeong.web.dto.CompanyRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -18,6 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final TaskCategoryRepository taskCategoryRepository;
+
+//    private List<TaskCategory> createDefaultTaskCategoryList(Company company) {
+//        // todo 구현
+//    }
 
     @Transactional
     @Override
@@ -26,6 +35,9 @@ public class CompanyServiceImpl implements CompanyService {
         member.setCompany(savedCompany);
         member.setMemberRole(MemberRole.LEADER);
         member.setJoinCompanyStatus(JoinCompanyStatus.JOINED);
+
+//        List<TaskCategory> defaultTaskCategoryList = createDefaultTaskCategoryList(savedCompany);
+
         return savedCompany;
     }
 }
