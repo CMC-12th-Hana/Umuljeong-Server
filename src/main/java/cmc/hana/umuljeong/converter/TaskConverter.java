@@ -106,12 +106,12 @@ public class TaskConverter {
     public static TaskResponseDto.TaskDto toTaskDto(Task task) {
         return TaskResponseDto.TaskDto.builder()
                 .taskId(task.getId())
-                .memberId(task.getMember().getId())
+                .memberId(task.getMember() != null ? task.getMember().getId() : -1)
                 .categoryId(task.getTaskCategory() != null ? task.getTaskCategory().getId() : -1)
                 .businessId(task.getBusiness().getId())
                 .clientId(task.getBusiness().getClientCompany().getId())
                 .title(task.getTitle())
-                .memberName(task.getMember().getName())
+                .memberName(task.getMember() != null ? task.getMember().getName() : task.getExitMemberName())
                 .taskCategory(task.getTaskCategory() != null ? task.getTaskCategory().getName() : "미지정")
                 .taskCategoryColor(task.getTaskCategory() != null ? task.getTaskCategory().getColor() : "")
                 .clientName(task.getBusiness().getClientCompany().getName())
@@ -149,10 +149,15 @@ public class TaskConverter {
     public static TaskResponseDto.TaskListDto toLeaderTaskListDto(List<Task> taskList) {
         HashMap<Member, List<Task>> memberListHashMap = new HashMap<>();
         for(Task task : taskList) {
-            if (memberListHashMap.containsKey(task.getMember())) memberListHashMap.get(task.getMember()).add(task);
+            Member member = task.getMember() != null ? task.getMember() :
+                    Member.builder()
+                            .name(task.getExitMemberName())
+                            .build();
+
+            if (memberListHashMap.containsKey(member)) memberListHashMap.get(member).add(task);
             else {
                 List<Task> tasks = new ArrayList<>(); tasks.add(task);
-                memberListHashMap.put(task.getMember(), tasks);
+                memberListHashMap.put(member, tasks);
             }
         }
 

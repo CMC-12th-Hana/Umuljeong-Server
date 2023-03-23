@@ -28,6 +28,8 @@ public class Task extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private String exitMemberName;
+
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     private List<TaskImage> taskImageList = new ArrayList<>();
 
@@ -51,11 +53,18 @@ public class Task extends BaseEntity {
     }
 
     public void setMember(Member member) {
-        if (this.member != null) {
+        if(member == null) {
+            this.member = null;
+        }
+
+        else if (this.member != null) {
             this.member.getTaskList().remove(this);
         }
-        this.member = member;
-        member.getTaskList().add(this);
+
+        else {
+            this.member = member;
+            member.getTaskList().add(this);
+        }
     }
 
     public void removeRelationship() {

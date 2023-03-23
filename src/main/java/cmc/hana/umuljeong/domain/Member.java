@@ -48,7 +48,7 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BusinessMember> businessMemberList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "member")
     private List<Task> taskList = new ArrayList<>();
 
     public void setCompany(Company company) {
@@ -64,5 +64,12 @@ public class Member extends BaseEntity {
             this.company.getMemberList().remove(this);
             this.company = null;
         }
+
+        this.taskList.stream().forEach(task -> {
+            task.setExitMemberName(this.getName() + "(탈퇴)");
+            task.setMember(null);
+        });
     }
+
+
 }
