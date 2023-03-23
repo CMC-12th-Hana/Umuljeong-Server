@@ -1,6 +1,7 @@
 package cmc.hana.umuljeong.service.impl;
 
 import cmc.hana.umuljeong.converter.CompanyConverter;
+import cmc.hana.umuljeong.converter.TaskConverter;
 import cmc.hana.umuljeong.domain.Company;
 import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.TaskCategory;
@@ -24,10 +25,6 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final TaskCategoryRepository taskCategoryRepository;
 
-//    private List<TaskCategory> createDefaultTaskCategoryList(Company company) {
-//        // todo 구현
-//    }
-
     @Transactional
     @Override
     public Company create(Member member, CompanyRequestDto.CompanyCreateDto request) {
@@ -36,7 +33,8 @@ public class CompanyServiceImpl implements CompanyService {
         member.setMemberRole(MemberRole.LEADER);
         member.setJoinCompanyStatus(JoinCompanyStatus.JOINED);
 
-//        List<TaskCategory> defaultTaskCategoryList = createDefaultTaskCategoryList(savedCompany);
+        List<TaskCategory> defaultTaskCategoryList = TaskConverter.createDefaultTaskCategoryList(savedCompany);
+        taskCategoryRepository.saveAll(defaultTaskCategoryList);
 
         return savedCompany;
     }

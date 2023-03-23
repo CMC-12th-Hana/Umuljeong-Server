@@ -1,9 +1,7 @@
 package cmc.hana.umuljeong.converter;
 
 import cmc.hana.umuljeong.aws.s3.TaskImagePackageMetaData;
-import cmc.hana.umuljeong.domain.Member;
-import cmc.hana.umuljeong.domain.Task;
-import cmc.hana.umuljeong.domain.TaskImage;
+import cmc.hana.umuljeong.domain.*;
 import cmc.hana.umuljeong.domain.common.Uuid;
 import cmc.hana.umuljeong.repository.BusinessRepository;
 import cmc.hana.umuljeong.repository.TaskCategoryRepository;
@@ -63,6 +61,23 @@ public class TaskConverter {
         return TaskResponseDto.DeleteTaskDto.builder()
                 .deletedAt(LocalDateTime.now())
                 .build();
+    }
+
+    static List<String> colorList = List.of("D813A2", "E71F2A", "356DF8", "108852", "4B5390", "FFAD0F", "8F00FF");
+    static List<String> nameList = List.of("A/S", "고객민원", "단순 문의", "기술마케팅", "사전점검", "기술마케팅", "컨설팅");
+
+    public static List<TaskCategory> createDefaultTaskCategoryList(Company savedCompany) {
+        List<TaskCategory> taskCategoryList = new ArrayList<>();
+        for(int i=0; i < colorList.size(); i++) {
+            TaskCategory taskCategory = TaskCategory.builder()
+                    .name(nameList.get(i))
+                    .color(colorList.get(i))
+                    .company(savedCompany)
+                    .build();
+            taskCategoryList.add(taskCategory);
+        }
+
+        return taskCategoryList;
     }
 
     @PostConstruct
