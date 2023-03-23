@@ -13,9 +13,7 @@ public class MemberRequestDto {
         private String name;
         @NotBlank
         private String phoneNumber;
-        @NotBlank
         private String staffRank;
-        @NotBlank
         private String staffNumber;
     }
 
@@ -23,9 +21,7 @@ public class MemberRequestDto {
     public static class UpdateProfileDto {
         @NotBlank
         private String name;
-        @NotBlank
         private String staffNumber;
-        @NotBlank
         private String staffRank;
     }
 
@@ -35,9 +31,7 @@ public class MemberRequestDto {
         private String name;
         @NotBlank
         private String phoneNumber;
-        @NotBlank
         private String staffRank;
-        @NotBlank
         private String staffNumber;
     }
 
