@@ -64,7 +64,7 @@ public class TaskConverter {
     }
 
     static List<String> colorList = List.of("D813A2", "E71F2A", "356DF8", "108852", "4B5390", "FFAD0F", "8F00FF");
-    static List<String> nameList = List.of("A/S", "고객민원", "단순 문의", "기술마케팅", "사전점검", "기술마케팅", "컨설팅");
+    static List<String> nameList = List.of("A/S", "고객민원", "단순 문의", "기술마케팅", "사전점검", "방문점검", "컨설팅");
 
     public static List<TaskCategory> createDefaultTaskCategoryList(Company savedCompany) {
         List<TaskCategory> taskCategoryList = new ArrayList<>();
