@@ -13,7 +13,7 @@ import java.util.Map;
 public interface TaskService {
     Task create(TaskRequestDto.CreateTaskDto request, Member member);
 
-    List<Task> findByMemberAndDate(Member member, LocalDate date);
+    List<Task> findByMemberAndDate(Long companyId, Member member, LocalDate date);
 
     List<Task> findByBusinessAndMemberAndDate(Long businessId, Member member, LocalDate date);
 

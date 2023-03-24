@@ -101,7 +101,7 @@ public class TaskRestController {
             return ResponseEntity.ok(TaskConverter.toLeaderTaskListDto(taskList)); // 구성원별
         }
 
-        taskList = taskService.findByMemberAndDate(member, date);
+        taskList = taskService.findByMemberAndDate(companyId, member, date);
         return ResponseEntity.ok(TaskConverter.toStaffTaskListDto(taskList)); // 업무별
     }
 
