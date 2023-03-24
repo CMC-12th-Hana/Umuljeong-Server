@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,9 +25,11 @@ public class TaskRequestDto {
         private Long taskCategoryId;
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         private LocalDate date;
+        @NotBlank
         private String title;
+        @Size(min = 0, max = 300, message = "300자 이하로 작성해주세요.")
         private String description;
-        @Size(min = 0, max = 10)
+        @Size(min = 0, max = 5)
         private List<MultipartFile> taskImageList = new ArrayList<>();
     }
 
@@ -36,11 +39,12 @@ public class TaskRequestDto {
         private Long businessId;
         @ExistTaskCategory
         private Long taskCategoryId;
+        @NotBlank
         private String title;
+        @Size(min = 0, max = 300, message = "300자 이하로 작성해주세요.")
         private String description;
         private Long[] deleteImageIdList;
-
-        @Size(min = 0, max = 10)
+        @Size(min = 0, max = 5)
         private List<MultipartFile> addTaskImageList = new ArrayList<>();
     }
 }

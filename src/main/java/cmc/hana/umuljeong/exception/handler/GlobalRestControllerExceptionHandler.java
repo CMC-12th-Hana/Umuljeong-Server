@@ -96,11 +96,9 @@ public class GlobalRestControllerExceptionHandler extends ResponseEntityExceptio
         while (errorIterator.hasNext()) {
             ObjectError error = errorIterator.next();
             resultMessageBuilder
-                    .append("['")
+                    .append("[")
                     .append(((FieldError) error).getField()) // 유효성 검사가 실패한 속성
-                    .append("' is '")
-                    .append(((FieldError) error).getRejectedValue()) // 유효하지 않은 값
-                    .append("' :: ")
+                    .append(" : ")
                     .append(error.getDefaultMessage()) // 유효성 검사 실패 시 메시지
                     .append("]");
 

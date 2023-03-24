@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class BusinessRequestDto {
         private List<Long> memberIdList;
         @NotNull
         private Long revenue;
+        @Size(min = 0, max = 300, message = "300자 이하로 작성해주세요.")
         private String description;
     }
 
@@ -35,6 +37,7 @@ public class BusinessRequestDto {
         private List<Long> memberIdList;
         @NotNull
         private Long revenue;
+        @Size(min = 0, max = 300, message = "300자 이하로 작성해주세요.")
         private String description;
     }
 }
