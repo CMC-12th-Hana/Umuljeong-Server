@@ -78,8 +78,6 @@ public class MessageServiceImpl implements MessageService {
     public void sendMessage(AuthRequestDto.SendMessageDto request) {
         try {
             String verificationNumber = numberGen(4);
-            // for 애플 심사
-            if(request.getPhoneNumber().equals("01071378664")) verificationNumber = "0725";
             Message message = new Message();
             // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
             message.setFrom(fromNumber);

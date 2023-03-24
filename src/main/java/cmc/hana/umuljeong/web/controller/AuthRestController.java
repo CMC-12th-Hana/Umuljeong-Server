@@ -154,7 +154,7 @@ public class AuthRestController {
             2. 해당 정보로 토큰 발급
          */
 
-        if(!AuthValidator.isVerified(joinDto.getPhoneNumber()) && !joinDto.getPhoneNumber().equals("01071378664")) throw new AuthException(ErrorCode.UNVERIFIED_PHONE_NUMBER);
+        if(!AuthValidator.isVerified(joinDto.getPhoneNumber())) throw new AuthException(ErrorCode.UNVERIFIED_PHONE_NUMBER);
         if(AuthValidator.existsByJoinCompanyStatusAndPhoneNumber(joinDto.getPhoneNumber())) throw new AuthException(ErrorCode.PHONE_NUMBER_ALREADY_EXISTS);
 
 
@@ -190,8 +190,6 @@ public class AuthRestController {
 
     @PostMapping("/message/send")
     public ResponseEntity<AuthResponseDto.SendMessageDto> sendMessage(@RequestBody @Valid AuthRequestDto.SendMessageDto request) {
-        if(request.getPhoneNumber().equals("01071378664")) throw new MessageException(ErrorCode.MESSAGE_SEND_FAILED);
-
         messageService.sendMessage(request);
         return ResponseEntity.ok(AuthConverter.toSendMessageDto());
     }
