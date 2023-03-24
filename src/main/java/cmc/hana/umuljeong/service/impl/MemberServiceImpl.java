@@ -135,10 +135,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void delete(Long memberId) {
         Member member = memberRepository.findById(memberId).get();
-        for(Task task : member.getTaskList()) { // todo : 나중에 리팩토링
-            ClientCompany clientCompany = task.getBusiness().getClientCompany();
-            clientCompanyRepository.decreaseTaskCount(clientCompany);
-        }
+//        for(Task task : member.getTaskList()) { // todo : 나중에 리팩토링
+//            ClientCompany clientCompany = task.getBusiness().getClientCompany();
+//            clientCompanyRepository.decreaseTaskCount(clientCompany);
+//        }
 
         member.removeRelationship();
         memberRepository.delete(member);
