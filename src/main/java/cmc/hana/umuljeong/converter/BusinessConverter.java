@@ -38,7 +38,7 @@ public class BusinessConverter {
         Business business = Business.builder()
                 .businessPeriod(BusinessPeriod.builder()
                                 .start(LocalDate.of(2000, 1, 1))
-                                .finish(LocalDate.of(2000, 1, 1))
+                                .finish(LocalDate.of(9999, 12, 31))
                                 .build())
                 .businessMemberList(new ArrayList<>())
                 .revenue(0L)
