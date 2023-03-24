@@ -1,8 +1,10 @@
 package cmc.hana.umuljeong.repository.querydsl.impl;
 
 import cmc.hana.umuljeong.domain.Business;
+import cmc.hana.umuljeong.domain.Member;
 import cmc.hana.umuljeong.domain.Task;
 import cmc.hana.umuljeong.domain.TaskCategory;
+import cmc.hana.umuljeong.domain.enums.MemberRole;
 import cmc.hana.umuljeong.repository.querydsl.TaskCustomRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -48,6 +50,20 @@ public class TaskCustomRepositoryImpl implements TaskCustomRepository {
         return factory.selectFrom(task)
                 .where(builder)
                 .orderBy(task.date.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<Task> findByMemberAndDate(Member member, LocalDate date) {
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(task.date.eq(date));
+        if(member.getMemberRole() == MemberRole.STAFF) {
+            builder.and(task.member.eq(member));
+        }
+
+        return factory.selectFrom(task)
+                .where(builder)
+                .orderBy(task.title.asc())
                 .fetch();
     }
 }

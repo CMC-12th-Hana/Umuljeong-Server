@@ -109,7 +109,7 @@ TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> findByMemberAndDate(Member member, LocalDate date) {
-        return taskRepository.findByMemberAndDate(member, date);
+        return taskCustomRepository.findByMemberAndDate(member, date);
     }
 
     @Override

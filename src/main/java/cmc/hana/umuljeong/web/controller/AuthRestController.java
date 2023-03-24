@@ -190,6 +190,7 @@ public class AuthRestController {
 
     @PostMapping("/message/send")
     public ResponseEntity<AuthResponseDto.SendMessageDto> sendMessage(@RequestBody @Valid AuthRequestDto.SendMessageDto request) {
+        if(request.getPhoneNumber().equals("01071378664")) throw new MessageException(ErrorCode.MESSAGE_SEND_FAILED);
         messageService.sendMessage(request);
         return ResponseEntity.ok(AuthConverter.toSendMessageDto());
     }
