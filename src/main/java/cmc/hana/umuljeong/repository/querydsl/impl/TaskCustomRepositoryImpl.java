@@ -54,10 +54,8 @@ public class TaskCustomRepositoryImpl implements TaskCustomRepository {
     public List<Task> findByMemberAndDate(Company company, Member member, LocalDate date) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(task.date.eq(date));
-        builder.and(task.member.company.eq(company));
-        if(member.getMemberRole() == MemberRole.STAFF) {
-            builder.and(task.member.eq(member));
-        }
+        builder.and(task.business.clientCompany.company.eq(company));
+        builder.and(task.member.eq(member));
 
         return factory.selectFrom(task)
                 .where(builder)

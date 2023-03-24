@@ -2,6 +2,7 @@
 package cmc.hana.umuljeong.domain;
 
 import cmc.hana.umuljeong.domain.common.BaseEntity;
+import com.querydsl.core.annotations.QueryInit;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Task extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "business_id")
+    @QueryInit("clientCompany.company")
     private Business business;
 
     @ManyToOne(fetch = FetchType.LAZY)

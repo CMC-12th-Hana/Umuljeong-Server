@@ -3,6 +3,7 @@ package cmc.hana.umuljeong.domain;
 import cmc.hana.umuljeong.domain.common.BaseEntity;
 import cmc.hana.umuljeong.domain.embedded.BusinessPeriod;
 import cmc.hana.umuljeong.domain.mapping.BusinessMember;
+import com.querydsl.core.annotations.QueryInit;
 import lombok.*;
 
 import javax.persistence.*;
