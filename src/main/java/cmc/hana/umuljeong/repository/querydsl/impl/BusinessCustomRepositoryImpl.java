@@ -75,8 +75,13 @@ public class BusinessCustomRepositoryImpl implements BusinessCustomRepository {
             builder.and(business.id.in(businessIds));
         }
 
+
+        BooleanBuilder builderEtc = new BooleanBuilder();
+        builderEtc.and(business.name.eq("기타"));
+        builderEtc.and(business.clientCompany.eq(clientCompany));
+
         return factory.selectFrom(business)
-                .where(builder)
+                .where(builder.or(builderEtc))
                 .orderBy(business.name.asc())
                 .fetch();
     }
