@@ -1,5 +1,6 @@
 package cmc.hana.umuljeong.web.dto;
 
+import cmc.hana.umuljeong.domain.enums.JoinCompanyStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class MemberResponseDto {
         private String role;
         private String companyName;
         private String staffRank;
+        private JoinCompanyStatus joinCompanyStatus;
         // todo : 사내 전화번호?....
         private String phoneNumber;
         private String staffNumber;

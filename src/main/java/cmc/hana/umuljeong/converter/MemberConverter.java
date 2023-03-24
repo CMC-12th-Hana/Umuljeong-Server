@@ -98,6 +98,7 @@ public class MemberConverter {
                 .companyId(member.getCompany() != null ? member.getCompany().getId() : -1)
                 .memberId(member.getId())
                 .name(member.getName())
+                .joinCompanyStatus(member.getJoinCompanyStatus())
                 .role(member.getMemberRole().getDescription())
                 .companyName(member.getCompany() != null ? member.getCompany().getName() : "")
                 .staffRank(member.getStaffRank() != null ? member.getStaffRank() : "")
