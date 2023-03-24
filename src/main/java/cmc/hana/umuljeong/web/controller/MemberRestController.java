@@ -3,6 +3,8 @@ package cmc.hana.umuljeong.web.controller;
 import cmc.hana.umuljeong.auth.annotation.AuthUser;
 import cmc.hana.umuljeong.converter.MemberConverter;
 import cmc.hana.umuljeong.domain.Member;
+import cmc.hana.umuljeong.domain.enums.JoinCompanyStatus;
+import cmc.hana.umuljeong.exception.AuthException;
 import cmc.hana.umuljeong.exception.CompanyException;
 import cmc.hana.umuljeong.exception.MemberException;
 import cmc.hana.umuljeong.exception.common.ApiErrorResult;
@@ -10,6 +12,7 @@ import cmc.hana.umuljeong.exception.common.ErrorCode;
 import cmc.hana.umuljeong.service.MemberService;
 import cmc.hana.umuljeong.validation.annotation.ExistCompany;
 import cmc.hana.umuljeong.validation.annotation.ExistMember;
+import cmc.hana.umuljeong.validation.validator.AuthValidator;
 import cmc.hana.umuljeong.validation.validator.CompanyValidator;
 import cmc.hana.umuljeong.validation.validator.MemberValidator;
 import cmc.hana.umuljeong.web.dto.ClientCompanyResponseDto;
@@ -174,6 +177,8 @@ public class MemberRestController {
     @PostMapping("/company/{companyId}/member")
     public ResponseEntity<MemberResponseDto.CreateDto> create(@PathVariable(name = "companyId") @ExistCompany Long companyId, @RequestBody @Valid MemberRequestDto.CreateDto request, @AuthUser Member leader) {
         if(!CompanyValidator.isAccessible(leader, companyId)) throw new CompanyException(ErrorCode.COMPANY_ACCESS_DENIED);
+        if(AuthValidator.existsByJoinCompanyStatusAndPhoneNumber(request.getPhoneNumber()))
+            throw new AuthException(ErrorCode.COMPANY_ALREADY_EXISTS);
 
         Member createdMember = memberService.create(companyId, request);
         return ResponseEntity.ok(MemberConverter.toCreateDto(createdMember));
