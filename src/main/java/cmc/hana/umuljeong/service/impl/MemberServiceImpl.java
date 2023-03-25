@@ -65,6 +65,7 @@ public class MemberServiceImpl implements MemberService {
             member.setCompany(company);
             member.setStaffNumber(request.getStaffNumber());
             member.setStaffRank(request.getStaffRank());
+            member.setJoinCompanyStatus(JoinCompanyStatus.JOINED);
             return member;
         }
         else {
