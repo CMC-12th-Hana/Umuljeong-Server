@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    @EntityGraph(attributePaths = {"businessMemberList", "taskList"})
+    @EntityGraph(attributePaths = {"taskList"})
     Optional<Member> findByPhoneNumber(String phoneNumber);
 
-    @EntityGraph(attributePaths = {"businessMemberList", "taskList"})
+    @EntityGraph(attributePaths = {"taskList"})
     Optional<Member> findById(Long aLong);
 
     List<Member> findByCompany(Company company);

@@ -45,10 +45,10 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private JoinCompanyStatus joinCompanyStatus;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BusinessMember> businessMemberList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Task> taskList = new ArrayList<>();
 
     public void setCompany(Company company) {
